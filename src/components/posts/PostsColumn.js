@@ -1,11 +1,11 @@
 import React from 'react'
 import PostView from './PostView'
 import PropTypes from 'prop-types'
-import {getPosts, getUserPosts, getNewsFeed} from "../../actions/profileActions"
-import {addPost, clearPosts} from '../../actions/postsActions'
+// import {getPosts, getUserPosts, getNewsFeed} from "../../actions/profileActions"
+// import {addPost, clearPosts} from '../../actions/postsActions'
 import {connect} from 'react-redux'
 import shortid from 'shortid'
-import Loader from 'react-loader-spinner'
+// import Loader from 'react-loader-spinner'
 
 
 class PostsColumn extends React.Component {
@@ -105,4 +105,5 @@ function mapStateToProps(state) {
     return {posts: state.postsReducers}
 }
 
-export default connect(mapStateToProps, {getPosts, addPost, getUserPosts, getNewsFeed, clearPosts})(PostsColumn)
+export default PostsColumn
+// export default connect(mapStateToProps, {getPosts, addPost, getUserPosts, getNewsFeed, clearPosts})(PostsColumn)

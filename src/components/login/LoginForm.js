@@ -3,9 +3,8 @@ import PropTypes from 'prop-types'
 import validator from '../../../node_modules/validator/index.js'
 import {isEmpty} from 'lodash'
 import TextFieldGroup from './../../shared/TextFieldsGroup'
-import {connect} from 'react-redux'
-import {login} from '../../actions/loginActions'
 
+import {twinpalFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 
 class LoginForm extends React.Component {
     constructor(props) {
@@ -15,7 +14,10 @@ class LoginForm extends React.Component {
             password: '',
             errors: {},
             isLoading: false,
-            invalid: false
+            invalid: false,
+            loading: false,
+            message: ''
+
         }
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
@@ -53,13 +55,40 @@ class LoginForm extends React.Component {
         e.preventDefault()
         if (this.isValid()) {
             this.setState({errors: {}, isLoading: true})
-            console.log(this.state)
-            this.props.login(this.state).then(
-                (res) => {
-                    // this.props.addFlashMessage({type: 'success', text: 'You have signed up successfully'})
-                    this.context.router.history.push('/')
-                },
-                err => this.setState({errors: err.response.data.errors, isLoading: false})
+            this.setState({loading: true})
+            this.props.graphql
+                .query({
+                    fetchOptionsOverride: twinpalFetchOptionsOverride,
+                    resetOnLoad: true,
+                    operation: {
+                        variables: {email: this.state.email, password: this.state.password},
+                        query: `
+       mutation($email: String!,$password:String!) {
+              login(email:$email,password:$password){
+                        ok
+                        token
+                        error
+              }
+            }
+      `
+                    }
+                })
+                .request.then(({data}) => {
+                    if (data.login.token === null && !data.login.ok) {
+                        this.setState({errors: {form: data.login.error}, isLoading: false})
+                    }
+                    else {
+                        localStorage.setItem('Twinpal', data.login.token)
+                        this.context.router.history.push('/')
+                        this.setState({
+                            loading: false,
+                            message: data
+                                ? `Logged in.`
+                                : `Logging failed.`
+                        })
+                    }
+
+                }
             )
         }
     }
@@ -69,7 +98,13 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        const {errors, password, email, isLoading} = this.state
+        const {errors, password, email, invalid, isLoading, loading, message} = this.state
+        // if (loading) {
+        //     return <p>Loading…</p>
+        // }
+        // if (message) {
+        //     return <p>{message}</p>
+        // }
         return (
             <form onSubmit={this.onSubmit}>
                 <h1>Login</h1>
@@ -78,7 +113,7 @@ class LoginForm extends React.Component {
                     label="Email"
                     type="email"
                     name="email"
-                    value={this.state.email}
+                    value={email}
                     onChange={this.onChange}
                     error={errors.email}
                     // checkUserExists={this.checkUserExists}
@@ -87,12 +122,12 @@ class LoginForm extends React.Component {
                     label="Password"
                     type="password"
                     name="password"
-                    value={this.state.password}
+                    value={password}
                     onChange={this.onChange}
                     error={errors.password}
                 />
                 <div className="form-group">
-                    <button disabled={this.state.isLoading || this.state.invalid} className="btn btn-primary btn-sm"
+                    <button disabled={isLoading || invalid} className="btn btn-primary btn-sm"
                             type="submit">Login
                     </button>
                 </div>
@@ -101,11 +136,9 @@ class LoginForm extends React.Component {
     }
 }
 
-LoginForm.propTypes = {
-    login: PropTypes.func.isRequired
-}
+
 LoginForm.contextTypes = {
     router: PropTypes.object.isRequired
 }
 
-export default connect(null, {login})(LoginForm)
+export default LoginForm

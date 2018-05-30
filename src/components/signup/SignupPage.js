@@ -27,3 +27,4 @@ SignupPage.propTypes = {
 }
 
 export default connect(null, {userSignupRequest, addFlashMessage, isUserExists})(SignupPage)
+// export default connect(null, {userSignupRequest, addFlashMessage, isUserExists})(SignupPage)

@@ -1,43 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { GraphQL, Provider, Query } from 'graphql-react'
-const graphql = new GraphQL()
-const twinpalFetchOptionsOverride = options => {
-    options.url = 'http://localhost:8080/graphql'
-    const token = localStorage.getItem('Twinpal')
-    if (token) options.headers.Authorization = `Bearer ${token}`
-}
+import Router from './routes'
+import {GraphQL ,Provider as GraphQLReact,  } from 'graphql-react'
+import {createStore, applyMiddleware, compose} from 'redux'
+import thunk from 'redux-thunk'
+import rootReducer from './rootReducer'
+import {Provider} from 'react-redux'
 
-const App = () => (
-    <Provider value={graphql}>
-        <Query
-            loadOnMount
-            loadOnReset
-            fetchOptionsOverride={twinpalFetchOptionsOverride}
-            query={`
-        {
-          people {
-            username
-            id
-          }
-        }
-      `}
-        >
-            {({ loading, data }) =>
-                data ?data.people.map (person=>
-                    <article>
-                        <h1>{person.username}</h1>
-                        <p>{person.id}</p>
-                    </article>
-                ) : loading ? (
-                    <p>Loading…</p>
-                ) : (
-                    <p>Loading failed.</p>
-                )
-            }
-        </Query>
-    </Provider>
-)
+
+const store = createStore(rootReducer, compose(applyMiddleware(thunk)))
+
+
+const graphql = new GraphQL()
+
 ReactDOM.render(
-    <App/>
+    <Provider store={store}>
+    <GraphQLReact value={graphql}   >
+       <Router />
+    </GraphQLReact>
+    </Provider>
     , document.getElementById('root'))
+
