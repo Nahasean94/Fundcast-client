@@ -98,7 +98,7 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        const {errors, password, email, invalid, isLoading, loading, message} = this.state
+        const {errors, password, email, invalid, isLoading,} = this.state
         // if (loading) {
         //     return <p>Loading…</p>
         // }

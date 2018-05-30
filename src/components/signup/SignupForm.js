@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import validator from 'validator'
 import {isEmpty} from 'lodash'
 import TextFieldGroup from './../../shared/TextFieldsGroup'
+import {twinpalFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 
 
 class SignupForm extends React.Component {
@@ -14,10 +15,12 @@ class SignupForm extends React.Component {
             email: '',
             password: '',
             passwordConfirmation: '',
-            birthday:'',
+            birthday: '',
             errors: {},
             isLoading: false,
-            invalid: false
+            invalid: false,
+            loading:false,
+            message:''
         }
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
@@ -28,20 +31,36 @@ class SignupForm extends React.Component {
         const field = e.target.name
         const val = e.target.value
         if (val !== '') {
-            this.props.isUserExists(val).then(res => {
-                if (res) {
-                    let errors = this.state.errors
-                    let invalid
-                    if (res.data) {
-                        invalid = true
-                        errors[field] = 'There is user with such ' + field
-                    } else {
-                        invalid = false
-                        errors[field] = ''
+            this.props.graphql
+                .query({
+                    fetchOptionsOverride: twinpalFetchOptionsOverride,
+                    resetOnLoad: true,
+                    operation: {
+                        variables: {email: val},
+                        query: `
+       mutation($email: String!) {
+              isUserExists(email:$email){
+                       exists
+              }
+            }
+      `
                     }
-                    this.setState({errors, invalid})
+                })
+                .request.then(({data}) => {
+                    if (data) {
+                        let errors = this.state.errors
+                        let invalid
+                        if (data.isUserExists.exists) {
+                            invalid = true
+                            errors[field] = 'There is user with such ' + field
+                        } else {
+                            invalid = false
+                            errors[field] = ''
+                        }
+                        this.setState({errors, invalid})
+                    }
                 }
-            })
+            )
         }
     }
 
@@ -87,12 +106,48 @@ class SignupForm extends React.Component {
         e.preventDefault()
         if (this.isValid()) {
             this.setState({errors: {}, isLoading: true})
-            this.props.userSignupRequest(this.state).then(
-                () => {
-                    this.props.addFlashMessage({type: 'success', text: 'You have signed up successfully. Please use the login in form below to access your account'})
-                    this.context.router.history.push('/profile')
-                },
-                err => this.setState({errors: err.response.data, isLoading: false})
+            this.props.graphql
+                .query({
+                    fetchOptionsOverride: twinpalFetchOptionsOverride,
+                    resetOnLoad: true,
+                    operation: {
+                        variables: {
+                            first_name: this.state.first_name,
+                            last_name: this.state.last_name,
+                            email: this.state.email,
+                            password: this.state.password,
+                            birthday: this.state.birthday
+                        },
+                        query: `
+       mutation($first_name:String!,$last_name:String!,$email: String!,$password:String!,$birthday:String!) {
+              signup(first_name:$first_name,last_name:$last_name,email:$email,password:$password,birthday:$birthday){
+                        id
+                        username
+              }
+            }
+      `
+                    }
+                })
+                .request.then(({data}) => {
+                    if (data) {
+                        this.setState({
+                            first_name: '',
+                            last_name: '',
+                            email: '',
+                            password: '',
+                            passwordConfirmation: '',
+                            birthday: '',
+                            errors: {},
+                            isLoading: false,
+                            invalid: false,
+                            loading: false,
+                            message: data
+                                ? `You can now use your email and password to log in.`
+                                : `Signup failed.`
+                        })
+                        // this.context.router.history.push('/')
+                    }
+                }
             )
         }
     }
@@ -102,7 +157,13 @@ class SignupForm extends React.Component {
     }
 
     render() {
-        const {errors} = this.state
+        const {errors,loading,message} = this.state
+        if (loading) {
+            return <p>Creating account…</p>
+        }
+        if (message) {
+            return <p>{message}</p>
+        }
         return (
             <form onSubmit={this.onSubmit}>
                 <h3>Create a free account</h3>
@@ -165,11 +226,7 @@ class SignupForm extends React.Component {
     }
 }
 
-SignupForm.propTypes = {
-    userSignupRequest: PropTypes.func.isRequired,
-    addFlashMessage: PropTypes.func.isRequired,
-    isUserExists: PropTypes.func.isRequired
-}
+
 SignupForm.contextTypes = {
     router: PropTypes.object.isRequired
 }
