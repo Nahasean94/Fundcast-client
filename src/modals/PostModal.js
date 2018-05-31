@@ -5,7 +5,7 @@ import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 class PostModal extends React.Component {
     render() {
         const {show, onClose, post, username, uploads} = this.props
-        const upload = uploads.length>0 ? <img src={`/uploads/${uploads[0].path}`} width="400" height="350" alt="Uploads"/> : ''
+        const upload = uploads.length>0 ? <img src={`http://localhost:8080/uploads/${uploads[0].path}`} width="400" height="350" alt="Uploads"/> : ''
         if (show) {
             return (
                 <Modal isOpen={show} toggle={onClose} size="lg">

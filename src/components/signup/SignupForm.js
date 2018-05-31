@@ -4,6 +4,7 @@ import validator from 'validator'
 import {isEmpty} from 'lodash'
 import TextFieldGroup from './../../shared/TextFieldsGroup'
 import {twinpalFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
+import {signup,isUserExists} from "../../shared/queries"
 
 
 class SignupForm extends React.Component {
@@ -37,13 +38,7 @@ class SignupForm extends React.Component {
                     resetOnLoad: true,
                     operation: {
                         variables: {email: val},
-                        query: `
-       mutation($email: String!) {
-              isUserExists(email:$email){
-                       exists
-              }
-            }
-      `
+                        query:isUserExists
                     }
                 })
                 .request.then(({data}) => {
@@ -118,14 +113,7 @@ class SignupForm extends React.Component {
                             password: this.state.password,
                             birthday: this.state.birthday
                         },
-                        query: `
-       mutation($first_name:String!,$last_name:String!,$email: String!,$password:String!,$birthday:String!) {
-              signup(first_name:$first_name,last_name:$last_name,email:$email,password:$password,birthday:$birthday){
-                        id
-                        username
-              }
-            }
-      `
+                        query: signup
                     }
                 })
                 .request.then(({data}) => {

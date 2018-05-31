@@ -5,6 +5,8 @@ import {isEmpty} from 'lodash'
 import TextFieldGroup from './../../shared/TextFieldsGroup'
 
 import {twinpalFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
+import {login} from '../../shared/queries'
+
 
 class LoginForm extends React.Component {
     constructor(props) {
@@ -62,15 +64,7 @@ class LoginForm extends React.Component {
                     resetOnLoad: true,
                     operation: {
                         variables: {email: this.state.email, password: this.state.password},
-                        query: `
-       mutation($email: String!,$password:String!) {
-              login(email:$email,password:$password){
-                        ok
-                        token
-                        error
-              }
-            }
-      `
+                        query: login
                     }
                 })
                 .request.then(({data}) => {

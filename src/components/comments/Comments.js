@@ -1,15 +1,95 @@
+// import React from 'react'
+// import CommentView from './CommentView'
+// import PropTypes from 'prop-types'
+// import {addComment, clearComments, deleteComment, saveComment, updateComment} from "../../actions/commentsActions"
+// import {connect} from 'react-redux'
+//
+// const AllComments = ({comments, toggleHidden}) => {
+//     return (
+//         <div>
+//             {comments.map(comment => {
+//                 return (
+//                     <li key={comment._id}><CommentView comment={comment}/></li>)
+//             })
+//             }
+//             <li><a href="" onClick={toggleHidden}>Show less</a></li>
+//         </div>
+//     )
+// }
+//
+// class Comments extends React.Component {
+//     constructor(props) {
+//         super(props)
+//         this.state = {
+//             hidden: this.props.viewAll
+//         }
+//         this.toggleHidden = this.toggleHidden.bind(this)
+//     }
+//
+//     // componentWillReceiveProps(nextProps) {
+//     //     if (nextProps.comments !== this.props.comments) {
+//     //         this.props.comments.map(comment => {
+//     //             this.props.addComment(comment)
+//     //         })
+//     //     }
+//     // }
+//
+//     toggleHidden(e) {
+//         e.preventDefault()
+//         this.setState({hidden: !this.state.hidden})
+//     }
+//
+//     render() {
+//         const {hidden} = this.state
+//         const comments = this.props.comments
+//         const otherComments = <li><a href="" onClick={this.toggleHidden}>View
+//             all {comments.length} comments</a>
+//         </li>
+//         return (
+//             <span>
+//                 <li hidden={hidden} className="list-inline-item"><CommentView comment={comments[0]}/></li>
+//                 {hidden ? <AllComments comments={comments} toggleHidden={this.toggleHidden}/> : ''}
+//                 {comments.length > 1 && !hidden ? otherComments : ''}
+//             </span>
+//         )
+//     }
+// }
+//
+// Comments.propTypes = {
+//     comments: PropTypes.array.isRequired,
+//     addComment: PropTypes.func.isRequired,
+//     clearComments: PropTypes.func.isRequired,
+//     deleteComment: PropTypes.func.isRequired,
+//     updateComment: PropTypes.func.isRequired,
+//     viewAll: PropTypes.bool.isRequired
+// }
+//
+// // function mapStateToProps(state) {
+// //     return {
+// //         comments: state.commentsReducers
+// //     }
+// // }
+// //
+//
+// export default connect(null, {
+//     addComment,
+//     clearComments,
+//     deleteComment,
+//     updateComment,
+//     saveComment
+// })(Comments)
 import React from 'react'
 import CommentView from './CommentView'
 import PropTypes from 'prop-types'
-import {addComment, clearComments, deleteComment, saveComment, updateComment} from "../../actions/commentsActions"
-import {connect} from 'react-redux'
+// import {addComment, clearComments, deleteComment, saveComment, updateComment} from "../../actions/commentsActions"
+// import {connect} from 'react-redux'
 
-const AllComments = ({comments, toggleHidden}) => {
+const AllComments = ({comments, toggleHidden,history}) => {
     return (
         <div>
             {comments.map(comment => {
                 return (
-                    <li key={comment._id}><CommentView comment={comment}/></li>)
+                    <li key={comment.id}><CommentView history={history} comment={comment}/></li>)
             })
             }
             <li><a href="" onClick={toggleHidden}>Show less</a></li>
@@ -47,8 +127,8 @@ class Comments extends React.Component {
         </li>
         return (
             <span>
-                <li hidden={hidden} className="list-inline-item"><CommentView comment={comments[0]}/></li>
-                {hidden ? <AllComments comments={comments} toggleHidden={this.toggleHidden}/> : ''}
+                <li hidden={hidden} className="list-inline-item"><CommentView history={this.props.history} comment={comments[0]}/></li>
+                {hidden ? <AllComments comments={comments} toggleHidden={this.toggleHidden} history={this.props.history}/> : ''}
                 {comments.length > 1 && !hidden ? otherComments : ''}
             </span>
         )
@@ -57,10 +137,11 @@ class Comments extends React.Component {
 
 Comments.propTypes = {
     comments: PropTypes.array.isRequired,
-    addComment: PropTypes.func.isRequired,
-    clearComments: PropTypes.func.isRequired,
-    deleteComment: PropTypes.func.isRequired,
-    updateComment: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
+    // addComment: PropTypes.func.isRequired,
+    // clearComments: PropTypes.func.isRequired,
+    // deleteComment: PropTypes.func.isRequired,
+    // updateComment: PropTypes.func.isRequired,
     viewAll: PropTypes.bool.isRequired
 }
 
@@ -71,10 +152,11 @@ Comments.propTypes = {
 // }
 //
 
-export default connect(null, {
-    addComment,
-    clearComments,
-    deleteComment,
-    updateComment,
-    saveComment
-})(Comments)
+export default Comments
+// export default connect(null, {
+//     addComment,
+//     clearComments,
+//     deleteComment,
+//     updateComment,
+//     saveComment
+// })(Comments)

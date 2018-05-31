@@ -10,7 +10,7 @@ class ProfilePictureModal extends React.Component {
                 <ModalHeader toggle={onClose}>{username}</ModalHeader>
                 <ModalBody>
                     <div className="modal-body">
-                        <img src={`/uploads/${picture}`} alt="Let me see" width="600" height="500"/>
+                        <img src={`http://localhost:8080/uploads/${picture}`} alt="Let me see" width="600" height="500"/>
                     </div>
                 </ModalBody>
                 <ModalFooter>
