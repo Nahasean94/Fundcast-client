@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 import validator from '../../../node_modules/validator/index.js'
 import {isEmpty} from 'lodash'
 import TextFieldGroup from './../../shared/TextFieldsGroup'
+import {login as setLoginToken} from "../../actions/loginActions"
 
 import {twinpalFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {login} from '../../shared/queries'
-
 
 class LoginForm extends React.Component {
     constructor(props) {
@@ -72,7 +72,7 @@ class LoginForm extends React.Component {
                         this.setState({errors: {form: data.login.error}, isLoading: false})
                     }
                     else {
-                        localStorage.setItem('Twinpal', data.login.token)
+                        setLoginToken(data.login.token)
                         this.context.router.history.push('/')
                         this.setState({
                             loading: false,

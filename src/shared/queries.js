@@ -166,10 +166,49 @@ const isUserExists =`
   }
 }
 `
+const uploadProfilePicture =`
+   mutation($file:Upload!) {
+  uploadProfilePicture(file:$file) {
+   uploaded
+  }
+}
+`
 const likePost =`
    mutation($id:ID!) {
   likePost(id:$id) {
-   id
+    id
+    timestamp
+        scope
+        uploads {
+          id
+          path
+          }
+        likes {
+        person{
+        id
+        }
+          id
+          }
+        body
+        author {
+            username
+            id
+            profile_picture
+        }
+        profile {
+        username
+        id
+        }
+        comments{
+        id
+        body
+        author{
+        id
+        profile_picture
+        username
+        }
+        timestamp
+        }
   }
 }
 `
@@ -177,13 +216,77 @@ const unlikePost =`
    mutation($id:ID!) {
   unlikePost(id:$id) {
    id
+    timestamp
+        scope
+        uploads {
+          id
+          path
+          }
+        likes {
+        person{
+        id
+        }
+          id
+          }
+        body
+        author {
+            username
+            id
+            profile_picture
+        }
+        profile {
+        username
+        id
+        }
+        comments{
+        id
+        body
+        author{
+        id
+        profile_picture
+        username
+        }
+        timestamp
+        }
   }
 }
 `
 const updatePost =`
    mutation($id:ID!,$body:String!) {
   updatePost(id:$id,body:$body) {
-   id
+  id
+    timestamp
+        scope
+        uploads {
+          id
+          path
+          }
+        likes {
+        person{
+        id
+        }
+          id
+          }
+        body
+        author {
+            username
+            id
+            profile_picture
+        }
+        profile {
+        username
+        id
+        }
+        comments{
+        id
+        body
+        author{
+        id
+        profile_picture
+        username
+        }
+        timestamp
+        }
   }
 }
 `
@@ -198,11 +301,43 @@ const addComment =`
    mutation($post_id:ID!,$comment:String!) {
   addComment(post_id:$post_id,comment:$comment) {
    id
+    timestamp
+        scope
+        uploads {
+          id
+          path
+          }
+        likes {
+        person{
+        id
+        }
+          id
+          }
+        body
+        author {
+            username
+            id
+            profile_picture
+        }
+        profile {
+        username
+        id
+        }
+        comments{
+        id
+        body
+        author{
+        id
+        profile_picture
+        username
+        }
+        timestamp
+        }
   }
 }
 `
 const updateProfile =`
-   mutation($first_name:String!,$last_name:String!,$username:String!,$email:String!,$birthday:String!) {
+   mutation($first_name:String!,$last_name:String!,$username:String,$email:String!,$birthday:String!) {
   updateProfile(first_name:$first_name,last_name:$last_name,username:$username,email:$email,birthday:$birthday) {
    id
   }
@@ -305,4 +440,5 @@ export {
     updateProfile,
     createNewPost,
     uploadFile,
+    uploadProfilePicture
 }

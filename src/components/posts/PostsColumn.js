@@ -8,7 +8,7 @@ import shortid from 'shortid'
 // import Loader from 'react-loader-spinner'
 import {fetchNewsFeed, fetchPalPosts, fetchProfilePosts} from "../../shared/queries"
 import {twinpalFetchOptionsOverride} from '../../shared/fetchOverrideOptions'
-import {Query} from 'graphql-react'
+import {Query,Consumer} from 'graphql-react'
 
 
 class PostsColumn extends React.Component {
@@ -18,43 +18,6 @@ class PostsColumn extends React.Component {
             isLoading: true
         }
     }
-
-    // componentDidMount() {
-    //     this.props.clearPosts()
-    //     if (window.location.pathname === '/') {
-    //         return this.props.getNewsFeed().then(posts => {
-    //             this.setState({isLoading: false})
-    //             if (posts.data.length > 0) {
-    //                 console.log(posts.data)
-    //                 return posts.data.map(p => {
-    //                     return this.props.addPost(p)
-    //                 })
-    //             }
-    //         })
-    //     }
-    //     else if (window.location.pathname === '/profile') {
-    //         return this.props.getPosts().then(posts => {
-    //             this.setState({isLoading: false})
-    //             if (posts.data.length > 0) {
-    //                 return posts.data.map(p => {
-    //                     return this.props.addPost(p)
-    //                 })
-    //             }
-    //
-    //         })
-    //     }
-    //     else {
-    //         return this.props.getUserPosts(window.location.pathname.split('/')[2]).then(posts => {
-    //             this.setState({isLoading: false})
-    //             if (posts.data.length > 0) {
-    //                 posts.data.map(p => {
-    //                     return this.props.addPost(p)
-    //                 })
-    //             }
-    //         })
-    //     }
-    //
-    // }
 
     render() {
         if (window.location.pathname === '/') {
@@ -70,7 +33,7 @@ class PostsColumn extends React.Component {
                             return data.fetchNewsFeed.map(post =>
                                 (
                                     <div key={shortid.generate()}>
-                                        <PostView post={post}/>
+                                        <Consumer>{graphql => <PostView post={post} graphql={graphql}/>}</Consumer>
                                     </div>
                                 )
                             )
@@ -92,13 +55,13 @@ class PostsColumn extends React.Component {
                 fetchOptionsOverride={twinpalFetchOptionsOverride}
                 query={fetchProfilePosts}
             >
-                {({loading, data}) =>{
+                {({loading, data}) => {
                     if (data) {
                         if (data.fetchProfilePosts) {
                             return data.fetchProfilePosts.map(post =>
                                 (
                                     <div key={shortid.generate()}>
-                                        <PostView post={post}/>
+                                        <Consumer>{graphql => <PostView post={post} graphql={graphql}/>}</Consumer>
                                     </div>
                                 )
                             )
@@ -122,13 +85,13 @@ class PostsColumn extends React.Component {
                 variables={{id: window.location.pathname.split('/')[2]}}
                 query={fetchPalPosts}
             >
-                {({loading, data}) =>{
+                {({loading, data}) => {
                     if (data) {
                         if (data.fetchPalPosts) {
                             return data.fetchPalPosts.map(post =>
                                 (
                                     <div key={shortid.generate()}>
-                                        <PostView post={post}/>
+                                        <Consumer>{graphql => <PostView post={post} graphql={graphql}/>}</Consumer>
                                     </div>
                                 )
                             )
@@ -175,7 +138,7 @@ class PostsColumn extends React.Component {
     // console.log(post)
     // return (
     //     {/*<div key={shortid.generate()}>*/}
-    //         {/*<PostView post={post}/>*/}
+    //         {/*<PostView post={post}graphql={graphql}/>}</Consumer>*/}
     //
     // {/*</div>*/}
     // )

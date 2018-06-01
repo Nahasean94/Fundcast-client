@@ -95,7 +95,7 @@ class NavigationBar extends React.Component {
             </div>)
         return (
 
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <header className="navbar navbar-expand-lg navbar-light bg-light fixed-top" id="navigation-bar">
                 <Link to="/" className="navbar-brand">Twinpal</Link>
                 <button className="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarNavAltMarkup"
@@ -105,7 +105,7 @@ class NavigationBar extends React.Component {
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                     {isAuthenticated ? userLinks : guestLinks}
                 </div>
-            </nav>
+            </header>
         )
     }
 }

@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {addFlashMessage} from "../actions/flashMessages"
 import {connect} from 'react-redux'
 
 

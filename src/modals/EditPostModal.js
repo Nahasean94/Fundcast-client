@@ -2,7 +2,9 @@ import React from 'react'
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {saveUpdatedPost, updatePost} from "../actions/postsActions"
+import { updatePost as showUpdatedPost} from "../actions/postsActions"
+import { updatePost} from '../shared/queries'
+import {twinpalFetchOptionsOverride} from "../shared/fetchOverrideOptions"
 
 class EditPostModal extends React.Component {
     constructor(props) {
@@ -17,14 +19,20 @@ class EditPostModal extends React.Component {
     onSave() {
         const { editedPost} = this.state
         if (editedPost !== '') {
-            const data = new FormData()
-            data.append('body', editedPost)
-            data.append('id', this.props.postId)
-            this.props.saveUpdatedPost(data).then(
-                post => {
-                    this.setState({editedPost: ''})
-                    this.props.updatePost(post.data)
-                    this.props.onClose()
+            this.props.graphql
+                .query({
+                    fetchOptionsOverride: twinpalFetchOptionsOverride,
+                    resetOnLoad: true,
+                    operation: {
+                        variables: {id: this.props.postId,body:editedPost},
+                        query: updatePost
+                    }
+                })
+                .request.then(({data}) => {
+                    if (data) {
+                        this.props.showUpdatedPost(data.updatePost)
+                    }
+
                 }
             )
         }
@@ -64,9 +72,8 @@ EditPostModal.propTypes = {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     post: PropTypes.string.isRequired,
-    updatePost:PropTypes.func.isRequired,
-    saveUpdatedPost:PropTypes.func.isRequired,
+    showUpdatedPost:PropTypes.func.isRequired,
     postId:PropTypes.string.isRequired
 }
 
-export default connect(null,{updatePost,saveUpdatedPost})(EditPostModal)
+export default connect(null,{showUpdatedPost})(EditPostModal)

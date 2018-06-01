@@ -4,9 +4,9 @@ import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import TextFieldGroup from "../shared/TextFieldsGroup"
 import validator from "validator"
 import {isEmpty} from "lodash"
-import {connect} from 'react-redux'
-import {editProfile} from "../actions/profileActions"
-import {Redirect} from 'react-router'
+import { updateProfile} from "../shared/queries"
+
+import {twinpalFetchOptionsOverride} from "../shared/fetchOverrideOptions"
 
 
 class EditProfileModal extends React.Component {
@@ -55,14 +55,30 @@ class EditProfileModal extends React.Component {
         e.preventDefault()
         if (this.isValid()) {
             this.setState({errors: {}, isLoading: true})
-            this.props.editProfile(this.state).then(
-                () => {
-                    this.props.onClose()
-                    this.setState({isLoading:false})
-                    window.location.reload()
-                    // this.context.router.history.push('/refresh/')
-                },
-                err => this.setState({errors: err.response.data, isLoading: false})
+            this.props.graphql
+                .query({
+                    fetchOptionsOverride: twinpalFetchOptionsOverride,
+                    resetOnLoad: true,
+                    operation: {
+                        variables: {
+                            first_name: this.state.first_name,
+                            last_name: this.state.last_name,
+                            username: this.state.username,
+                            email: this.state.email,
+                            birthday: this.state.birthday,
+                        },
+                        query: updateProfile
+                    }
+                })
+                .request.then(({data}) => {
+                    if (data) {
+                        this.props.onClose()
+                        this.setState({isLoading: false})
+                        //TODO add a way to change the username in navigation bar
+                        window.location.reload()
+                    }
+
+                }
             )
         }
     }
@@ -72,9 +88,9 @@ class EditProfileModal extends React.Component {
     }
 
     render() {
-        const {show} = this.props.profile
-        const {onClose}=this.props
-        const {errors, isLoading, invalid, first_name, last_name, birthday, email, username,  profile_picture} = this.state
+        const {show} = this.props
+        const {onClose} = this.props
+        const {errors, isLoading, invalid, first_name, last_name, birthday, email, username,} = this.state
         if (show) {
             return (
                 <Modal isOpen={show} toggle={onClose} size="lg">
@@ -147,9 +163,9 @@ class EditProfileModal extends React.Component {
 EditProfileModal.propTypes = {
     onClose: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
-    editProfile: PropTypes.func.isRequired
+    // editProfile: PropTypes.func.isRequired
 }
 EditProfileModal.contextTypes = {
     router: PropTypes.object.isRequired
 }
-export default connect(null, {editProfile})(EditProfileModal)
+export default EditProfileModal
