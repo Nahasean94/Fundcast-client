@@ -1,7 +1,7 @@
 import React from 'react'
 import Comments from '../comments/Comments'
 import PropTypes from 'prop-types'
-import {likePost, unlikePost, deletePost, addComment, } from '../../shared/queries'
+import {addComment, deletePost, likePost, unlikePost,} from '../../shared/queries'
 import jwt from "jsonwebtoken"
 import {timeSince} from "../../shared/TimeSince"
 import ProfilePictureModal from "../../modals/ProfilePictureModal"
@@ -10,8 +10,8 @@ import EditPostModal from "../../modals/EditPostModal"
 import DeletePostModal from "../../modals/DeletePostModal"
 import {Consumer} from 'graphql-react'
 import {connect} from 'react-redux'
-import {deletePost as removePost, updatePost} from '../../actions/postsActions'
 import {twinpalFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
+import {deletePost as removePost, updatePost} from "../../actions/postsActions"
 
 const commentForm = (onChange, onComment) => {
     return (
@@ -76,11 +76,16 @@ class PostView extends React.Component {
     }
 
     async componentWillMount() {
-        const token = jwt.decode(localStorage.getItem("Twinpal"))
+        const token = jwt.decode(localStorage.getItem("Twinpal")) ? jwt.decode(localStorage.getItem("Twinpal")) : ''
+
         let liked = false
         await this.props.post.likes.map(liker => {
-            if (liker.person.id === token.id) {
-                liked = true
+            if (token) {
+                if (liker.person.id === token.id) {
+                    liked = true
+                }
+            } else {
+                liked = false
             }
         })
         if (liked) {
@@ -90,53 +95,60 @@ class PostView extends React.Component {
 
     onLike(e) {
         e.preventDefault()
-        const token = jwt.decode(localStorage.getItem("Twinpal"))
-        if (this.state.author !== token.id) {
-            if (this.state.liked) {
-                this.props.graphql
-                    .query({
-                        fetchOptionsOverride: twinpalFetchOptionsOverride,
-                        resetOnLoad: true,
-                        operation: {
-                            variables: {id: this.state.id},
-                            query: unlikePost
-                        }
-                    })
-                    .request.then(({data}) => {
-                        if (data) {
-                            this.props.updatePost(data.unlikePost)
-                        }
+        const token = jwt.decode(localStorage.getItem("Twinpal")) ? jwt.decode(localStorage.getItem("Twinpal")) : ''
+        if (token) {
 
-                    }
-                )
-            }
-            else {
-                this.props.graphql
-                    .query({
-                        fetchOptionsOverride: twinpalFetchOptionsOverride,
-                        resetOnLoad: true,
-                        operation: {
-                            variables: {id: this.state.id},
-                            query: likePost
-                        }
-                    })
-                    .request.then(({data}) => {
-                        if (data) {
-                            this.props.updatePost(data.likePost)
-                        }
+            if (this.state.author !== token.id) {
+                if (this.state.liked) {
+                    this.props.graphql
+                        .query({
+                            fetchOptionsOverride: twinpalFetchOptionsOverride,
+                            resetOnLoad: true,
+                            operation: {
+                                variables: {id: this.state.id},
+                                query: unlikePost
+                            }
+                        })
+                        .request.then(({data}) => {
+                            if (data) {
+                                this.props.updatePost(data.unlikePost)
+                            }
 
-                    }
-                )
+                        }
+                    )
+                }
+                else {
+                    this.props.graphql
+                        .query({
+                            fetchOptionsOverride: twinpalFetchOptionsOverride,
+                            resetOnLoad: true,
+                            operation: {
+                                variables: {id: this.state.id},
+                                query: likePost
+                            }
+                        })
+                        .request.then(({data}) => {
+                            if (data) {
+                                this.props.updatePost(data.likePost)
+                            }
+
+                        }
+                    )
+                }
+            } else {
+                //TODO add a flash message to tell user they cannot like their own post
             }
-        } else {
-            //TODO add a flash message to tell user they cannot like their own post
+
         }
 
     }
 
     onCommenting(e) {
         e.preventDefault()
-        this.setState({commenting: true})
+        const token = jwt.decode(localStorage.getItem("Twinpal")) ? jwt.decode(localStorage.getItem("Twinpal")) : ''
+        if (token) {
+            this.setState({commenting: true})
+        }
     }
 
     onComment(e) {
@@ -167,34 +179,38 @@ class PostView extends React.Component {
         e.preventDefault()
         const {author, profile} = this.props.post
 // this.props.clearPosts()
-        const token = jwt.decode(localStorage.getItem('Twinpal'))
-        if (token.id !== author.id && token.id !== profile.id) {
-            this.context.router.history.push(`/twinpal/${ e.target.id}`)
-        }
-        else if (token.id === author.id && token.id === profile.id) {
-            if (window.location.pathname !== '/profile') {
-                this.context.router.history.push('/profile')
+        const token = jwt.decode(localStorage.getItem("Twinpal")) ? jwt.decode(localStorage.getItem("Twinpal")) : ''
+        if (token) {
+            if (token.id !== author.id && token.id !== profile.id) {
+                this.context.router.history.push(`/twinpal/${ e.target.id}`)
             }
-        }
-        else if (token.id === author.id && token.id !== profile.id) {
-            if (window.location.pathname !== '/profile' && token.id === e.target.id) {
-
-                this.context.router.history.push('/profile')
-            } else {
-                if (token.id !== e.target.id) {
-                    this.context.router.history.push(`/twinpal/${profile.id}`)
+            else if (token.id === author.id && token.id === profile.id) {
+                if (window.location.pathname !== '/profile') {
+                    this.context.router.history.push('/profile')
                 }
             }
-        }
-        else if (token.id !== author.id && token.id === profile.id) {
-            if (window.location.pathname === '/profile' && token.id !== e.target.id) {
+            else if (token.id === author.id && token.id !== profile.id) {
+                if (window.location.pathname !== '/profile' && token.id === e.target.id) {
 
-                this.context.router.history.push(`/twinpal/${author.id}`)
+                    this.context.router.history.push('/profile')
+                } else {
+                    if (token.id !== e.target.id) {
+                        this.context.router.history.push(`/twinpal/${profile.id}`)
+                    }
+                }
             }
-            else if (window.location.pathname !== '/profile' && token.id === e.target.id) {
+            else if (token.id !== author.id && token.id === profile.id) {
+                if (window.location.pathname === '/profile' && token.id !== e.target.id) {
 
-                this.context.router.history.push('/profile')
+                    this.context.router.history.push(`/twinpal/${author.id}`)
+                }
+                else if (window.location.pathname !== '/profile' && token.id === e.target.id) {
+
+                    this.context.router.history.push('/profile')
+                }
             }
+        } else {
+            this.context.router.history.push(`/twinpal/${ e.target.id}`)
         }
 
     }
@@ -224,8 +240,11 @@ class PostView extends React.Component {
     }
 
     isAuthor() {
-        const token = jwt.decode(localStorage.getItem("Twinpal"))
+        const token = jwt.decode(localStorage.getItem("Twinpal")) ? jwt.decode(localStorage.getItem("Twinpal")) : ''
         const {author} = this.state
+        if (!token) {
+            return false
+        }
         return token.id === author.id
     }
 
@@ -269,19 +288,19 @@ class PostView extends React.Component {
         const {showPostModal, show, liked, commenting, viewAll, showEditPostModal, showDeletePostModal} = this.state
         const {id, body, timestamp, scope, uploads, author, profile, likes} = this.props.post
         let {comments} = this.props.post
-        const authorUsername=jwt.decode(localStorage.getItem('Twinpal')).username
-
+        const authorUsername = jwt.decode(localStorage.getItem('Twinpal')) ? jwt.decode(localStorage.getItem('Twinpal')).username : ""
         const targetProfile = <span>
              <li className="list-inline-item"><i className="fa fa-angle-double-right" aria-hidden="true"></i></li> <li
-            className="list-inline-item author"><a href="" onClick={this.onProfileLink}
-                                                   id={profile.id}>{author.username===authorUsername?'public':profile.username}</a> &nbsp;</li>
+            className="list-inline-item author">{authorUsername && profile.username === authorUsername ? '' :<a href="" onClick={this.onProfileLink}
+                                                                                                                      id={profile.id}>{ profile.username}</a>} &nbsp;</li>
         </span>
         const more = <p>
             {body !== undefined &&
             body.substr(0, 599)}... <a href="">more</a></p>
         // const upload = uploads > 0 ?
         const upload = uploads.length > 0 ?
-            <img src={`http://localhost:8080/uploads/${uploads[0].path}`} width="600" height="400" alt="Uploads"/> : ''
+            <img src={`http://localhost:8080/uploads/${uploads[0].path}`} width="600" height="400"
+                 alt="Uploads"/> : ''
         const postActions = <div className="btn-group">
             <strong className="dropdown-toggle dropdown-toggle-split more-options" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
@@ -347,7 +366,8 @@ class PostView extends React.Component {
                                                  username={author.username}/>
                             <PostModal show={showPostModal} onClose={this.onClosePostModal} post={body}
                                        uploads={uploads} username={author.username}/>
-                            <Consumer>{graphql => <EditPostModal graphql={graphql} show={showEditPostModal} post={body}
+                            <Consumer>{graphql => <EditPostModal graphql={graphql} show={showEditPostModal}
+                                                                 post={body}
                                                                  onClose={this.onCloseEditPostModal}
                                                                  postId={id}/>}</Consumer>
                             <DeletePostModal show={showDeletePostModal} onClose={this.onCloseDeletePostModal}

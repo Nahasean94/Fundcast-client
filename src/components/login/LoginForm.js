@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import validator from '../../../node_modules/validator/index.js'
 import {isEmpty} from 'lodash'
 import TextFieldGroup from './../../shared/TextFieldsGroup'
-import {login as setLoginToken} from "../../actions/loginActions"
-
+import  {setLoginToken} from "../../actions/loginActions"
+import {connect} from 'react-redux'
 import {twinpalFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {login} from '../../shared/queries'
 
@@ -68,11 +68,12 @@ class LoginForm extends React.Component {
                     }
                 })
                 .request.then(({data}) => {
-                    if (data.login.token === null && !data.login.ok) {
+
+                    if (data.login.token === null || !data.login.ok) {
                         this.setState({errors: {form: data.login.error}, isLoading: false})
                     }
                     else {
-                        setLoginToken(data.login.token)
+                        this.props.setLoginToken(data.login.token)
                         this.context.router.history.push('/')
                         this.setState({
                             loading: false,
@@ -130,9 +131,11 @@ class LoginForm extends React.Component {
     }
 }
 
-
+LoginForm.propTypes = {
+    setLoginToken: PropTypes.func.isRequired,
+}
 LoginForm.contextTypes = {
     router: PropTypes.object.isRequired
 }
 
-export default LoginForm
+export default connect(null, {setLoginToken})(LoginForm)

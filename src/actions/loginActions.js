@@ -1,9 +1,10 @@
 import {SET_CURRENT_USER} from "./types"
 import jwt from 'jsonwebtoken'
-export function login(userData) {
+export function setLoginToken(userData) {
     return dispatch=>{
             const token=userData
-            localStorage.setItem('jwtToken',token)
+        console.log(token)
+            localStorage.setItem('Twinpal',token)
             dispatch(setCurrentUser(jwt.decode(token)))
     }
 }
@@ -16,7 +17,7 @@ export function setCurrentUser(user) {
 
 export function logout() {
     return dispatch=>{
-        localStorage.removeItem('jwtToken')
+        localStorage.removeItem('Twinpal')
         dispatch(setCurrentUser({}))
     }
 }
