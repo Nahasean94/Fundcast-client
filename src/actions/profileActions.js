@@ -21,14 +21,14 @@
 //     return axios.get(`/posts/${user}`)
 //     }
 // }
-// export  function getTwinpals() {
+// export  function getPodcasters() {
 //     return dispatch=>{
-//     return axios.get('/twinpals')
+//     return axios.get('/podcasters')
 //     }
 // }
-// export  function getTwinpalProfile(id) {
+// export  function getPodcasterProfile(id) {
 //     return dispatch=>{
-//     return axios.get(`/twinpals/${id}`)
+//     return axios.get(`/podcasters/${id}`)
 //     }
 // }
 // export function editProfile(info) {

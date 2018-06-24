@@ -1,6 +1,6 @@
 import React from 'react'
-import PostsColumn from "./posts/PostsColumn"
-import NewPostForm from "./posts/NewPostForm"
+import PostsColumn from "./podcasts/PodcastsColumn"
+import NewPodcastForm from "./podcasts/NewPodcastForm"
 import {fetchPalProfile} from "../shared/queries"
 import {twinpalFetchOptionsOverride} from "../shared/fetchOverrideOptions"
 import {Query, Consumer} from 'graphql-react'
@@ -34,7 +34,7 @@ const TwinpalProfile = () => {
                         <div className="col-sm-6">
 
                             <div className="content-feed">
-                                <Consumer>{graphql => <NewPostForm graphql={graphql}/>}</Consumer>
+                                <Consumer>{graphql => <NewPodcastForm graphql={graphql}/>}</Consumer>
 
                             </div>
                             <PostsColumn/>

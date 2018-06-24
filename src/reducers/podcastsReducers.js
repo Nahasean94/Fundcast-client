@@ -1,20 +1,20 @@
-import {ADD_POST,UPDATE_POST,CLEAR_POSTS,DELETE_POST} from "../actions/types"
+import {ADD_PODCAST,UPDATE_PODCAST,CLEAR_PODCASTS,DELETE_PODCAST} from "../actions/types"
 import findIndex from "lodash/findIndex"
 
 export default (state=[],action)=>{
 switch (action.type){
-    case ADD_POST:
+    case ADD_PODCAST:
         return [action.payload,...state]
-    case UPDATE_POST:
-         return state.map(post=>{
-             if(post._id===action.payload._id){
+    case UPDATE_PODCAST:
+         return state.map(podcast=>{
+             if(podcast._id===action.payload._id){
                  return action.payload
              }
-             return post
+             return podcast
          })
-    case CLEAR_POSTS:
+    case CLEAR_PODCASTS:
         return []
-    case DELETE_POST:
+    case DELETE_PODCAST:
         const index = findIndex(state, {_id: action.payload._id})
         if (index => 0) {
             return [...state.slice(0, index), ...state.slice(index + 1)]

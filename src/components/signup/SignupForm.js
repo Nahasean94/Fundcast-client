@@ -4,24 +4,24 @@ import validator from 'validator'
 import {isEmpty} from 'lodash'
 import TextFieldGroup from './../../shared/TextFieldsGroup'
 import {twinpalFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
-import {signup,isUserExists} from "../../shared/queries"
+import {isUserExists, signup} from "../../shared/queries"
+import classnames from 'classnames'
 
 
 class SignupForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            first_name: '',
-            last_name: '',
+            username: '',
             email: '',
             password: '',
             passwordConfirmation: '',
-            birthday: '',
+            role: '',
             errors: {},
             isLoading: false,
             invalid: false,
-            loading:false,
-            message:''
+            loading: false,
+            message: ''
         }
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
@@ -38,7 +38,7 @@ class SignupForm extends React.Component {
                     resetOnLoad: true,
                     operation: {
                         variables: {email: val},
-                        query:isUserExists
+                        query: isUserExists
                     }
                 })
                 .request.then(({data}) => {
@@ -61,17 +61,18 @@ class SignupForm extends React.Component {
 
     validateInput(data) {
         let errors = {}
-        if (validator.isEmpty(data.first_name)) {
-            errors.first_name = 'This field is required'
-        }
-        if (validator.isEmpty(data.last_name)) {
-            errors.last_name = 'This field is required'
+
+        if (validator.isEmpty(data.username)) {
+            errors.username = 'This field is required'
         }
         if (validator.isEmpty(data.email)) {
             errors.email = 'This field is required'
         }
         if (!validator.isEmail(data.email)) {
             errors.email = 'This field must be an email'
+        }
+        if (validator.isEmpty(data.role)) {
+            errors.role = 'This field is required'
         }
         if (validator.isEmpty(data.password)) {
             errors.password = 'This field is required'
@@ -107,11 +108,10 @@ class SignupForm extends React.Component {
                     resetOnLoad: true,
                     operation: {
                         variables: {
-                            first_name: this.state.first_name,
-                            last_name: this.state.last_name,
+                            username: this.state.username,
                             email: this.state.email,
                             password: this.state.password,
-                            birthday: this.state.birthday
+                            role: this.state.role
                         },
                         query: signup
                     }
@@ -119,12 +119,11 @@ class SignupForm extends React.Component {
                 .request.then(({data}) => {
                     if (data) {
                         this.setState({
-                            first_name: '',
-                            last_name: '',
+                            username: '',
                             email: '',
                             password: '',
                             passwordConfirmation: '',
-                            birthday: '',
+                            role: '',
                             errors: {},
                             isLoading: false,
                             invalid: false,
@@ -145,7 +144,7 @@ class SignupForm extends React.Component {
     }
 
     render() {
-        const {errors,loading,message} = this.state
+        const {errors, loading, message} = this.state
         if (loading) {
             return <p>Creating account…</p>
         }
@@ -155,21 +154,14 @@ class SignupForm extends React.Component {
         return (
             <form onSubmit={this.onSubmit}>
                 <h3>Create a free account</h3>
+
                 <TextFieldGroup
-                    label="First name"
-                    type="first_name"
-                    name="first_name"
-                    value={this.state.first_name} autoFocus={true}
+                    label="Username"
+                    type="username"
+                    name="username"
+                    value={this.state.username} autoFocus={true}
                     onChange={this.onChange}
-                    error={errors.first_name}
-                />
-                <TextFieldGroup
-                    label="Last name"
-                    type="last_name"
-                    name="last_name"
-                    value={this.state.last_name} autoFocus={true}
-                    onChange={this.onChange}
-                    error={errors.last_name}
+                    error={errors.username}
                 />
                 <TextFieldGroup
                     label="Email"
@@ -196,14 +188,20 @@ class SignupForm extends React.Component {
                     onChange={this.onChange}
                     error={errors.passwordConfirmation}
                 />
-                <TextFieldGroup
-                    label="Date of birth"
-                    type="date"
-                    name="birthday"
-                    value={this.state.birthday}
-                    onChange={this.onChange}
-                    error={errors.birthday}
-                />
+                <div className="form-group">
+                    <label className="col-form-label" htmlFor="role">Account type</label>
+
+                    <select className={classnames("form-control form-control-sm", {"is-invalid": errors.role})}
+                            name="role"
+                            required="true" onChange={this.onChange}>
+                        <option>Select</option>
+                        <option value="listener">Listener</option>
+                        <option value="podcaster">Podcaster</option>
+
+                    </select>
+                    {errors.role && <div className="invalid-feedback">{errors.role}</div>}
+                </div>
+
                 <div className="form-group">
                     <button disabled={this.state.isLoading || this.state.invalid} className="btn btn-primary btn-sm"
                             type="submit">Sign up

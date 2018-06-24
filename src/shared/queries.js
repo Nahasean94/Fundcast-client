@@ -1,6 +1,6 @@
-const fetchNewsFeed =`
+const fetchPodcastsFeed =`
     {
-  fetchNewsFeed {
+  fetchPodcastsFeed {
   id
         timestamp
         scope
@@ -38,9 +38,9 @@ const fetchNewsFeed =`
     }
 `
 
-const fetchProfilePosts =`
+const fetchProfilePodcasts =`
     {
-  fetchProfilePosts {
+  fetchProfilePodcasts {
   id
      timestamp
         scope
@@ -81,10 +81,10 @@ const getProfileInfo =`
     {
   getProfileInfo {
    username
-   birthday
+   role
    email
    first_name
-   last_name
+   username
    profile_picture
    twinpals {
    profile_picture
@@ -94,9 +94,9 @@ const getProfileInfo =`
   }
 }
 `
-const fetchPalPosts =`
-   query fetchPalPosts($id:ID!){
-  fetchPalPosts(id:$id) {
+const fetchPalPodcasts =`
+   query fetchPalPodcasts($id:ID!){
+  fetchPalPodcasts(id:$id) {
   id
     timestamp
         scope
@@ -138,7 +138,7 @@ const fetchPalProfile =`
   fetchPalProfile(id:$id) {
             id
             username
-            birthday
+            role
             profile_picture
   }
 }
@@ -153,8 +153,8 @@ const login =`
 }
 `
 const signup =`
-   mutation($first_name:String!,$last_name:String!,$email:String!,$password:String!,$birthday:String!) {
-  signup(first_name:$first_name,last_name:$last_name,email:$email,password:$password,birthday:$birthday) {
+   mutation($username:String!,$email:String!,$password:String!,$role:String!) {
+  signup(username:$username,email:$email,password:$password,role:$role) {
    id
   }
 }
@@ -173,9 +173,9 @@ const uploadProfilePicture =`
   }
 }
 `
-const likePost =`
+const likePodcast =`
    mutation($id:ID!) {
-  likePost(id:$id) {
+  likePodcast(id:$id) {
     id
     timestamp
         scope
@@ -212,9 +212,9 @@ const likePost =`
   }
 }
 `
-const unlikePost =`
+const unlikePodcast =`
    mutation($id:ID!) {
-  unlikePost(id:$id) {
+  unlikePodcast(id:$id) {
    id
     timestamp
         scope
@@ -251,9 +251,9 @@ const unlikePost =`
   }
 }
 `
-const updatePost =`
+const updatePodcast =`
    mutation($id:ID!,$body:String!) {
-  updatePost(id:$id,body:$body) {
+  updatePodcast(id:$id,body:$body) {
   id
     timestamp
         scope
@@ -290,9 +290,9 @@ const updatePost =`
   }
 }
 `
-const deletePost =`
+const deletePodcast =`
    mutation($id:ID!) {
-  deletePost(id:$id) {
+  deletePodcast(id:$id) {
    id
   }
 }
@@ -337,8 +337,8 @@ const addComment =`
 }
 `
 const updateProfile =`
-   mutation($first_name:String!,$last_name:String!,$username:String,$email:String!,$birthday:String!) {
-  updateProfile(first_name:$first_name,last_name:$last_name,username:$username,email:$email,birthday:$birthday) {
+   mutation($first_name:String!,$username:String!,$username:String,$email:String!,$role:String!) {
+  updateProfile(first_name:$first_name,username:$username,username:$username,email:$email,role:$role) {
    id
   }
 }
@@ -382,63 +382,38 @@ const uploadFile =`
   }
 }
 `
-const createNewPost =`
-   mutation($body:String!,$profile:ID!) {
-  newPost(body:$body,profile:$profile) {
- id
-    timestamp
-        scope
-        uploads {
-          id
-          path
-          }
-        likes {
-        person{
-        id
-        }
-          id
-          }
-        body
-        author {
-            username
-            id
-            profile_picture
-        }
-        profile {
-        username
-        id
-        }
-        comments{
-        id
-        body
-        author{
-        id
-        profile_picture
-        username
-        }
-        timestamp
-        }
+const createNewPodcast =`
+   mutation($title:String!,$description:String!,$hosts:String!,$paid:Boolean!,$genre:String!,$podcast:Upload!,$coverImage:Upload!) {
+  newPodcast(title:$title!,description:$description,hosts:$hosts,paid:$paid,genre:$genre,podcast:$podcast,coverImage:$coverImage) {
+ title
+ description
+ hosts
+ paid
+ genre
+ podcast
+ coverImage
+ timestamp
   }
 }
 `
 
 
 export {
-    fetchNewsFeed,
-    fetchProfilePosts,
-    fetchPalPosts,
+    fetchPodcastsFeed,
+    fetchProfilePodcasts,
+    fetchPalPodcasts,
     fetchPalProfile,
     getProfileInfo,
     signup,
     isUserExists,
     login,
-    likePost,
-    unlikePost,
-    updatePost,
-    deletePost,
+    likePodcast,
+    unlikePodcast,
+    updatePodcast,
+    deletePodcast,
     addComment,
     updateProfile,
-    createNewPost,
+    createNewPodcast,
     uploadFile,
     uploadProfilePicture
 }

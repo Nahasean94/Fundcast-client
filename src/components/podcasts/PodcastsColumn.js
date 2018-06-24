@@ -1,17 +1,15 @@
 import React from 'react'
-import PostView from './PostView'
+import PodcastView from './PodcastView'
 import PropTypes from 'prop-types'
-// import {getPosts, getUserPosts, getNewsFeed} from "../../actions/profileActions"
-// import {addPost, clearPosts} from '../../actions/postsActions'
+
 import {connect} from 'react-redux'
 import shortid from 'shortid'
-// import Loader from 'react-loader-spinner'
-import {fetchNewsFeed, fetchPalPosts, fetchProfilePosts} from "../../shared/queries"
+import {fetchPodcastsFeed, fetchPalPodcasts, fetchProfilePodcasts} from "../../shared/queries"
 import {twinpalFetchOptionsOverride} from '../../shared/fetchOverrideOptions'
 import {Query,Consumer} from 'graphql-react'
 
 
-class PostsColumn extends React.Component {
+class PodcastsColumn extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -25,15 +23,15 @@ class PostsColumn extends React.Component {
                 loadOnMount
                 loadOnReset
                 fetchOptionsOverride={twinpalFetchOptionsOverride}
-                query={fetchNewsFeed}
+                query={fetchPodcastsFeed}
             >
                 {({loading, data}) => {
                     if (data) {
-                        if (data.fetchNewsFeed) {
-                            return data.fetchNewsFeed.map(post =>
+                        if (data.fetchPodcastsFeed) {
+                            return data.fetchPodcastsFeed.map(post =>
                                 (
                                     <div key={shortid.generate()}>
-                                        <Consumer>{graphql => <PostView post={post} graphql={graphql}/>}</Consumer>
+                                        <Consumer>{graphql => <PodcastView post={post} graphql={graphql}/>}</Consumer>
                                     </div>
                                 )
                             )
@@ -53,15 +51,15 @@ class PostsColumn extends React.Component {
                 loadOnMount
                 loadOnReset
                 fetchOptionsOverride={twinpalFetchOptionsOverride}
-                query={fetchProfilePosts}
+                query={fetchProfilePodcasts}
             >
                 {({loading, data}) => {
                     if (data) {
-                        if (data.fetchProfilePosts) {
-                            return data.fetchProfilePosts.map(post =>
+                        if (data.fetchProfilePodcasts) {
+                            return data.fetchProfilePodcasts.map(post =>
                                 (
                                     <div key={shortid.generate()}>
-                                        <Consumer>{graphql => <PostView post={post} graphql={graphql}/>}</Consumer>
+                                        <Consumer>{graphql => <PodcastView post={post} graphql={graphql}/>}</Consumer>
                                     </div>
                                 )
                             )
@@ -83,15 +81,15 @@ class PostsColumn extends React.Component {
                 loadOnReset
                 fetchOptionsOverride={twinpalFetchOptionsOverride}
                 variables={{id: window.location.pathname.split('/')[2]}}
-                query={fetchPalPosts}
+                query={fetchPalPodcasts}
             >
                 {({loading, data}) => {
                     if (data) {
-                        if (data.fetchPalPosts) {
-                            return data.fetchPalPosts.map(post =>
+                        if (data.fetchPalPodcasts) {
+                            return data.fetchPalPodcasts.map(post =>
                                 (
                                     <div key={shortid.generate()}>
-                                        <Consumer>{graphql => <PostView post={post} graphql={graphql}/>}</Consumer>
+                                        <Consumer>{graphql => <PodcastView post={post} graphql={graphql}/>}</Consumer>
                                     </div>
                                 )
                             )
@@ -109,56 +107,5 @@ class PostsColumn extends React.Component {
         }
     }
 
-    // if (this.state.isLoading) {
-    //     const style = {
-    //         'border': '16px solid #f3f3f3',
-    //         'border-radius': '50%',
-    //         'border-top': '16px solid #3498db',
-    //         'width': '120px',
-    //         'height': '120px',
-    //         'animation': 'spin 2s linear infinite',
-    //
-    //     }
-    //     const style2 = {
-    //         '@keyframes spin': {
-    //             '0%': {
-    //                 'transform': 'rotate(0deg)'
-    //             },
-    //             '100%': {
-    //                 'transform': 'rotate(360deg)'
-    //             }
-    //         }
-    //     }
-
-    //     return (
-    //         <div style={{style, style2}}/>
-    //     )
-    // }
-    // return this.props.posts.map(post => {
-    // console.log(post)
-    // return (
-    //     {/*<div key={shortid.generate()}>*/}
-    //         {/*<PostView post={post}graphql={graphql}/>}</Consumer>*/}
-    //
-    // {/*</div>*/}
-    // )
-    // })
-    // }
 }
-
-
-// PostsColumn.propTypes = {
-//     getPosts: PropTypes.func.isRequired,
-//     getUserPosts: PropTypes.func.isRequired,
-//     addPost: PropTypes.func.isRequired,
-//     getNewsFeed: PropTypes.func.isRequired,
-//     clearPosts: PropTypes.func.isRequired,
-//     posts: PropTypes.array.isRequired
-// }
-//
-// function mapStateToProps(state) {
-//     return {posts: state.postsReducers}
-// }
-
-export default PostsColumn
-// export default connect(mapStateToProps, {getPosts, addPost, getUserPosts, getNewsFeed, clearPosts})(PostsColumn)
+export default PodcastsColumn

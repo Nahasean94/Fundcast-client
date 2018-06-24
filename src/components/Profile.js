@@ -1,7 +1,7 @@
 import { getProfileInfo} from '../shared/queries'
 import React from 'react'
-import PostsColumn from '../components/posts/PostsColumn'
-import NewPostForm from '../components/posts/NewPostForm'
+import PostsColumn from './podcasts/PodcastsColumn'
+import NewPodcastForm from './podcasts/NewPodcastForm'
 import EditProfileModal from "../modals/EditProfileModal"
 import UploadProfilePictureModal from "../modals/UploadProfilePictureModal"
 import {twinpalFetchOptionsOverride} from "../shared/fetchOverrideOptions"
@@ -99,7 +99,7 @@ class Profile extends React.Component {
                             <div className="col-sm-6">
 
                                 <div className="content-feed">
-                                    <Consumer>{graphql => <NewPostForm graphql={graphql}/>}</Consumer>
+                                    <Consumer>{graphql => <NewPodcastForm graphql={graphql}/>}</Consumer>
                                 </div>
                                 <PostsColumn/>
                             </div>

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
-class DeletePostModal extends React.Component {
+class DeletePodcastModal extends React.Component {
     render() {
         const {show, onClose,onDeletePost} = this.props
         if (show) {
@@ -23,9 +23,9 @@ class DeletePostModal extends React.Component {
     }
 }
 
-DeletePostModal.propTypes = {
+DeletePodcastModal.propTypes = {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onDeletePost:PropTypes.func.isRequired,
 }
-export default DeletePostModal
+export default DeletePodcastModal
