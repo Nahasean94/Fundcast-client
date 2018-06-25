@@ -1,39 +1,29 @@
-const fetchPodcastsFeed =`
+const podcasts =`
     {
-  fetchPodcastsFeed {
-  id
-        timestamp
-        scope
-        uploads {
-          id
-          path
-          }
-        likes {
-        person{
+  podcasts {
         id
-        }
-          id
-          }
-        body
-        author {
-            username
-            id
-            profile_picture
-        }
-        profile {
-        username
-        id
-        }
-        comments{
-        id
-        body
-        author{
-        id
-        profile_picture
-        username
-        }
-        timestamp
-        }
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
+}
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+payment{
+paid
+}
     }
     }
 `
@@ -402,7 +392,7 @@ const createNewPodcast =`
 
 
 export {
-    fetchPodcastsFeed,
+    podcasts,
     fetchProfilePodcasts,
     fetchPalPodcasts,
     fetchPalProfile,
