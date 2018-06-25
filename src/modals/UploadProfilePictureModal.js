@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
-import {twinpalFetchOptionsOverride} from "../shared/fetchOverrideOptions"
+import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
 import {uploadProfilePicture} from "../shared/queries"
 
 let upload
@@ -37,7 +37,7 @@ class UploadProfilePictureModal extends React.Component {
         if (selectedFile !== '') {
             this.props.graphql
                 .query({
-                    fetchOptionsOverride: twinpalFetchOptionsOverride,
+                    fetchOptionsOverride: fundcastFetchOptionsOverride,
                     resetOnLoad: true,
                     operation: {
                         variables: {file: selectedFile},

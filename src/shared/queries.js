@@ -383,15 +383,18 @@ const uploadFile =`
 }
 `
 const createNewPodcast =`
-   mutation($title:String!,$description:String!,$hosts:String!,$paid:Boolean!,$genre:String!,$podcast:Upload!,$coverImage:Upload!) {
-  newPodcast(title:$title!,description:$description,hosts:$hosts,paid:$paid,genre:$genre,podcast:$podcast,coverImage:$coverImage) {
+   mutation($title:String!,$description:String!,$hosts:[String!],$paid:Int!,$tags:String!,$coverImage:Upload!,$podcast:Upload!) {
+  newPodcast(title:$title,description:$description,hosts:$hosts,paid:$paid,tags:$tags,coverImage:$coverImage,podcast:$podcast) {
  title
  description
- hosts
- paid
- genre
- podcast
- coverImage
+ hosts{
+ id
+ }
+ payment{
+ id
+ }
+ tags
+
  timestamp
   }
 }

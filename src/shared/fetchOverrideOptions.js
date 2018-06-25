@@ -1,5 +1,5 @@
-export function twinpalFetchOptionsOverride(options) {
+export function fundcastFetchOptionsOverride(options) {
     options.url = 'http://localhost:8080/graphql'
-    const token = localStorage.getItem('Twinpal')
+    const token = localStorage.getItem('Fundcast')
     if (token) options.headers.Authorization = `Bearer ${token}`
 }

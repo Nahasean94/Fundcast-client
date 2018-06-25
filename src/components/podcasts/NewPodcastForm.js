@@ -1,16 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import validator from 'validator'
-import {isEmpty, isDate} from 'lodash'
+import {isDate, isEmpty} from 'lodash'
 import TextFieldGroup from '../../shared/TextFieldsGroup'
-import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
-
-import {connect} from 'react-redux'
-
-import jwt from "jsonwebtoken"
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
+import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
+import {createNewPodcast} from "../../shared/queries"
 
 
-class NewStudentForm extends React.Component {
+class NewPodCastForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -20,14 +18,15 @@ class NewStudentForm extends React.Component {
             coverImage: '',
             hosts: [],
             paid: false,
-            genre: '',
+            tags: '',
             errors: {},
             isLoading: false,
             invalid: false
         }
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
-        // this.checkStudentExists = this.checkStudentExists.bind(this)
+        this.handlePodcastChange = this.handlePodcastChange.bind(this)
+        this.handleCoverImageChange = this.handleCoverImageChange.bind(this)
     }
 
     validateInput(data) {
@@ -36,8 +35,8 @@ class NewStudentForm extends React.Component {
         if (validator.isEmpty(data.title)) {
             errors.title = 'This field is required'
         }
-        if (data.title.length<3||data.title.length>15) {
-            errors.title = 'Description must be between 3 and 15 characters'
+        if (data.title.length < 3 || data.title.length > 35) {
+            errors.title = 'Description must be between 3 and 35 characters'
         }
         if (validator.isEmpty(data.description)) {
             errors.description = 'This field is required'
@@ -46,8 +45,8 @@ class NewStudentForm extends React.Component {
         if (validator.isEmpty(data.paid)) {
             errors.paid = 'This field is required'
         }
-        if (validator.isEmpty(data.genre)) {
-            errors.genre = 'This field is required'
+        if (validator.isEmpty(data.tags)) {
+            errors.tags = 'This field is required'
         }
 
         return {
@@ -64,50 +63,74 @@ class NewStudentForm extends React.Component {
         return isValid
     }
 
+    handlePodcastChange({
+                     target: {
+                         validity,
+                         files: [file]
+                     }
+                 }) {
+        if (validity.valid) {
+            this.setState({podcast:file})
+        }
+    }
+    handleCoverImageChange({
+                     target: {
+                         validity,
+                         files: [file]
+                     }
+                 }) {
+        if (validity.valid) {
+            this.setState({coverImage:file})
+        }
+    }
+
     onSubmit(e) {
         e.preventDefault()
         if (this.isValid()) {
-            this.setState({errors: {}, isLoading: true})
-            this.props.registerStudent(this.state).then(
-                (student) => {
-                    // this.props.addFlashMessage({
-                    //     type: 'success',
-                    //     text: 'You have signed up successfully. Please use the login in form below to access your account'
-                    // })
-                    this.props.onClose()
-                    this.props.addStudent(student.data)
-                    this.setState({
-                        title: '',
-                        description: '',
-                        podcast: '',
-                        coverImage: '',
-                        hosts: [],
-                        paid: false,
-                        genre: '',
-                        errors: {},
-                        isLoading: false,
-                        invalid: false
-                    })
-                },
-                err => this.setState({errors: err.response.data, isLoading: false})
+
+            this.setState({errors: {}, isLoading: false})
+            this.props.graphql
+                .query({
+                    fetchOptionsOverride: fundcastFetchOptionsOverride,
+                    resetOnLoad: true,
+                    operation: {
+                        variables: {
+                            title: this.state.title,
+                            description: this.state.description,
+                            hosts: this.state.hosts,
+                            paid: this.state.paid,
+                            tags: this.state.tags,
+                            coverImage: this.state.coverImage,
+                            podcast: this.state.podcast,
+                        },
+                        query: createNewPodcast
+                    }
+                })
+                .request.then(({data}) => {
+                    if (data) {
+                        this.setState({
+                            title: '',
+                            description: '',
+                            podcast: '',
+                            coverImage: '',
+                            hosts: [],
+                            paid: false,
+                            tags: '',
+                            errors: {},
+                            isLoading: false,
+                            invalid: false,
+                            message: data
+                                ? `Successfully added a new podcast.`
+                                : `Posting failed failed.`
+                        })
+                        // this.context.router.history.push('/')
+                        this.props.onClose()
+                    }
+                }
             )
         }
     }
 
-    componentDidMount() {
-        if (window.location.pathname === '/school_admin/students') {
-            const token = jwt.decode(localStorage.schoolAdminJwtToken)
-            this.setState({school_upi: token.school_upi})
-            this.props.getSchoolCategory({upi: token.school_upi}).then(category => {
-                if (category) {
-                    this.setState({category: category.data.category})
-                    console.log(category.data.category)
-                }
-            })
-
-
-        }
-    }
 
     onChange(e) {
         this.setState({[e.target.name]: e.target.value})
@@ -116,7 +139,7 @@ class NewStudentForm extends React.Component {
     render() {
         const {show, onClose} = this.props
 
-        const {errors, isLoading, invalid, description, title, last_name, genre, school_upi, category} = this.state
+        const {errors, isLoading, invalid, description, title, tags,} = this.state
 
 
         if (show) {
@@ -135,38 +158,40 @@ class NewStudentForm extends React.Component {
                             />
                             <div className="form-group">
                                 <label className="control-label">Description</label>
-                                <textarea name="description" onChange={this.onChange} className="form-control" rows="3" cols="20"/>
+                                <textarea name="description" onChange={this.onChange} className="form-control" rows="3"
+                                          cols="20"/>
                             </div>
                             <fieldset className="form-group ">
                                 <div className="form-check form-check-inline">
                                     <input className="form-check-input form-check-inline" type="radio"
-                                           value="student" name="searchType" onChange={this.onChange} id="searchStudent" />
-                                    <label className="form-check-label" htmlFor="searchStudent">Free</label>
+                                           value={0} name="paid" onChange={this.onChange}
+                                           id="free"/>
+                                    <label className="form-check-label" htmlFor="free">Free</label>
                                 </div>
                                 <div className="form-check form-check-inline">
                                     <input className="form-check-input form-check-inline" type="radio"
-                                           value="institution" name="searchType" onChange={this.onChange}
-                                           id="searchInstitution"/>
-                                    <label className="form-check-label" htmlFor="searchInstitution">Paid</label>
+                                           value={1} name="paid" onChange={this.onChange}
+                                           id="paid"/>
+                                    <label className="form-check-label" htmlFor="paid">Paid</label>
                                 </div>
 
                             </fieldset>
 
                             <div className="form-group row">
-                                <label className="col-sm-2 col-form-label" htmlFor="paid">Hosts</label>
+                                <label className="col-sm-2 col-form-label" htmlFor="hosts">Hosts</label>
                                 <div className="col-sm-10">
-                                    <select className="form-control form-control-sm" id="paid" name="paid"
+                                    <select className="form-control form-control-sm" id="hosts" name="hosts"
                                             required="true" onChange={this.onChange}>
                                         <option>Select</option>
-                                        <option value="you">You</option>
-                                        <option value="me">Me</option>
+                                        <option value="5b300e54887bd8359421abff">You</option>
+                                        <option value="5b300e7c887bd8359421ac00">Me</option>
                                     </select>
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label className="col-sm-2 col-form-label" htmlFor="paid">Genre</label>
+                                <label className="col-sm-2 col-form-label" htmlFor="tags">Tags</label>
                                 <div className="col-sm-10">
-                                    <select className="form-control form-control-sm" id="paid" name="paid"
+                                    <select className="form-control form-control-sm" id="tags" name="tags"
                                             required="true" onChange={this.onChange}>
                                         <option>Select</option>
                                         <option value="religion">Religion</option>
@@ -178,9 +203,10 @@ class NewStudentForm extends React.Component {
                                 <label className="col-sm-2 col-form-label" htmlFor="paid">Podcast audio file</label>
                                 <div className="col-sm-10">
                                     <div className="custom-file">
-                                        <input type="file" className="custom-file-input form-control-sm" id="customFile" accept="audio/*"/>
-                                            <label className="custom-file-label" htmlFor="customFile">Choose
-                                                audio file</label>
+                                        <input type="file" className="custom-file-input form-control-sm" id="customFile"
+                                               name="podcast" accept="audio/*" onChange={this.handlePodcastChange}/>
+                                        <label className="custom-file-label" htmlFor="customFile">Choose audio
+                                            file</label>
                                     </div>
                                 </div>
                             </div>
@@ -188,19 +214,22 @@ class NewStudentForm extends React.Component {
                                 <label className="col-sm-2 col-form-label" htmlFor="paid">Cover image</label>
                                 <div className="col-sm-10">
                                     <div className="custom-file">
-                                        <input type="file" className="custom-file-input form-control-sm" id="customFile" accept="image/*"/>
-                                            <label className="custom-file-label" htmlFor="customFile">Choose
-                                                cover image for the podcast</label>
+                                        <input type="file" className="custom-file-input form-control-sm" id="customFile"
+                                               name="coverImage" accept="image/*" onChange={this.handleCoverImageChange}/>
+                                        <label className="custom-file-label" htmlFor="customFile">Choose cover image for
+                                            the podcast</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="form-group row">
                                 <label className="col-sm-2 col-form-label" htmlFor="paid"></label>
                                 <div className="col-sm-10">
-                            <div className="form-group">
-                                <button disabled={isLoading || invalid} className="form-control from-control-sm btn btn-primary btn-sm" type="submit">Save
-                                </button>
-                            </div>
+                                    <div className="form-group">
+                                        <button disabled={isLoading || invalid}
+                                                className="form-control from-control-sm btn btn-primary btn-sm"
+                                                type="submit">Save
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -213,18 +242,17 @@ class NewStudentForm extends React.Component {
         }
         else return null
     }
-
 }
 
 
-NewStudentForm.propTypes = {
+NewPodCastForm.propTypes = {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
 }
-NewStudentForm.contextTypes = {
+NewPodCastForm.contextTypes = {
     router: PropTypes.object.isRequired
 }
 
-export default NewStudentForm
-// export default connect(null, {addStudent, registerStudent, addFlashMessage, getSchoolCategory})(NewStudentForm)
+export default NewPodCastForm
+
 

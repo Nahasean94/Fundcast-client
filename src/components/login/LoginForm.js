@@ -5,7 +5,7 @@ import {isEmpty} from 'lodash'
 import TextFieldGroup from './../../shared/TextFieldsGroup'
 import  {setLoginToken} from "../../actions/loginActions"
 import {connect} from 'react-redux'
-import {twinpalFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
+import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {login} from '../../shared/queries'
 
 class LoginForm extends React.Component {
@@ -60,7 +60,7 @@ class LoginForm extends React.Component {
             this.setState({loading: true})
             this.props.graphql
                 .query({
-                    fetchOptionsOverride: twinpalFetchOptionsOverride,
+                    fetchOptionsOverride: fundcastFetchOptionsOverride,
                     resetOnLoad: true,
                     operation: {
                         variables: {email: this.state.email, password: this.state.password},

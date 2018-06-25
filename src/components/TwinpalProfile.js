@@ -2,7 +2,7 @@ import React from 'react'
 import PostsColumn from "./podcasts/PodcastsColumn"
 import NewPodcastForm from "./podcasts/NewPodcastForm"
 import {fetchPalProfile} from "../shared/queries"
-import {twinpalFetchOptionsOverride} from "../shared/fetchOverrideOptions"
+import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
 import {Query, Consumer} from 'graphql-react'
 
 
@@ -13,7 +13,7 @@ const TwinpalProfile = () => {
         <Query
             loadOnMount
             loadOnReset
-            fetchOptionsOverride={twinpalFetchOptionsOverride}
+            fetchOptionsOverride={fundcastFetchOptionsOverride}
             variables={{id: window.location.pathname.split('/')[2]}}
             query={fetchPalProfile}
         >

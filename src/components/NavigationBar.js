@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import NewPodcastForm from './podcasts/NewPodcastForm'
-
+import {Consumer} from "graphql-react"
 import jwt from "jsonwebtoken"
 
 class NavigationBar extends React.Component {
@@ -47,7 +47,7 @@ class NavigationBar extends React.Component {
                 <button className="btn btn-sm btn-default" onClick={this.showNewPodcastModal}>Add podcast</button>
             </div>)
         const userLinks = (<div className="navbar-nav flex-row ml-md-auto">
-            {token && token.role === 'podcaster' && uploadButton}
+            {token && token.role === 'host' && uploadButton}
             <a href="/logout" className="nav-item nav-link" onClick={this.logout}>Logout </a>
             {token && <Link to="/profile" className="nav-item nav-link">{token.username}</Link>}
 
@@ -109,7 +109,7 @@ class NavigationBar extends React.Component {
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                     {isAuthenticated ? userLinks : guestLinks}
                 </div>
-                <NewPodcastForm show={showNewPodcastModal} onClose={this.closeNewPodcastModal}/>
+                <Consumer >{graphql =>   <NewPodcastForm  graphql={graphql} show={showNewPodcastModal} onClose={this.closeNewPodcastModal}/>}</Consumer>
             </nav>
 
 

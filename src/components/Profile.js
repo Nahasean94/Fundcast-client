@@ -4,7 +4,7 @@ import PostsColumn from './podcasts/PodcastsColumn'
 import NewPodcastForm from './podcasts/NewPodcastForm'
 import EditProfileModal from "../modals/EditProfileModal"
 import UploadProfilePictureModal from "../modals/UploadProfilePictureModal"
-import {twinpalFetchOptionsOverride} from "../shared/fetchOverrideOptions"
+import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
 import {Query, Consumer} from 'graphql-react'
 
 
@@ -43,7 +43,7 @@ class Profile extends React.Component {
 
     onTwinpal(e) {
         e.preventDefault()
-        this.props.history.push(`/twinpal/${ e.target.id}`)
+        this.props.history.push(`/fundcast/${ e.target.id}`)
     }
 
 
@@ -53,24 +53,24 @@ class Profile extends React.Component {
         return <Query
             loadOnMount
             loadOnReset
-            fetchOptionsOverride={twinpalFetchOptionsOverride}
+            fetchOptionsOverride={fundcastFetchOptionsOverride}
             query={getProfileInfo}
         >
             {({loading, data}) => {
                 if (data) {
-                    const {username, birthday, email, first_name, last_name, profile_picture, twinpals,} = data.getProfileInfo
-                    const twinpalView = twinpals.map(twinpal => {
+                    const {username, birthday, email, first_name, last_name, profile_picture, fundcasts,} = data.getProfileInfo
+                    const fundcastView = fundcasts.map(fundcast => {
                         return (
-                            <li key={twinpal.id}><img src={`http://localhost:8080/uploads/${twinpal.profile_picture}`}
+                            <li key={fundcast.id}><img src={`http://localhost:8080/uploads/${fundcast.profile_picture}`}
                                                       alt="Profile picture"
                                                       width="40"
                                                       height="40" className="avatar"/>
 
-                                {/*<Link to={`/twinpal/${twinpal.id}`} className="ml1 no-underline black">*/}
+                                {/*<Link to={`/fundcast/${fundcast.id}`} className="ml1 no-underline black">*/}
                                 {/*submit*/}
                                 {/*</Link>*/}
                                 <a href="" onClick={this.onTwinpal}
-                                   id={twinpal.id}>{twinpal.username}</a>
+                                   id={fundcast.id}>{fundcast.username}</a>
                             </li>)
 
                     })
@@ -107,7 +107,7 @@ class Profile extends React.Component {
                                 <br/>
                                 <h4>Twinpals</h4>
                                 <ul className="list-unstyled">
-                                    {twinpals.length > 0 ? twinpalView : 'You have no twinpals'}
+                                    {fundcasts.length > 0 ? fundcastView : 'You have no fundcasts'}
                                 </ul>
                             </div>
                         </div>
@@ -154,7 +154,7 @@ class Profile extends React.Component {
         //                 <br/>
         //                 <h4>Twinpals</h4>
         //                 <ul className="list-unstyled">
-        //                     {twinpals.length > 0 ? twinpalView : 'You have no twinpals'}
+        //                     {fundcasts.length > 0 ? fundcastView : 'You have no fundcasts'}
         //                 </ul>
         //             </div>
         //         </div>

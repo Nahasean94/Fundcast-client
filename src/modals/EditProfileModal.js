@@ -6,7 +6,7 @@ import validator from "validator"
 import {isEmpty} from "lodash"
 import { updateProfile} from "../shared/queries"
 
-import {twinpalFetchOptionsOverride} from "../shared/fetchOverrideOptions"
+import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
 
 
 class EditProfileModal extends React.Component {
@@ -57,7 +57,7 @@ class EditProfileModal extends React.Component {
             this.setState({errors: {}, isLoading: true})
             this.props.graphql
                 .query({
-                    fetchOptionsOverride: twinpalFetchOptionsOverride,
+                    fetchOptionsOverride: fundcastFetchOptionsOverride,
                     resetOnLoad: true,
                     operation: {
                         variables: {

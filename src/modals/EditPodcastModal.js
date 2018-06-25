@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import { updatePodcast as showUpdatedPodcast} from "../actions/podcastsActions"
 import { updatePodcast} from '../shared/queries'
-import {twinpalFetchOptionsOverride} from "../shared/fetchOverrideOptions"
+import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
 
 class EditPodcastModal extends React.Component {
     constructor(props) {
@@ -21,7 +21,7 @@ class EditPodcastModal extends React.Component {
         if (editedPodcast !== '') {
             this.props.graphql
                 .query({
-                    fetchOptionsOverride: twinpalFetchOptionsOverride,
+                    fetchOptionsOverride: fundcastFetchOptionsOverride,
                     resetOnLoad: true,
                     operation: {
                         variables: {id: this.props.postId,body:editedPodcast},

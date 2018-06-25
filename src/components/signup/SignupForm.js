@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import validator from 'validator'
 import {isEmpty} from 'lodash'
 import TextFieldGroup from './../../shared/TextFieldsGroup'
-import {twinpalFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
+import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {isUserExists, signup} from "../../shared/queries"
 import classnames from 'classnames'
 
@@ -34,7 +34,7 @@ class SignupForm extends React.Component {
         if (val !== '') {
             this.props.graphql
                 .query({
-                    fetchOptionsOverride: twinpalFetchOptionsOverride,
+                    fetchOptionsOverride: fundcastFetchOptionsOverride,
                     resetOnLoad: true,
                     operation: {
                         variables: {email: val},
@@ -104,7 +104,7 @@ class SignupForm extends React.Component {
             this.setState({errors: {}, isLoading: true})
             this.props.graphql
                 .query({
-                    fetchOptionsOverride: twinpalFetchOptionsOverride,
+                    fetchOptionsOverride: fundcastFetchOptionsOverride,
                     resetOnLoad: true,
                     operation: {
                         variables: {
@@ -196,7 +196,7 @@ class SignupForm extends React.Component {
                             required="true" onChange={this.onChange}>
                         <option>Select</option>
                         <option value="listener">Listener</option>
-                        <option value="podcaster">Podcaster</option>
+                        <option value="host">Host</option>
 
                     </select>
                     {errors.role && <div className="invalid-feedback">{errors.role}</div>}
