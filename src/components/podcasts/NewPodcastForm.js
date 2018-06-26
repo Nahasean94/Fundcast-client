@@ -35,8 +35,8 @@ class NewPodCastForm extends React.Component {
         if (validator.isEmpty(data.title)) {
             errors.title = 'This field is required'
         }
-        if (data.title.length < 3 || data.title.length > 35) {
-            errors.title = 'Description must be between 3 and 35 characters'
+        if (data.title.length < 3 ) {
+            errors.title = 'Description must be more than 3'
         }
         if (validator.isEmpty(data.description)) {
             errors.description = 'This field is required'
@@ -183,7 +183,7 @@ class NewPodCastForm extends React.Component {
                                     <select className="form-control form-control-sm" id="hosts" name="hosts"
                                             required="true" onChange={this.onChange}>
                                         <option>Select</option>
-                                        <option value="5b30f667575dbd2170c7ca7a">You</option>
+                                        <option value="5b311c84a9845c2a8cecd4eb">You</option>
                                         <option value="5b30f667575dbd2170c7ca7a">Me</option>
                                     </select>
                                 </div>

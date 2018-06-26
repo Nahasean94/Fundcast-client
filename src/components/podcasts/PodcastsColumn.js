@@ -29,7 +29,6 @@ class PodcastsColumn extends React.Component {
                 {({loading, data}) => {
                     if (data) {
                         if (data.podcasts) {
-                            console.log(data.podcasts)
                             return data.podcasts.map(podcast =>
                                 (
                                     <div key={shortid.generate()}>

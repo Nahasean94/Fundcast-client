@@ -1,4 +1,4 @@
-const podcasts =`
+const podcasts = `
     {
   podcasts {
         id
@@ -27,8 +27,40 @@ paid
     }
     }
 `
+const podcast = `
+ query podcast($id:ID!){
+  podcast(id:$id) {
+        id
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
+}
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+audioFile{
+path
+}
+payment{
+paid
+}
+    }
+    }
+`
 
-const fetchProfilePodcasts =`
+const fetchProfilePodcasts = `
     {
   fetchProfilePodcasts {
   id
@@ -67,7 +99,7 @@ const fetchProfilePodcasts =`
   }
 }
 `
-const getProfileInfo =`
+const getProfileInfo = `
     {
   getProfileInfo {
    username
@@ -84,7 +116,7 @@ const getProfileInfo =`
   }
 }
 `
-const fetchPalPodcasts =`
+const fetchPalPodcasts = `
    query fetchPalPodcasts($id:ID!){
   fetchPalPodcasts(id:$id) {
   id
@@ -123,7 +155,7 @@ const fetchPalPodcasts =`
   }
 }
 `
-const fetchPalProfile =`
+const fetchPalProfile = `
     query fetchPalProfile($id:ID!)   {
   fetchPalProfile(id:$id) {
             id
@@ -133,7 +165,7 @@ const fetchPalProfile =`
   }
 }
 `
-const login =`
+const login = `
    mutation($email:String!,$password:String!) {
   login(email:$email,password:$password) {
     token
@@ -142,28 +174,28 @@ const login =`
   }
 }
 `
-const signup =`
+const signup = `
    mutation($username:String!,$email:String!,$password:String!,$role:String!) {
   signup(username:$username,email:$email,password:$password,role:$role) {
    id
   }
 }
 `
-const isUserExists =`
+const isUserExists = `
    mutation($email:String!) {
   isUserExists(email:$email) {
    exists
   }
 }
 `
-const uploadProfilePicture =`
+const uploadProfilePicture = `
    mutation($file:Upload!) {
   uploadProfilePicture(file:$file) {
    uploaded
   }
 }
 `
-const likePodcast =`
+const likePodcast = `
    mutation($id:ID!) {
   likePodcast(id:$id) {
     id
@@ -202,7 +234,7 @@ const likePodcast =`
   }
 }
 `
-const unlikePodcast =`
+const unlikePodcast = `
    mutation($id:ID!) {
   unlikePodcast(id:$id) {
    id
@@ -241,7 +273,7 @@ const unlikePodcast =`
   }
 }
 `
-const updatePodcast =`
+const updatePodcast = `
    mutation($id:ID!,$body:String!) {
   updatePodcast(id:$id,body:$body) {
   id
@@ -280,40 +312,16 @@ const updatePodcast =`
   }
 }
 `
-const deletePodcast =`
+const deletePodcast = `
    mutation($id:ID!) {
   deletePodcast(id:$id) {
    id
   }
 }
 `
-const addComment =`
-   mutation($post_id:ID!,$comment:String!) {
-  addComment(post_id:$post_id,comment:$comment) {
-   id
-    timestamp
-        scope
-        uploads {
-          id
-          path
-          }
-        likes {
-        person{
-        id
-        }
-          id
-          }
-        body
-        author {
-            username
-            id
-            profile_picture
-        }
-        profile {
-        username
-        id
-        }
-        comments{
+const addComment = `
+   mutation($podcast_id:ID!,$comment:String!) {
+  addComment(podcast_id:$podcast_id,comment:$comment) {
         id
         body
         author{
@@ -322,18 +330,32 @@ const addComment =`
         username
         }
         timestamp
-        }
+        
   }
 }
 `
-const updateProfile =`
+const findPodcastComments = `
+   query($podcast_id:ID!)  {
+  findPodcastComments(podcast_id:$podcast_id) {
+        id
+        body
+        author{
+        id
+        profile_picture
+        username
+        }
+        timestamp     
+  }
+}
+`
+const updateProfile = `
    mutation($first_name:String!,$username:String!,$username:String,$email:String!,$role:String!) {
   updateProfile(first_name:$first_name,username:$username,username:$username,email:$email,role:$role) {
    id
   }
 }
 `
-const uploadFile =`
+const uploadFile = `
    mutation($file:Upload!,$profile:ID!) {
   uploadFile(file:$file,profile:$profile){
   id
@@ -372,7 +394,7 @@ const uploadFile =`
   }
 }
 `
-const createNewPodcast =`
+const createNewPodcast = `
    mutation($title:String!,$description:String!,$hosts:[String!],$paid:Int!,$tags:String!,$coverImage:Upload!,$podcast:Upload!) {
   newPodcast(title:$title,description:$description,hosts:$hosts,paid:$paid,tags:$tags,coverImage:$coverImage,podcast:$podcast) {
  title
@@ -393,6 +415,7 @@ const createNewPodcast =`
 
 export {
     podcasts,
+    podcast,
     fetchProfilePodcasts,
     fetchPalPodcasts,
     fetchPalProfile,
@@ -401,6 +424,7 @@ export {
     isUserExists,
     login,
     likePodcast,
+    findPodcastComments,
     unlikePodcast,
     updatePodcast,
     deletePodcast,

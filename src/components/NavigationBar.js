@@ -41,6 +41,7 @@ class NavigationBar extends React.Component {
         if (localStorage.getItem('Fundcast')) {
             token = jwt.decode(localStorage.getItem('Fundcast'))
             isAuthenticated = true
+            console.log(token)
         }
         const uploadButton = (
             <div className="navbar-nav flex-row ml-md-auto">

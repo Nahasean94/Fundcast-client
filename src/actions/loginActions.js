@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken'
 export function setLoginToken(userData) {
     return dispatch=>{
             const token=userData
-        console.log(token)
             localStorage.setItem('Fundcast',token)
             dispatch(setCurrentUser(jwt.decode(token)))
     }

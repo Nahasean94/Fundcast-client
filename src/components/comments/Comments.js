@@ -1,162 +1,141 @@
-// import React from 'react'
-// import CommentView from './CommentView'
-// import PropTypes from 'prop-types'
-// import {addComment, clearComments, deleteComment, saveComment, updateComment} from "../../actions/commentsActions"
-// import {connect} from 'react-redux'
-//
-// const AllComments = ({comments, toggleHidden}) => {
-//     return (
-//         <div>
-//             {comments.map(comment => {
-//                 return (
-//                     <li key={comment._id}><CommentView comment={comment}/></li>)
-//             })
-//             }
-//             <li><a href="" onClick={toggleHidden}>Show less</a></li>
-//         </div>
-//     )
-// }
-//
-// class Comments extends React.Component {
-//     constructor(props) {
-//         super(props)
-//         this.state = {
-//             hidden: this.props.viewAll
-//         }
-//         this.toggleHidden = this.toggleHidden.bind(this)
-//     }
-//
-//     // componentWillReceiveProps(nextProps) {
-//     //     if (nextProps.comments !== this.props.comments) {
-//     //         this.props.comments.map(comment => {
-//     //             this.props.addComment(comment)
-//     //         })
-//     //     }
-//     // }
-//
-//     toggleHidden(e) {
-//         e.preventDefault()
-//         this.setState({hidden: !this.state.hidden})
-//     }
-//
-//     render() {
-//         const {hidden} = this.state
-//         const comments = this.props.comments
-//         const otherComments = <li><a href="" onClick={this.toggleHidden}>View
-//             all {comments.length} comments</a>
-//         </li>
-//         return (
-//             <span>
-//                 <li hidden={hidden} className="list-inline-item"><CommentView comment={comments[0]}/></li>
-//                 {hidden ? <AllComments comments={comments} toggleHidden={this.toggleHidden}/> : ''}
-//                 {comments.length > 1 && !hidden ? otherComments : ''}
-//             </span>
-//         )
-//     }
-// }
-//
-// Comments.propTypes = {
-//     comments: PropTypes.array.isRequired,
-//     addComment: PropTypes.func.isRequired,
-//     clearComments: PropTypes.func.isRequired,
-//     deleteComment: PropTypes.func.isRequired,
-//     updateComment: PropTypes.func.isRequired,
-//     viewAll: PropTypes.bool.isRequired
-// }
-//
-// // function mapStateToProps(state) {
-// //     return {
-// //         comments: state.commentsReducers
-// //     }
-// // }
-// //
-//
-// export default connect(null, {
-//     addComment,
-//     clearComments,
-//     deleteComment,
-//     updateComment,
-//     saveComment
-// })(Comments)
 import React from 'react'
 import CommentView from './CommentView'
-import PropTypes from 'prop-types'
-// import {addComment, clearComments, deleteComment, saveComment, updateComment} from "../../actions/commentsActions"
-// import {connect} from 'react-redux'
-
-const AllComments = ({comments, toggleHidden}) => {
-    return (
-        <div>
-            {comments.map(comment => {
-                return (
-                    <li key={comment.id}><CommentView comment={comment}/></li>)
-            })
-            }
-            <li><a href="" onClick={toggleHidden}>Show less</a></li>
-        </div>
-    )
-}
+import {addComment, findPodcastComments} from "../../shared/queries"
+import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
+import {Query} from 'graphql-react'
+import validator from '../../../node_modules/validator/index.js'
+import {isEmpty} from 'lodash'
+import classnames from "classnames"
 
 class Comments extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            hidden: this.props.viewAll
+            comment: '',
+            errors: {},
+            isLoading: false,
+            invalid: false
         }
-        this.toggleHidden = this.toggleHidden.bind(this)
+        this.onChange = this.onChange.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     if (nextProps.comments !== this.props.comments) {
-    //         this.props.comments.map(comment => {
-    //             this.props.addComment(comment)
-    //         })
-    //     }
-    // }
+    validateInput(data) {
+        let errors = {}
 
-    toggleHidden(e) {
+        if (data.comment.length < 4) {
+            errors.comment = 'Comment must be more than 4 characters'
+        }
+        if (validator.isEmpty(data.comment)) {
+            errors.comment = 'This field is required'
+        }
+        return {
+            errors,
+            isValid: isEmpty(errors)
+        }
+    }
+
+    isValid() {
+        const {errors, isValid} = this.validateInput(this.state)
+        if (!isValid) {
+            this.setState({errors})
+        }
+        return isValid
+    }
+
+    onChange(e) {
         e.preventDefault()
-        this.setState({hidden: !this.state.hidden})
+        this.setState({[e.target.name]: e.target.value})
+    }
+
+    onSubmit(e) {
+        e.preventDefault()
+        if (this.isValid()) {
+            this.props.graphql
+                .query({
+                    fetchOptionsOverride: fundcastFetchOptionsOverride,
+                    resetOnLoad: true,
+                    operation: {
+                        variables: {
+                            podcast_id: window.location.pathname.split('/')[2],
+                            comment: this.state.comment,
+                        },
+                        query: addComment
+                    }
+                })
+                .request.then(({data}) => {
+                    if (data) {
+                        this.setState({
+                            comment: '',
+                            errors: {},
+                            isLoading: false,
+                            invalid: false,
+                            message: data
+                                ? <li key={data.addComment.id}><CommentView comment={data.addComment}/></li>
+                                : `Posting failed failed.`
+                        })
+                    }
+                }
+            )
+
+        }
     }
 
     render() {
-        const {hidden} = this.state
-        const comments = this.props.comments
-        const otherComments = <li><a href="" onClick={this.toggleHidden}>View
-            all {comments.length} comments</a>
-        </li>
+        const {errors} = this.state
+        const commentError = errors.comment
         return (
-            <span>
-                <li hidden={hidden} className="list-inline-item"><CommentView comment={comments[0]}/></li>
-                {hidden ? <AllComments comments={comments} toggleHidden={this.toggleHidden} /> : ''}
-                {comments.length > 1 && !hidden ? otherComments : ''}
-            </span>
-        )
+            <div>
+                <form onSubmit={this.onSubmit}>
+                    <div className="form-group">
+                        <textarea name="comment" onChange={this.onChange}
+                                  className={classnames("form-control form-control-sm", {"is-invalid": commentError})}
+                                  rows="2" cols="20" placeholder="Add comment" onClick={this.onChange}/>
+                        {commentError && <div className="invalid-feedback">{commentError}</div>}
+                    </div>
+                    <div className="row">
+                        <div className="col-sm-2 offset-sm-10">
+                            <button className="btn btn-primary" type="submit" onClick={this.onSubmit}>Comment
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <Query
+                    loadOnMount
+                    loadOnReset
+                    fetchOptionsOverride={fundcastFetchOptionsOverride}
+                    variables={{
+                        podcast_id: window.location.pathname.split('/')[2],
+
+                    }}
+                query= {findPodcastComments}
+            >
+                {({loading, data}) => {
+                    if (data) {
+                        if (data.findPodcastComments) {
+                            console.log(data.findPodcastComments)
+                            return <ul className="list-unstyled">
+                                {data.findPodcastComments.map(comment => {
+                                    return (
+                                        <li key={comment.id}><CommentView comment={comment}/></li>)
+                                })
+                                }
+
+                            </ul>
+                        }
+                    }
+                    else if (loading) {
+                        return <p>Loading…</p>
+                    }
+                    return <p>No comments found</p>
+                }
+
+                }
+            </Query>
+    </div>
+
+    )
     }
 }
 
-Comments.propTypes = {
-    comments: PropTypes.array.isRequired,
-    // history: PropTypes.object.isRequired,
-    // addComment: PropTypes.func.isRequired,
-    // clearComments: PropTypes.func.isRequired,
-    // deleteComment: PropTypes.func.isRequired,
-    // updateComment: PropTypes.func.isRequired,
-    viewAll: PropTypes.bool.isRequired
-}
-
-// function mapStateToProps(state) {
-//     return {
-//         comments: state.commentsReducers
-//     }
-// }
-//
-
 export default Comments
-// export default connect(null, {
-//     addComment,
-//     clearComments,
-//     deleteComment,
-//     updateComment,
-//     saveComment
-// })(Comments)

@@ -4,7 +4,7 @@ import Profile from "./components/Profile"
 import SigninPage from "./components/SigninPage"
 import App from "./components/App"
 import requireAuth from "./utils/requireAuth"
-import TwinpalProfile from './components/TwinpalProfile'
+import PodcastPage from './components/podcasts/PodcastPage'
 import Home from "./components/Home"
 
 export default () => {
@@ -16,7 +16,7 @@ export default () => {
                         <Route exact path="/" component={Home}/>
                         <Route exact path="/profile" component={requireAuth(Profile)}/>
                         <Route path="/signin" component={SigninPage}/>
-                        <Route path="/podcast/:id" component={TwinpalProfile}/>
+                        <Route path="/podcasts/:id" component={PodcastPage}/>
                     </Switch>
                 </App>
 
