@@ -79,12 +79,12 @@ class CommentView extends React.Component {
             {body.substr(0, 599)}... <a href="" onClick={this.viewComment}>more</a></p>
         return (
             <div className="row">
-                <div className="col-sm-2">
+                <div className="col-sm-1">
                     <p><img src={`http://localhost:8080/uploads/${author.profile_picture}`}
-                            width="40" height="40"
+                            width="60" height="40"
                             className="avatar" onClick={this.onProfilePicture}/></p>
                 </div>
-                <div className="col-sm-10">
+                <div className="col-sm-11">
                     <ul className="list-inline list-unstyled">
                         <li className="list-inline-item author">
                             <a href="" onClick={this.onProfileLink} id={author.id}>{author.username}</a>

@@ -12,6 +12,7 @@ class RelatedPodcasts extends React.Component {
             ...this.props.podcast,
 
         }
+        this.onProfileLink=this.onProfileLink.bind(this)
     }
 
 
@@ -61,35 +62,32 @@ class RelatedPodcasts extends React.Component {
         const {id, title, description, tags, listens, hosts, timestamp, payment, coverImage, likes} = this.props.podcast
 
         const link = `/podcasts/${id}`
+        const currentPodcast = window.location.pathname.split('/')[2]
 
 
         const imageView =
             <img src={`http://localhost:8080/uploads/${coverImage.path}`} width="200" height="150"
                  alt={title} className="rounded"/>
-        return (
-            <div>
-                {/*<div className="well">*/}
-                    {/*<div className="row">*/}
-                        {/*<div className="col-sm-3">*/}
-                            <Link to={link}>{imageView}</Link>
-                        {/*</div>*/}
-                        {/*<div className="col-sm-9">*/}
-                            <Link to={link}><h6>{title}</h6></Link>
-                            <strong>HOSTED BY:</strong> <a href="" onClick={this.onProfileLink}
-                                                           id={hosts[0].id}>{hosts[0].username}</a>
-                            <div className="feed-meta">
-                                <ul className="list-inline list-unstyled">
-                                    <li className="list-inline-item">{timeSince(timestamp)}</li>
+        if (id !== currentPodcast) {
+            return (
+                <div>
+                    <Link to={link}>{imageView}</Link>
 
-                                </ul>
-                            </div>
-                        {/*// </div>*/}
-                     {/*</div>*/}
+                    <Link to={link}><h6>{title}</h6></Link>
+                    <strong>HOSTED BY:</strong> <a href="" onClick={this.onProfileLink}
+                                                   id={hosts[0].id}>{hosts[0].username}</a>
+                    <div className="feed-meta">
+                        <ul className="list-inline list-unstyled">
+                            <li className="list-inline-item">{timeSince(timestamp)}</li>
 
-                <hr/>
+                        </ul>
+                    </div>
+                    <hr/>
 
-            </div>
-        )
+                </div>
+            )
+        }
+        return null
     }
 
 }

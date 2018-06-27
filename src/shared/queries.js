@@ -198,80 +198,66 @@ const uploadProfilePicture = `
 const likePodcast = `
    mutation($id:ID!) {
   likePodcast(id:$id) {
-    id
-    timestamp
-        scope
-        uploads {
-          id
-          path
-          }
-        likes {
-        person{
-        id
-        }
-          id
-          }
-        body
-        author {
-            username
-            id
-            profile_picture
-        }
-        profile {
-        username
-        id
-        }
-        comments{
-        id
-        body
-        author{
-        id
-        profile_picture
-        username
-        }
-        timestamp
-        }
-  }
+     id
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
 }
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+audioFile{
+path
+}
+payment{
+paid
+}
+    }
+    }
 `
 const unlikePodcast = `
    mutation($id:ID!) {
   unlikePodcast(id:$id) {
    id
-    timestamp
-        scope
-        uploads {
-          id
-          path
-          }
-        likes {
-        person{
-        id
-        }
-          id
-          }
-        body
-        author {
-            username
-            id
-            profile_picture
-        }
-        profile {
-        username
-        id
-        }
-        comments{
-        id
-        body
-        author{
-        id
-        profile_picture
-        username
-        }
-        timestamp
-        }
-  }
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
 }
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+audioFile{
+path
+}
+payment{
+paid
+}
+    }
+    }
 `
 const updatePodcast = `
    mutation($id:ID!,$body:String!) {
@@ -423,8 +409,8 @@ export {
     signup,
     isUserExists,
     login,
-    likePodcast,
     findPodcastComments,
+    likePodcast,
     unlikePodcast,
     updatePodcast,
     deletePodcast,

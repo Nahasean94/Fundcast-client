@@ -13,11 +13,13 @@ class Comments extends React.Component {
         this.state = {
             comment: '',
             errors: {},
+            liked:false,
             isLoading: false,
             invalid: false
         }
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+
     }
 
     validateInput(data) {
@@ -47,6 +49,7 @@ class Comments extends React.Component {
         e.preventDefault()
         this.setState({[e.target.name]: e.target.value})
     }
+
 
     onSubmit(e) {
         e.preventDefault()
@@ -86,11 +89,12 @@ class Comments extends React.Component {
         const commentError = errors.comment
         return (
             <div>
+                <h3>Comments</h3>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
                         <textarea name="comment" onChange={this.onChange}
                                   className={classnames("form-control form-control-sm", {"is-invalid": commentError})}
-                                  rows="2" cols="20" placeholder="Add comment" onClick={this.onChange}/>
+                                  rows="3" placeholder="Add comment" onClick={this.onChange} value={this.state.comment}/>
                         {commentError && <div className="invalid-feedback">{commentError}</div>}
                     </div>
                     <div className="row">
@@ -100,6 +104,7 @@ class Comments extends React.Component {
                         </div>
                     </div>
                 </form>
+                <hr/>
                 <Query
                     loadOnMount
                     loadOnReset
@@ -112,8 +117,8 @@ class Comments extends React.Component {
             >
                 {({loading, data}) => {
                     if (data) {
-                        if (data.findPodcastComments) {
-                            console.log(data.findPodcastComments)
+                        if (data.findPodcastComments.length>0) {
+
                             return <ul className="list-unstyled">
                                 {data.findPodcastComments.map(comment => {
                                     return (
