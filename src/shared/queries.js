@@ -397,11 +397,19 @@ const createNewPodcast = `
   }
 }
 `
-
+const hosts=`
+{
+hosts{
+id
+username
+profile_picture
+}
+}`
 
 export {
     podcasts,
     podcast,
+    hosts,
     fetchProfilePodcasts,
     fetchPalPodcasts,
     fetchPalProfile,

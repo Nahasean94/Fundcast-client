@@ -41,7 +41,6 @@ class NavigationBar extends React.Component {
         if (localStorage.getItem('Fundcast')) {
             token = jwt.decode(localStorage.getItem('Fundcast'))
             isAuthenticated = true
-            console.log(token)
         }
         const uploadButton = (
             <div className="navbar-nav flex-row ml-md-auto">
@@ -74,14 +73,14 @@ class NavigationBar extends React.Component {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
-                            <a className="nav-link" href="#">Hosts</a>
+                            <a className="nav-link" href="/hosts">Hosts</a>
                         </li>
 
                         <li className="nav-item">
                             <a className="nav-link" href="#">Genres</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">Stations</a>
+                            <a className="nav-link" href="#">About</a>
                         </li>
                     </ul>
                     <div className="navbar-search">

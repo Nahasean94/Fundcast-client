@@ -65,8 +65,8 @@ class PodcastPage extends Component {
                                     <br/>
                                     <ul className="list-inline">
                                         &nbsp;<i className="fa fa-tags"></i>
-                                        {tags.map(tag => {
-                                            return <li className="list-inline-item"><a href="">&nbsp;{tag}</a></li>
+                                        {tags.map((tag,i) => {
+                                            return <li key={i} className="list-inline-item"><a href="">&nbsp;{tag}</a></li>
                                         })}
                                     </ul>
                                 </div>

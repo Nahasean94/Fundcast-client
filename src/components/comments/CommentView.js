@@ -9,16 +9,13 @@ class CommentView extends React.Component {
         super(props)
         this.state = {
             ...this.props.comment,
-            authorPicture: '',
-            authorUsername: '',
-            show: false,
-            showFullComment: false
+
         }
-        this.onCommenting = this.onCommenting.bind(this)
-        this.onLike = this.onLike.bind(this)
+
+        // this.onLike = this.onLike.bind(this)
         this.onProfileLink = this.onProfileLink.bind(this)
-        this.onProfilePicture = this.onProfilePicture.bind(this)
-        this.onClose = this.onClose.bind(this)
+        // this.onProfilePicture = this.onProfilePicture.bind(this)
+        // this.onClose = this.onClose.bind(this)
         this.viewComment = this.viewComment.bind(this)
 
     }
@@ -28,20 +25,20 @@ class CommentView extends React.Component {
         this.setState({show: true})
     }
 
-    onClose() {
-        this.setState({show: !this.state.show})
-    }
-
-    onCommenting(e) {
-        e.preventDefault()
-    }
-
-    onLike(e) {
-        e.preventDefault()
-        this.props.likeComment(this.state._id).then(post => {
-            this.props.updatePost(post.data)
-        })
-    }
+    // onClose() {
+    //     this.setState({show: !this.state.show})
+    // }
+    //
+    // onCommenting(e) {
+    //     e.preventDefault()
+    // }
+    //
+    // onLike(e) {
+    //     e.preventDefault()
+    //     this.props.likeComment(this.state._id).then(post => {
+    //         this.props.updatePost(post.data)
+    //     })
+    // }
 
     onProfileLink(e) {
         e.preventDefault()
@@ -114,20 +111,14 @@ class CommentView extends React.Component {
                         </ul>
                     </div>
                 </div>
-                <ProfilePictureModal show={show} onClose={this.onClose} picture={author.profile_picture}
-                                     username={author.username}/>
+                {/*<ProfilePictureModal show={show} onClose={this.onClose} picture={author.profile_picture}*/}
+                                     {/*username={author.username}/>*/}
 
             </div>
         )
     }
 }
 
-CommentView.propTypes = {
-    // getProfileDetails: PropTypes.func.isRequired,
-    // likeComment: PropTypes.func.isRequired,
-    // clearPosts: PropTypes.func.isRequired
-    // history:PropTypes.object.isRequired
-}
 CommentView.contextTypes = {
     router: PropTypes.object.isRequired
 }

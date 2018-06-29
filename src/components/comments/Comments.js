@@ -53,7 +53,7 @@ class Comments extends React.Component {
 
     onSubmit(e) {
         e.preventDefault()
-        if (this.isValid()) {
+        if (this.isValid() && localStorage.getItem('Fundcast')) {
             this.props.graphql
                 .query({
                     fetchOptionsOverride: fundcastFetchOptionsOverride,

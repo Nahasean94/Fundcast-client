@@ -15,6 +15,7 @@ class LikingPodcast extends Component {
     async componentWillMount() {
         const token = jwt.decode(localStorage.getItem("Fundcast"))
         let liked = false
+        if(token){
         await this.props.likes.map(liker => {
             if (liker.liked_by === token.id) {
                 liked = true
@@ -23,10 +24,12 @@ class LikingPodcast extends Component {
         if (liked) {
             this.setState({liked: true})
         }
+        }
     }
 
     onLike(e) {
         e.preventDefault()
+        if(localStorage.removeItem('Fundcast')){
         if (this.state.liked) {
             this.props.graphql
                 .query({
@@ -40,7 +43,7 @@ class LikingPodcast extends Component {
                     }
                 })
                 .request.then(({data}) => {
-                    if (data) {
+                    if (data.unlikePodcast) {
                         this.setState({
                            liked:false,
                         })
@@ -62,7 +65,7 @@ class LikingPodcast extends Component {
                     }
                 })
                 .request.then(({data}) => {
-                    if (data) {
+                    if (data.likePodcast) {
                         this.setState({
                            liked:true
                         })
@@ -70,6 +73,7 @@ class LikingPodcast extends Component {
                     }
                 }
             )
+        }
         }
 
     }

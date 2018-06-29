@@ -6,6 +6,7 @@ import App from "./components/App"
 import requireAuth from "./utils/requireAuth"
 import PodcastPage from './components/podcasts/PodcastPage'
 import Home from "./components/Home"
+import Hosts from "./components/hosts/Hosts"
 
 export default () => {
 
@@ -17,6 +18,8 @@ export default () => {
                         <Route exact path="/profile" component={requireAuth(Profile)}/>
                         <Route path="/signin" component={SigninPage}/>
                         <Route path="/podcasts/:id" component={PodcastPage}/>
+                        <Route path="/hosts" component={Hosts}/>
+                        {/*<Route path="/hosts:/id" component={HostPage}/>*/}
                     </Switch>
                 </App>
 
