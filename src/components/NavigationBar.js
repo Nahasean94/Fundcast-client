@@ -77,7 +77,7 @@ class NavigationBar extends React.Component {
                         </li>
 
                         <li className="nav-item">
-                            <a className="nav-link" href="#">Genres</a>
+                            <a className="nav-link" href="/tags">Tags</a>
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" href="#">About</a>

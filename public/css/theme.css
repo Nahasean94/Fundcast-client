@@ -7,6 +7,12 @@
 #body{
     margin-top: 70px;
 }
+body{
+    background: #f8f9fa;
+}
+.bd-sidebar {
+    border-right: 1px solid rgba(0, 0, 0, .1);
+}
 .navbar-default .navbar-brand {
     font-weight: 300;
     color: #ffffff;
