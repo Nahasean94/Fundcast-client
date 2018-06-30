@@ -116,52 +116,46 @@ const getProfileInfo = `
   }
 }
 `
-const fetchPalPodcasts = `
-   query fetchPalPodcasts($id:ID!){
-  fetchPalPodcasts(id:$id) {
+const fetchHostPodcasts = `
+   query fetchHostPodcasts($id:ID!){
+  fetchHostPodcasts(id:$id) {
   id
-    timestamp
-        scope
-        uploads {
-          id
-          path
-          }
-        likes {
-        person{
-        id
-        }
-          id
-          }
-        body
-        author {
-            username
-            id
-            profile_picture
-        }
-        profile {
-        username
-        id
-        }
-        comments{
-        id
-        body
-        author{
-        id
-        profile_picture
-        username
-        }
-        timestamp
-        }
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
+}
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+payment{
+paid
+}
+
   }
 }
 `
-const fetchPalProfile = `
-    query fetchPalProfile($id:ID!)   {
-  fetchPalProfile(id:$id) {
-            id
-            username
-            role
-            profile_picture
+const fetchUserProfile = `
+    query fetchUserProfile($id:ID!)   {
+  fetchUserProfile(id:$id) {
+  id
+  username
+  email
+  role
+  profile_picture
+  date_joined
+  address
   }
 }
 `
@@ -405,14 +399,25 @@ username
 profile_picture
 }
 }`
+const person=`
+query($id:ID!){
+person(id:$id){
+username
+email
+role
+profile_picture
+date_joined
+address
+}
+}`
 
 export {
     podcasts,
     podcast,
     hosts,
     fetchProfilePodcasts,
-    fetchPalPodcasts,
-    fetchPalProfile,
+    fetchHostPodcasts,
+    fetchUserProfile,
     getProfileInfo,
     signup,
     isUserExists,
@@ -426,5 +431,6 @@ export {
     updateProfile,
     createNewPodcast,
     uploadFile,
-    uploadProfilePicture
+    uploadProfilePicture,
+    person
 }

@@ -1,9 +1,9 @@
 import React from 'react'
 import PodcastView from './PodcastView'
 import shortid from 'shortid'
-import {podcasts, fetchPalPodcasts, fetchProfilePodcasts} from "../../shared/queries"
+import {fetchPalPodcasts, podcasts} from "../../shared/queries"
 import {fundcastFetchOptionsOverride} from '../../shared/fetchOverrideOptions'
-import {Query,Consumer} from 'graphql-react'
+import {Consumer, Query} from 'graphql-react'
 
 
 class PodcastsColumn extends React.Component {
@@ -25,7 +25,7 @@ class PodcastsColumn extends React.Component {
             >
                 {({loading, data}) => {
                     if (data) {
-                        if (data.podcasts) {
+                        if (data.podcasts.length > 0) {
                             return data.podcasts.map(podcast =>
                                 (
                                     <div key={shortid.generate()}>
@@ -34,6 +34,8 @@ class PodcastsColumn extends React.Component {
                                     </div>
                                 )
                             )
+                        } else {
+                            return <p>No podcasts found</p>
                         }
                     }
                     else if (loading) {
@@ -47,4 +49,5 @@ class PodcastsColumn extends React.Component {
         }
     }
 }
+
 export default PodcastsColumn

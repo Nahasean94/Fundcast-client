@@ -183,8 +183,8 @@ class NewPodCastForm extends React.Component {
                                     <select className="form-control form-control-sm" id="hosts" name="hosts"
                                             required="true" onChange={this.onChange}>
                                         <option>Select</option>
-                                        <option value="5b311c84a9845c2a8cecd4eb">You</option>
-                                        <option value="5b30f667575dbd2170c7ca7a">Me</option>
+                                        <option value="5b376f6dea2dea17200344d4">You</option>
+                                        <option value="5b376f6dea2dea17200344d4">Me</option>
                                     </select>
                                 </div>
                             </div>

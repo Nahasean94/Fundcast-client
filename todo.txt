@@ -1,0 +1,13 @@
+more than one host
+more than one tag
+Tags schema
+subscribers
+notifications
+history
+comment likes, replies
+profile CRUD
+podcast CRUD
+Search
+Styling
+Work on add podcast form
+payments

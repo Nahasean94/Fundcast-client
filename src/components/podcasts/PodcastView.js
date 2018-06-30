@@ -68,17 +68,18 @@ class PodcastView extends React.Component {
         const imageView =
             <img src={`http://localhost:8080/uploads/${coverImage.path}`} width="150" height="120"
                  alt={title} className="rounded"/>
+        const hostsLink=`/hosts/${hosts[0].id}`
         return (
             <div>
                 <div className="well">
                     <div className="row">
-                        <div className="col-sm-3">
+                        <div className="col-sm-2">
                             <Link to={link}>{imageView}</Link>
 
                         </div>
-                        <div className="col-sm-9">
+                        <div className="col-sm-10">
                             <Link to={link}><h3>{title}</h3></Link>
-                            <strong>HOSTED BY:</strong> <a href="" onClick={this.onProfileLink}
+                            <strong>HOSTED BY:</strong> <a href={hostsLink}
                                                            id={hosts[0].id}>{hosts[0].username}</a>
                             <div className="feed-meta">
                                 <ul className="list-inline list-unstyled">
