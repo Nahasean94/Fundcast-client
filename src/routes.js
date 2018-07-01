@@ -8,7 +8,8 @@ import PodcastPage from './components/podcasts/PodcastPage'
 import Home from "./components/Home"
 import TestPage from "./components/TestPage"
 import Hosts from "./components/hosts/Hosts"
-import TagsPage from "./components/podcasts/TagsPage"
+import Tags from "./components/podcasts/tags/Tags"
+import TagPage from "./components/podcasts/tags/TagPage"
 import HostPage from "./components/hosts/HostPage"
 
 export default () => {
@@ -23,7 +24,8 @@ export default () => {
                         <Route path="/podcasts/:id" component={PodcastPage}/>
                         <Route path="/hosts/:id" component={HostPage}/>
                         <Route path="/hosts" component={Hosts}/>
-                        <Route path="/tags" component={TagsPage}/>
+                        <Route path="/tags/:id" component={TagPage}/>
+                        <Route path="/tags" component={Tags}/>
                         <Route path="/test" component={TestPage}/>
                     </Switch>
                 </App>

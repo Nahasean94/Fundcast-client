@@ -81,11 +81,11 @@ class PodcastView extends React.Component {
         return (
             <div className="well">
                 <div className="row">
-                    <div className="col-sm-2">
+                    <div className="col-sm-3">
                         <Link to={link}>{imageView}</Link>
 
                     </div>
-                    <div className="col-sm-10">
+                    <div className="col-sm-9">
                         <Link to={link}><h3>{title}</h3></Link>
                         {hostedBy}
                         <div className="feed-meta">

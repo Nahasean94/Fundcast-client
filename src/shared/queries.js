@@ -27,6 +27,35 @@ paid
     }
     }
 `
+const fetchPodcastsByTags = `
+   query($id:ID!) {
+  fetchPodcastsByTags(id:$id) {
+        id
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
+}
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+payment{
+paid
+}
+    }
+    }
+`
 const podcast = `
  query podcast($id:ID!){
   podcast(id:$id) {
@@ -428,6 +457,7 @@ address
 
 export {
     podcasts,
+    fetchPodcastsByTags,
     podcast,
     hosts,
     tags,
