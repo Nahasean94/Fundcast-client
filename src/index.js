@@ -10,11 +10,11 @@ import {setCurrentUser} from './actions/loginActions'
 import jwt from 'jsonwebtoken'
 import registerServiceWorker from './registerServiceWorker'
 
-const store = createStore(rootReducer, compose(applyMiddleware(thunk), window.devToolsExtension ? window.devToolsExtension() : f => f))
+const store = createStore(rootReducer, compose(applyMiddleware(thunk)))
 
 
-if (localStorage.getItem('Twinpal')) {
-    store.dispatch(setCurrentUser(jwt.decode(localStorage.getItem('Twinpal'))))
+if (localStorage.getItem('Fundcast')) {
+    store.dispatch(setCurrentUser(jwt.decode(localStorage.getItem('Fundcast'))))
 }
 
 

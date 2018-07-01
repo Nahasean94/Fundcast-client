@@ -1,180 +1,147 @@
-import { getProfileInfo} from '../shared/queries'
-import React from 'react'
-import PostsColumn from './podcasts/PodcastsColumn'
-import NewPodcastForm from './podcasts/NewPodcastForm'
-import EditProfileModal from "../modals/EditProfileModal"
-import UploadProfilePictureModal from "../modals/UploadProfilePictureModal"
-import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
-import {Query, Consumer} from 'graphql-react'
+import React, {Component} from 'react'
+import {fetchHostPodcasts, fetchUserProfile} from "../shared/queries"
+import {fundcastFetchOptionsOverride} from ".././shared/fetchOverrideOptions"
+import {Consumer, Query} from 'graphql-react'
+import shortid from "shortid"
+import PodcastView from "./podcasts/PodcastView"
+import * as jwt from "jsonwebtoken"
 
-
-class Profile extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            showEditProfileModal: false,
-            showProfilePictureModal: false
-        }
-
-        this.onTwinpal = this.onTwinpal.bind(this)
-        this.onClose = this.onClose.bind(this)
-        this.onEditProfile = this.onEditProfile.bind(this)
-        this.onProfilePictureModal = this.onProfilePictureModal.bind(this)
-        this.onCloseProfilePictureModal = this.onCloseProfilePictureModal.bind(this)
-    }
-
-    onProfilePictureModal() {
-        this.setState({showProfilePictureModal: true})
-    }
-
-    onCloseProfilePictureModal() {
-        this.setState({showProfilePictureModal: false})
-    }
-
-
-    onClose(e) {
-        this.setState({showEditProfileModal: false})
-    }
-
-    onEditProfile(e) {
-        e.preventDefault()
-        this.setState({showEditProfileModal: true})
-    }
-
-    onTwinpal(e) {
-        e.preventDefault()
-        this.props.history.push(`/fundcast/${ e.target.id}`)
-    }
-
+class HostPage extends Component {
 
     render() {
-        const { showProfilePictureModal, showEditProfileModal} = this.state
+        const token = jwt.decode(localStorage.getItem("Fundcast"))
+        let id
+        if (token) {
+            id = token.id
+        }
+        return (
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-sm-3">
+                        <Query
+                            loadOnMount
+                            loadOnReset
+                            fetchOptionsOverride={fundcastFetchOptionsOverride}
+                            variables={{id}}
+                            query={fetchUserProfile}
+                        >
+                            {({loading, data}) => {
+                                if (data) {
+                                    const {id, username, profile_picture, email, role, date_joined, address} = data.fetchUserProfile
+                                    return <div>
+                                        <ul className="list-unstyled">
+                                            <li><img src={`http://localhost:8080/uploads/${profile_picture}`}
+                                                     alt="Profile picture"
+                                                     width="300"
+                                                     height="200"/>
+                                            </li>
+                                            <li>
+                                                Username: {username}
+                                            </li>
+                                            <li>
+                                                Email: {email}
+                                            </li>
+                                            <li>
+                                                Account: {role}
+                                            </li>
+                                            <li>
+                                                Date joined: {date_joined}
+                                            </li>
+                                            <li>
+                                                Ethereum address: {address}
+                                            </li>
 
-        return <Query
-            loadOnMount
-            loadOnReset
-            fetchOptionsOverride={fundcastFetchOptionsOverride}
-            query={getProfileInfo}
-        >
-            {({loading, data}) => {
-                if (data) {
-                    const {username, birthday, email, first_name, last_name, profile_picture, fundcasts,} = data.getProfileInfo
-                    const fundcastView = fundcasts.map(fundcast => {
-                        return (
-                            <li key={fundcast.id}><img src={`http://localhost:8080/uploads/${fundcast.profile_picture}`}
-                                                      alt="Profile picture"
-                                                      width="40"
-                                                      height="40" className="avatar"/>
+                                        </ul>
+                                    </div>
 
-                                {/*<Link to={`/fundcast/${fundcast.id}`} className="ml1 no-underline black">*/}
-                                {/*submit*/}
-                                {/*</Link>*/}
-                                <a href="" onClick={this.onTwinpal}
-                                   id={fundcast.id}>{fundcast.username}</a>
-                            </li>)
+                                } else if (loading) {
+                                    return (
+                                        <p>Loading…</p>
+                                    )
+                                }
 
-                    })
-                    const profileInfo = <div>
-                        <br/>
-
-                        <img src={`http://localhost:8080/uploads/${profile_picture}`} alt="Profile picture" width="200"
-                             height="200"/>
-                        <button className="btn btn-primary btn-small" onClick={this.onProfilePictureModal}>Change pic
-                        </button>
-                        <ul>
-                            <li>{username}</li>
-                            <li>{birthday && new Date(birthday).toDateString()}</li>
-                            <li>{email}</li>
-                            <li>{first_name}</li>
-                            <li>{last_name}</li>
-                        </ul>
-
-                        <button className="btn btn-primary btn-sm" onClick={this.onEditProfile}>Edit profile</button>
+                                return (
+                                    <p>Loading failed.</p>
+                                )
+                            }
+                            }
+                        </Query>
                     </div>
-                    return (<div>
-                        <div className="row">
-                            <div className="col-sm-3">
-                                {email ? profileInfo : 'loading'}
+                    <div className="col-sm-8">
+                        <nav>
+                            <div className="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a className="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
+                                   href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Your
+                                    podcasts</a>
+                                <a className="nav-item nav-link" id="nav-profile-tab" data-toggle="tab"
+                                   href="#nav-history" role="tab" aria-controls="nav-history"
+                                   aria-selected="false">History</a>
+                                <a className="nav-item nav-link" id="nav-contact-tab" data-toggle="tab"
+                                   href="#nav-liked" role="tab" aria-controls="nav-liked"
+                                   aria-selected="false">Liked podcasts</a>
+                                <a className="nav-item nav-link" id="nav-contact-tab" data-toggle="tab"
+                                   href="#nav-subscriptions" role="tab" aria-controls="nav-subscriptions"
+                                   aria-selected="false">Subscriptions</a>
                             </div>
-                            <div className="col-sm-6">
+                        </nav>
+                        <div className="tab-content" id="nav-tabContent">
+                            <div className="tab-pane fade show active" id="nav-home" role="tabpanel"
+                                 aria-labelledby="nav-home-tab">
+                                <Query
+                                    loadOnMount
+                                    loadOnReset
+                                    fetchOptionsOverride={fundcastFetchOptionsOverride}
+                                    variables={{id}}
+                                    query={fetchHostPodcasts}
+                                >
+                                    {({loading, data}) => {
+                                        if (data) {
+                                            if (data.fetchHostPodcasts.length > 0) {
+                                                return data.fetchHostPodcasts.map(podcast => {
+                                                    return (
+                                                        <div key={shortid.generate()}>
+                                                            <Consumer>{graphql => <PodcastView podcast={podcast}
+                                                                                               graphql={graphql}/>}</Consumer>
+                                                        </div>
+                                                    )
+                                                })
+                                            } else {
+                                                return (
+                                                    <p>No podcasts found found</p>
+                                                )
+                                            }
+                                        } else if (loading) {
+                                            return (
+                                                <p>Loading…</p>
+                                            )
+                                        }
 
-                                <div className="content-feed">
-                                    <Consumer>{graphql => <NewPodcastForm graphql={graphql}/>}</Consumer>
-                                </div>
-                                <PostsColumn/>
+                                        return (
+                                            <p>Loading failed.</p>
+                                        )
+                                    }
+                                    }
+                                </Query>
                             </div>
-                            <div className="col-sm-3">
-                                <br/>
-                                <h4>Twinpals</h4>
-                                <ul className="list-unstyled">
-                                    {fundcasts.length > 0 ? fundcastView : 'You have no fundcasts'}
-                                </ul>
+                            <div className="tab-pane fade" id="nav-history" role="tabpanel"
+                                 aria-labelledby="nav-history-tab"><h4>History of podcasts you've listened to will go
+                                here</h4>
+                            </div>
+                            <div className="tab-pane fade" id="nav-liked" role="tabpanel"
+                                 aria-labelledby="nav-liked-tab"><h4>List of podcasts you've liked to will go here</h4>
+                            </div>
+                            <div className="tab-pane fade" id="nav-subscriptions" role="tabpanel"
+                                 aria-labelledby="nav-subscriptions-tab"><h4>List of podcasts/hosts you've subscribed to
+                                will go here</h4>
+
                             </div>
                         </div>
-                        <Consumer>{graphql => <EditProfileModal graphql={graphql} profile={data.getProfileInfo}
-                                                                onClose={this.onClose}
-                                                                show={showEditProfileModal}/>}</Consumer>
-                        <Consumer>{graphql => <UploadProfilePictureModal graphql={graphql}
-                                                                         show={showProfilePictureModal}
-                                                                         onClose={this.onCloseProfilePictureModal}/>}</Consumer>
-                    </div>)
 
-                } else if (loading) {
-                    return (
-                        <p>Loading…</p>
-                    )
-                }
-                else {
-                    return (
-                        <p>Loading failed.</p>
-                    )
-                }
-            }
-            }
-        </Query>
-        // const {loading, error, getProfileInfo} = this.props.data
-        // if (loading) return <p>Loading...</p>
-        // if (error) return <p>{error}(</p>
-
-
-        // return (
-        //     <div>
-        //         <div className="row">
-        //             <div className="col-sm-3">
-        //                 {email ? profileInfo : 'loading'}
-        //             </div>
-        //             <div className="col-sm-6">
-        //                 <br/>
-        //                 <div className="content-feed">
-        //                     <NewPostForm/>
-        //                 </div>
-        //                 <PostsColumn/>
-        //             </div>
-        //             <div className="col-sm-3">
-        //                 <br/>
-        //                 <h4>Twinpals</h4>
-        //                 <ul className="list-unstyled">
-        //                     {fundcasts.length > 0 ? fundcastView : 'You have no fundcasts'}
-        //                 </ul>
-        //             </div>
-        //         </div>
-        //         {/*{showEditProfileModal ? <EditProfileModal profile={getProfileInfo} onClose={this.onClose} show={showEditProfileModal}/> : ''}*/}
-        //         {/*<UploadProfilePictureModal show={showProfilePictureModal} onClose={this.onCloseProfilePictureModal} picture={picture} onSave={this.onUpload}/>*/}
-        //     </div>
-
+                    </div>
+                </div>
+            </div>
+        )
     }
 }
 
-//
-// Profile.propTypes = {
-//     getProfileInfo: PropTypes.func.isRequired,
-//     getTwinpals: PropTypes.func.isRequired,
-//     clearPosts: PropTypes.func.isRequired,
-//     saveProfilePicture: PropTypes.func.isRequired,
-// }
-// Profile.contextTypes = {
-//     router: PropTypes.object.isRequired
-// }
-// export default connect(null, {getProfileInfo, getTwinpals, clearPosts,saveProfilePicture})(Profile)
-export default Profile
-// export default graphql(getProfileInfo)(Profile)
+export default HostPage

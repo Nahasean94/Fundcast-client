@@ -4,10 +4,19 @@ import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {Consumer, Query} from 'graphql-react'
 import shortid from "shortid"
 import PodcastView from "../podcasts/PodcastView"
-
+import * as jwt from "jsonwebtoken"
+import PropTypes from 'prop-types'
 class HostPage extends Component {
 
+
     render() {
+        const token = jwt.decode(localStorage.getItem("Fundcast"))
+        if (token) {
+            if (token.id === window.location.pathname.split('/')[2]) {
+                this.props.history.push('/profile')
+            }
+        }
+
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -21,7 +30,7 @@ class HostPage extends Component {
                         >
                             {({loading, data}) => {
                                 if (data) {
-                                    const {id, username, profile_picture, email,role, date_joined,address} = data.fetchUserProfile
+                                    const {id, username, profile_picture, email, role, date_joined, address} = data.fetchUserProfile
                                     return <div>
                                         <ul className="list-unstyled">
                                             <li><img src={`http://localhost:8080/uploads/${profile_picture}`}
@@ -30,7 +39,7 @@ class HostPage extends Component {
                                                      height="200"/>
                                             </li>
                                             <li>
-                                               Username: {username}
+                                                Username: {username}
                                             </li>
                                             <li>
                                                 Email: {email}
@@ -53,7 +62,6 @@ class HostPage extends Component {
                                         <p>Loading…</p>
                                     )
                                 }
-
                                 return (
                                     <p>Loading failed.</p>
                                 )
@@ -62,46 +70,48 @@ class HostPage extends Component {
                         </Query>
                     </div>
                     <div className="col-sm-8">
-                    <Query
-                        loadOnMount
-                        loadOnReset
-                        fetchOptionsOverride={fundcastFetchOptionsOverride}
-                        variables={{id: window.location.pathname.split('/')[2]}}
-                        query={fetchHostPodcasts}
-                    >
-                        {({loading, data}) => {
-                            if (data) {
-                                if (data.fetchHostPodcasts.length > 0) {
-                                    return data.fetchHostPodcasts.map(podcast => {
+                        <Query
+                            loadOnMount
+                            loadOnReset
+                            fetchOptionsOverride={fundcastFetchOptionsOverride}
+                            variables={{id: window.location.pathname.split('/')[2]}}
+                            query={fetchHostPodcasts}
+                        >
+                            {({loading, data}) => {
+                                if (data) {
+                                    if (data.fetchHostPodcasts.length > 0) {
+                                        return data.fetchHostPodcasts.map(podcast => {
+                                            return (
+                                                <div key={shortid.generate()}>
+                                                    <Consumer>{graphql => <PodcastView podcast={podcast}
+                                                                                       graphql={graphql}/>}</Consumer>
+                                                </div>
+                                            )
+                                        })
+                                    } else {
                                         return (
-                                            <div key={shortid.generate()} >
-                                                <Consumer>{graphql => <PodcastView podcast={podcast}
-                                                                                   graphql={graphql}/>}</Consumer>
-                                            </div>
+                                            <p>No podcasts found found</p>
                                         )
-                                    })
-                                } else {
+                                    }
+                                } else if (loading) {
                                     return (
-                                        <p>No podcasts found found</p>
+                                        <p>Loading…</p>
                                     )
                                 }
-                            } else if (loading) {
                                 return (
-                                    <p>Loading…</p>
+                                    <p>Loading failed.</p>
                                 )
                             }
-
-                            return (
-                                <p>Loading failed.</p>
-                            )
-                        }
-                        }
-                    </Query>
+                            }
+                        </Query>
+                    </div>
                 </div>
-            </div>
             </div>
         )
     }
 }
 
+HostPage.contextTypes = {
+    router: PropTypes.object.isRequired
+}
 export default HostPage

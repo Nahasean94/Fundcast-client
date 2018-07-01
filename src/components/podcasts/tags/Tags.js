@@ -70,6 +70,8 @@ class Tags extends React.Component {
             <div className="container">
                 <div className="row flex-xl-nowrap">
                     <div className="col-2 col-md-2 bd-sidebar">
+                        <h3>Tags</h3>
+
                         {/*<form>*/}
                         {/*<div className="input-group">*/}
                         {/*<input type="text"*/}
