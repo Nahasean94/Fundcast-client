@@ -5,8 +5,11 @@ import {isDate, isEmpty} from 'lodash'
 import TextFieldGroup from '../../shared/TextFieldsGroup'
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
-import {createNewPodcast} from "../../shared/queries"
+import {createNewPodcast,hosts as queryHosts,tags as queryTags} from "../../shared/queries"
+import Select from 'react-select'
+import {Query} from "graphql-react"
 
+let hostOptions, tagOptions
 
 class NewPodCastForm extends React.Component {
     constructor(props) {
@@ -16,17 +19,33 @@ class NewPodCastForm extends React.Component {
             description: '',
             podcast: '',
             coverImage: '',
-            hosts: [],
             paid: false,
-            tags: '',
             errors: {},
             isLoading: false,
-            invalid: false
+            invalid: false,
+            tags: [],
+            hosts: [],
+            // hostsList: [],
+            // tagssList: [],
         }
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.handlePodcastChange = this.handlePodcastChange.bind(this)
         this.handleCoverImageChange = this.handleCoverImageChange.bind(this)
+        this.handleTagsChange = this.handleTagsChange.bind(this)
+        this.handleHostsChange = this.handleHostsChange.bind(this)
+
+    }
+
+    handleTagsChange = (tags) => {
+        this.setState({tags})
+    }
+    handleHostsChange = (hosts) => {
+        this.setState({hosts})
+    }
+
+    componentDidMount() {
+
     }
 
     validateInput(data) {
@@ -35,18 +54,18 @@ class NewPodCastForm extends React.Component {
         if (validator.isEmpty(data.title)) {
             errors.title = 'This field is required'
         }
-        if (data.title.length < 3 ) {
-            errors.title = 'Description must be more than 3'
+        if (data.title.length < 3) {
+            errors.title = 'Description must be more than 3 charaters'
         }
         if (validator.isEmpty(data.description)) {
             errors.description = 'This field is required'
         }
 
-        if (validator.isEmpty(data.paid)) {
-            errors.paid = 'This field is required'
-        }
-        if (validator.isEmpty(data.tags)) {
+        if (!data.tags.lenght<1) {
             errors.tags = 'This field is required'
+        }
+        if (data.hosts.length<1) {
+            errors.hosts = 'This field is required'
         }
 
         return {
@@ -64,28 +83,36 @@ class NewPodCastForm extends React.Component {
     }
 
     handlePodcastChange({
-                     target: {
-                         validity,
-                         files: [file]
-                     }
-                 }) {
+                            target: {
+                                validity,
+                                files: [file]
+                            }
+                        }) {
         if (validity.valid) {
-            this.setState({podcast:file})
+            this.setState({podcast: file})
         }
     }
+
     handleCoverImageChange({
-                     target: {
-                         validity,
-                         files: [file]
-                     }
-                 }) {
+                               target: {
+                                   validity,
+                                   files: [file]
+                               }
+                           }) {
         if (validity.valid) {
-            this.setState({coverImage:file})
+            this.setState({coverImage: file})
         }
     }
 
     onSubmit(e) {
         e.preventDefault()
+        let {hosts,tags}=this.state
+        hosts=hosts.map(host=>{
+            return host.value
+        })
+        tags=tags.map(tag=>{
+            return tag.value
+        })
         if (this.isValid()) {
 
             this.setState({errors: {}, isLoading: false})
@@ -97,9 +124,9 @@ class NewPodCastForm extends React.Component {
                         variables: {
                             title: this.state.title,
                             description: this.state.description,
-                            hosts: this.state.hosts,
+                            hosts: hosts,
                             paid: this.state.paid,
-                            tags: this.state.tags,
+                            tags:  tags,
                             coverImage: this.state.coverImage,
                             podcast: this.state.podcast,
                         },
@@ -113,12 +140,12 @@ class NewPodCastForm extends React.Component {
                             description: '',
                             podcast: '',
                             coverImage: '',
-                            hosts: [],
                             paid: false,
-                            tags: '',
                             errors: {},
                             isLoading: false,
                             invalid: false,
+                            tags: [],
+                            hosts: [],
                             message: data
                                 ? `Successfully added a new podcast.`
                                 : `Posting failed failed.`
@@ -139,8 +166,8 @@ class NewPodCastForm extends React.Component {
     render() {
         const {show, onClose} = this.props
 
-        const {errors, isLoading, invalid, description, title, tags,} = this.state
-
+        const {errors, isLoading, invalid, description, title,} = this.state
+        const {hosts, tags} = this.state
 
         if (show) {
             return (
@@ -148,6 +175,7 @@ class NewPodCastForm extends React.Component {
                     <ModalHeader toggle={onClose}>Add a new podcast</ModalHeader>
                     <ModalBody>
                         <form onSubmit={this.onSubmit}>
+
                             <TextFieldGroup
                                 label="Title"
                                 type="text"
@@ -155,48 +183,15 @@ class NewPodCastForm extends React.Component {
                                 value={title}
                                 onChange={this.onChange}
                                 error={errors.title}
+
                             />
-                            <div className="form-group">
-                                <label className="control-label">Description</label>
+                            <div className="form-group row">
+                                <label className="col-sm-2 control-label">Description</label>
+                                <div className="col-sm-10">
+                                    <div className="form-group">
                                 <textarea name="description" onChange={this.onChange} className="form-control" rows="3"
                                           cols="20"/>
-                            </div>
-                            <fieldset className="form-group ">
-                                <div className="form-check form-check-inline">
-                                    <input className="form-check-input form-check-inline" type="radio"
-                                           value={0} name="paid" onChange={this.onChange}
-                                           id="free"/>
-                                    <label className="form-check-label" htmlFor="free">Free</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input className="form-check-input form-check-inline" type="radio"
-                                           value={1} name="paid" onChange={this.onChange}
-                                           id="paid"/>
-                                    <label className="form-check-label" htmlFor="paid">Paid</label>
-                                </div>
-
-                            </fieldset>
-
-                            <div className="form-group row">
-                                <label className="col-sm-2 col-form-label" htmlFor="hosts">Hosts</label>
-                                <div className="col-sm-10">
-                                    <select className="form-control form-control-sm" id="hosts" name="hosts"
-                                            required="true" onChange={this.onChange}>
-                                        <option>Select</option>
-                                        <option value="5b376f6dea2dea17200344d4">You</option>
-                                        <option value="5b376f6dea2dea17200344d4">Me</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="form-group row">
-                                <label className="col-sm-2 col-form-label" htmlFor="tags">Tags</label>
-                                <div className="col-sm-10">
-                                    <select className="form-control form-control-sm" id="tags" name="tags"
-                                            required="true" onChange={this.onChange}>
-                                        <option>Select</option>
-                                        <option value="religion">Religion</option>
-                                        <option value="catering">Catering</option>
-                                    </select>
+                                    </div>
                                 </div>
                             </div>
                             <div className="form-group row">
@@ -215,10 +210,105 @@ class NewPodCastForm extends React.Component {
                                 <div className="col-sm-10">
                                     <div className="custom-file">
                                         <input type="file" className="custom-file-input form-control-sm" id="customFile"
-                                               name="coverImage" accept="image/*" onChange={this.handleCoverImageChange}/>
+                                               name="coverImage" accept="image/*"
+                                               onChange={this.handleCoverImageChange}/>
                                         <label className="custom-file-label" htmlFor="customFile">Choose cover image for
                                             the podcast</label>
                                     </div>
+                                </div>
+                            </div>
+                            <div className="form-group row">
+                                <label className="col-sm-2 col-form-label">Access</label>
+                                <div className="col-sm-10">
+                                    <fieldset>
+                                        <div className="form-check form-check-inline">
+                                            <input className="form-check-input form-check-inline" type="radio"
+                                                   value={0} name="paid" onChange={this.onChange}
+                                                   id="free"/>
+                                            <label className="form-check-label" htmlFor="free">Free</label>
+                                        </div>
+                                        <div className="form-check form-check-inline">
+                                            <input className="form-check-input form-check-inline" type="radio"
+                                                   value={1} name="paid" onChange={this.onChange}
+                                                   id="paid"/>
+                                            <label className="form-check-label" htmlFor="paid">Paid</label>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                            </div>
+
+                            <div className="form-group row">
+                                <label className="col-sm-2 col-form-label" htmlFor="hosts">Hosts</label>
+                                <div className="col-sm-10">
+                                    <Query
+                                        loadOnMount
+                                        loadOnReset
+                                        fetchOptionsOverride={fundcastFetchOptionsOverride}
+                                        query={queryTags}
+                                    >
+                                        {({loading, data}) => {
+                                            if (data) {
+                                                tagOptions = data.tags.map(tag => {
+                                                    return {
+                                                        label: tag.name,
+                                                        value: tag.name
+                                                    }
+                                                })
+                                                return <Select.Creatable
+                                                    closeOnSelect={true}
+                                                    multi={true}
+                                                    onChange={this.handleTagsChange}
+                                                    options={tagOptions}
+                                                    placeholder="Search tags"
+                                                    removeSelected={true}
+                                                    value={tags}/>
+                                            }
+                                            else if (loading) {
+                                                return <p>Loading…</p>
+                                            }
+                                            return <p>Loading failed.</p>
+                                        }
+                                        }
+                                    </Query>
+                                </div>
+                            </div>
+                            <div className="form-group row">
+                                <label className="col-sm-2 col-form-label" htmlFor="tags">Tags</label>
+                                <div className="col-sm-10">
+                                    <Query
+                                        loadOnMount
+                                        loadOnReset
+                                        fetchOptionsOverride={fundcastFetchOptionsOverride}
+                                        query={queryHosts}
+                                    >
+                                        {({loading, data}) => {
+                                            if (data) {
+                                                hostOptions = data.hosts.map(host => {
+                                                    return {
+                                                        label: <div><img
+                                                            src={`http://localhost:8080/uploads/${host.profile_picture}`}
+                                                            width="30" height="20"
+                                                            className="rounded-circle"/>{host.username}</div>,
+                                                        value: host.id
+                                                    }
+                                                })
+                                                return <Select
+                                                    closeOnSelect={true}
+                                                    multi={true}
+                                                    onChange={this.handleHostsChange}
+                                                    options={hostOptions}
+                                                    placeholder="Search hosts..."
+                                                    removeSelected={true}
+                                                    value={hosts}/>
+                                            }
+                                            else if (loading) {
+                                                return <p>Loading…</p>
+                                            }
+                                            return <p>Loading failed.</p>
+                                        }
+                                        }
+                                    </Query>
                                 </div>
                             </div>
                             <div className="form-group row">

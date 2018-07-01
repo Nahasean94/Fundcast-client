@@ -29,7 +29,7 @@ class LikingPodcast extends Component {
 
     onLike(e) {
         e.preventDefault()
-        if(localStorage.removeItem('Fundcast')){
+        if(localStorage.getItem('Fundcast')){
         if (this.state.liked) {
             this.props.graphql
                 .query({

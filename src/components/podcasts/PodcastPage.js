@@ -30,6 +30,16 @@ class PodcastPage extends Component {
                                  alt={title} className="rounded"/>
                         const audioView = <audio src={`http://localhost:8080/uploads/${audioFile.path}`} controls={true}
                                                  className="rounded" style={{width: '100%'}}/>
+                        const hostedBy =
+                            <ul className="list-inline">
+                                <strong>HOSTED BY: </strong>
+                                {hosts.map(host => {
+                                    const hostsLink = `/hosts/${host.id}`
+                                    return <li className="list-inline-item"><a href={hostsLink}
+                                                                               id={host.id}>{host.username}</a>{host === hosts[hosts.length - 1] ? '' : ','}
+                                    </li>
+                                })}
+                            </ul>
                         return <div className="row">
                             <div className="col-sm-3">
                                 {imageView}
@@ -47,8 +57,7 @@ class PodcastPage extends Component {
                             </div>
                             <div className="col-sm-7">
                                 <h3>{title}</h3>
-                                <strong>HOSTED BY:</strong> <a href="" onClick={this.onProfileLink}
-                                                               id={hosts[0].id}>{hosts[0].username}</a>
+                                {hostedBy}
                                 <div className="feed-meta">
                                     <ul className="list-inline list-unstyled">
                                         <li className="list-inline-item">Posted about {timeSince(timestamp)}</li>

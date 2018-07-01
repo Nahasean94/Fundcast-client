@@ -6,6 +6,7 @@ import App from "./components/App"
 import requireAuth from "./utils/requireAuth"
 import PodcastPage from './components/podcasts/PodcastPage'
 import Home from "./components/Home"
+import TestPage from "./components/TestPage"
 import Hosts from "./components/hosts/Hosts"
 import TagsPage from "./components/podcasts/TagsPage"
 import HostPage from "./components/hosts/HostPage"
@@ -23,6 +24,7 @@ export default () => {
                         <Route path="/hosts/:id" component={HostPage}/>
                         <Route path="/hosts" component={Hosts}/>
                         <Route path="/tags" component={TagsPage}/>
+                        <Route path="/test" component={TestPage}/>
                     </Switch>
                 </App>
 

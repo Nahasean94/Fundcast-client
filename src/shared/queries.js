@@ -375,7 +375,7 @@ const uploadFile = `
 }
 `
 const createNewPodcast = `
-   mutation($title:String!,$description:String!,$hosts:[String!],$paid:Int!,$tags:String!,$coverImage:Upload!,$podcast:Upload!) {
+   mutation($title:String!,$description:String!,$hosts:[String!]!,$paid:Int!,$tags:[String!]!,$coverImage:Upload!,$podcast:Upload!) {
   newPodcast(title:$title,description:$description,hosts:$hosts,paid:$paid,tags:$tags,coverImage:$coverImage,podcast:$podcast) {
  title
  description
@@ -391,9 +391,24 @@ const createNewPodcast = `
   }
 }
 `
+const tags=`
+{
+tags{
+id
+name
+}
+}`
 const hosts=`
 {
 hosts{
+id
+username
+profile_picture
+}
+}`
+const searchHosts=`
+query($username:String!){
+searchHosts(username:$username){
 id
 username
 profile_picture
@@ -415,6 +430,8 @@ export {
     podcasts,
     podcast,
     hosts,
+    tags,
+    searchHosts,
     fetchProfilePodcasts,
     fetchHostPodcasts,
     fetchUserProfile,

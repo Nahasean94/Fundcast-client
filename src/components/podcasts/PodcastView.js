@@ -68,32 +68,52 @@ class PodcastView extends React.Component {
         const imageView =
             <img src={`http://localhost:8080/uploads/${coverImage.path}`} width="150" height="120"
                  alt={title} className="rounded"/>
-        const hostsLink=`/hosts/${hosts[0].id}`
+        const hostedBy =
+            <ul className="list-inline">
+                <strong>HOSTED BY: </strong>
+                {hosts.map(host => {
+                    const hostsLink = `/hosts/${host.id}`
+                    return <li className="list-inline-item"><a href={hostsLink}
+                                                               id={host.id}>{host.username}</a>{host === hosts[hosts.length - 1] ? '' : ','}
+                    </li>
+                })}
+            </ul>
         return (
-            <div>
-                <div className="well">
-                    <div className="row">
-                        <div className="col-sm-2">
-                            <Link to={link}>{imageView}</Link>
+            <div className="well">
+                <div className="row">
+                    <div className="col-sm-2">
+                        <Link to={link}>{imageView}</Link>
 
-                        </div>
-                        <div className="col-sm-10">
-                            <Link to={link}><h3>{title}</h3></Link>
-                            <strong>HOSTED BY:</strong> <a href={hostsLink}
-                                                           id={hosts[0].id}>{hosts[0].username}</a>
-                            <div className="feed-meta">
-                                <ul className="list-inline list-unstyled">
-                                    <li className="list-inline-item">{timeSince(timestamp)}</li>
-
-                                </ul>
-                            </div>
-                        </div>
                     </div>
-                    <br/>
-                    <div className="view-podcast">
-                        {description !== '' ? description.length > 600 ? more : description : coverImage}
+                    <div className="col-sm-10">
+                        <Link to={link}><h3>{title}</h3></Link>
+                        {hostedBy}
+                        <div className="feed-meta">
+                            <ul className="list-inline list-unstyled">
+                                <li className="list-inline-item">Posted about {timeSince(timestamp)}</li>
+
+                            </ul>
+                        </div>
                     </div>
                 </div>
+                <br/>
+                <div className="view-podcast">
+                    {description !== '' ? description.length > 600 ? more : description : coverImage}
+                </div>
+                <br/>
+                <ul className="list-inline">
+                    &nbsp;<i className="fa fa-tags"></i>
+                    {tags.map((tag, i) => {
+                        return <li key={i} className="list-inline-item"><a href="">&nbsp;{tag}</a></li>
+                    })}
+
+                    <li className="list-inline-item pull-right">
+                        <ul className="list-inline">
+                            <li className="list-inline-item"><strong>{likes.length} likes</strong></li>
+                            <li className="list-inline-item"><strong> {listens} people listened</strong></li>
+                        </ul>
+                    </li>
+                </ul>
                 <hr/>
 
             </div>

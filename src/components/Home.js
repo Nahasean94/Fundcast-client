@@ -10,12 +10,10 @@ class Home extends React.Component {
     render() {
 
         return (
-            <div className="row">
-                <div className="col-sm-6 offset-sm-3">
-                    {/*<Consumer>{graphql=><NewPostForm graphql={graphql}/>}</Consumer>*/}
+            <div className="container">
                     <PodcastsColumn/>
                 </div>
-            </div>
+
 
         )
     }
