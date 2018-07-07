@@ -49,6 +49,8 @@ class EditPodcastModal extends React.Component {
         this.onSubmitBasicInfo = this.onSubmitBasicInfo.bind(this)
         this.onSubmitCoverImage = this.onSubmitCoverImage.bind(this)
         this.onSubmitAudioFile = this.onSubmitAudioFile.bind(this)
+        this.handlePodcastChange = this.handlePodcastChange.bind(this)
+        this.handleCoverImageChange = this.handleCoverImageChange.bind(this)
         this.handleTagsChange = this.handleTagsChange.bind(this)
         this.handleHostsChange = this.handleHostsChange.bind(this)
 
@@ -131,7 +133,27 @@ class EditPodcastModal extends React.Component {
             )
         }
     }
+    handlePodcastChange({
+                            target: {
+                                validity,
+                                files: [file]
+                            }
+                        }) {
+        if (validity.valid) {
+            this.setState({podcast: file})
+        }
+    }
 
+    handleCoverImageChange({
+                               target: {
+                                   validity,
+                                   files: [file]
+                               }
+                           }) {
+        if (validity.valid) {
+            this.setState({coverImage: file})
+        }
+    }
     onSubmitCoverImage(e) {
         e.preventDefault()
         if (this.state.coverImage) {
