@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
-import NewPodcastForm from './podcasts/NewPodcastForm'
+import NewPodcastForm from './podcasts/modals/NewPodcastForm'
 import {Consumer} from "graphql-react"
 import jwt from "jsonwebtoken"
 

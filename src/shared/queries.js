@@ -328,6 +328,20 @@ const deletePodcast = `
   }
 }
 `
+const unPublishPodcast= `
+   mutation($id:ID!) {
+  unPublishPodcast(id:$id) {
+   id
+  }
+}
+`
+const publishPodcast= `
+   mutation($id:ID!) {
+  publishPodcast(id:$id) {
+   id
+  }
+}
+`
 const addComment = `
    mutation($podcast_id:ID!,$comment:String!) {
   addComment(podcast_id:$podcast_id,comment:$comment) {
@@ -479,5 +493,7 @@ export {
     createNewPodcast,
     uploadFile,
     uploadProfilePicture,
-    person
+    person,
+    unPublishPodcast,
+    publishPodcast
 }

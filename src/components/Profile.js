@@ -96,19 +96,21 @@ class HostPage extends Component {
                                 >
                                     {({loading, data}) => {
                                         if (data) {
-                                            if (data.fetchHostPodcasts.length > 0) {
-                                                return data.fetchHostPodcasts.map(podcast => {
+                                            if (data.fetchHostPodcasts) {
+                                                if (data.fetchHostPodcasts.length > 0) {
+                                                    return data.fetchHostPodcasts.map(podcast => {
+                                                        return (
+                                                            <div key={shortid.generate()}>
+                                                                <Consumer>{graphql => <PodcastView podcast={podcast}
+                                                                                                   graphql={graphql}/>}</Consumer>
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+                                                } else {
                                                     return (
-                                                        <div key={shortid.generate()}>
-                                                            <Consumer>{graphql => <PodcastView podcast={podcast}
-                                                                                               graphql={graphql}/>}</Consumer>
-                                                        </div>
+                                                        <p>No podcasts found found</p>
                                                     )
-                                                })
-                                            } else {
-                                                return (
-                                                    <p>No podcasts found found</p>
-                                                )
                                             }
                                         } else if (loading) {
                                             return (

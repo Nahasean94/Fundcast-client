@@ -2,10 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import validator from 'validator'
 import {isDate, isEmpty} from 'lodash'
-import TextFieldGroup from '../../shared/TextFieldsGroup'
+import TextFieldGroup from '../../../shared/TextFieldsGroup'
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
-import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
-import {createNewPodcast,hosts as queryHosts,tags as queryTags} from "../../shared/queries"
+import {fundcastFetchOptionsOverride} from "../../../shared/fetchOverrideOptions"
+import {createNewPodcast,hosts as queryHosts,tags as queryTags} from "../../../shared/queries"
 import Select from 'react-select'
 import {Query} from "graphql-react"
 
@@ -197,23 +197,18 @@ class NewPodCastForm extends React.Component {
                             <div className="form-group row">
                                 <label className="col-sm-2 col-form-label" htmlFor="paid">Podcast audio file</label>
                                 <div className="col-sm-10">
-                                    <div className="custom-file">
-                                        <input type="file" className="custom-file-input form-control-sm" id="customFile"
+                                        <input type="file" className="form-control-sm" id="customFile"
                                                name="podcast" accept="audio/*" onChange={this.handlePodcastChange}/>
-                                        <label className="custom-file-label" htmlFor="customFile">Choose audio
-                                            file</label>
-                                    </div>
+
                                 </div>
                             </div>
                             <div className="form-group row">
                                 <label className="col-sm-2 col-form-label" htmlFor="paid">Cover image</label>
                                 <div className="col-sm-10">
-                                    <div className="custom-file">
-                                        <input type="file" className="custom-file-input form-control-sm" id="customFile"
+                                    <div className="">
+                                        <input type="file" className="form-control-sm" id="customFile"
                                                name="coverImage" accept="image/*"
                                                onChange={this.handleCoverImageChange}/>
-                                        <label className="custom-file-label" htmlFor="customFile">Choose cover image for
-                                            the podcast</label>
                                     </div>
                                 </div>
                             </div>
@@ -239,7 +234,7 @@ class NewPodCastForm extends React.Component {
                             </div>
 
                             <div className="form-group row">
-                                <label className="col-sm-2 col-form-label" htmlFor="hosts">Hosts</label>
+                                <label className="col-sm-2 col-form-label" htmlFor="hosts">Tags</label>
                                 <div className="col-sm-10">
                                     <Query
                                         loadOnMount
@@ -274,7 +269,7 @@ class NewPodCastForm extends React.Component {
                                 </div>
                             </div>
                             <div className="form-group row">
-                                <label className="col-sm-2 col-form-label" htmlFor="tags">Tags</label>
+                                <label className="col-sm-2 col-form-label" htmlFor="tags">Hosts</label>
                                 <div className="col-sm-10">
                                     <Query
                                         loadOnMount
@@ -310,6 +305,7 @@ class NewPodCastForm extends React.Component {
                                         }
                                     </Query>
                                 </div>
+
                             </div>
                             <div className="form-group row">
                                 <label className="col-sm-2 col-form-label" htmlFor="paid"></label>

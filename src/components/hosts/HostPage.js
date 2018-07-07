@@ -79,7 +79,7 @@ class HostPage extends Component {
                         >
                             {({loading, data}) => {
                                 if (data) {
-                                    if (data.fetchHostPodcasts.length > 0) {
+                                    if (data.fetchHostPodcasts) {
                                         return data.fetchHostPodcasts.map(podcast => {
                                             return (
                                                 <div key={shortid.generate()}>
