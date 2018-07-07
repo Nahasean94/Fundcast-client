@@ -1,6 +1,6 @@
 import React from 'react'
 import jwt from "jsonwebtoken"
-import Profile from "../components/Profile"
+import Profile from "../components/profile/Profile"
 import PodcastPage from "../components/podcasts/PodcastPage"
 
 export function ProfileLink(id) {

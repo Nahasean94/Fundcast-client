@@ -1,6 +1,6 @@
 import React from 'react'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
-import Profile from "./components/Profile"
+import Profile from "./components/profile/Profile"
 import SigninPage from "./components/SigninPage"
 import App from "./components/App"
 import requireAuth from "./utils/requireAuth"

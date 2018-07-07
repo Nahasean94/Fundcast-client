@@ -185,7 +185,7 @@ const fetchUserProfile = `
   role
   profile_picture
   date_joined
-  address
+  ethereum_address
   }
 }
 `
@@ -451,6 +451,19 @@ const updateBasicInfo = `
   }
 }
 `
+const updateProfileBasicInfo = `
+   mutation($id:ID!,$username:String!,$email:String!,$role:String!,$ethereum_address:String) {
+  updateProfileBasicInfo(id:$id,username:$username,email:$email,role:$role,ethereum_address:$ethereum_address) {
+ id
+  username
+  email
+  role
+  profile_picture
+  date_joined
+  ethereum_address
+  }
+}
+`
 const updateCoverImageFile = `
    mutation($id:ID!,$coverImage:Upload!) {
   updateCoverImageFile(id:$id,coverImage:$coverImage) {
@@ -514,7 +527,7 @@ email
 role
 profile_picture
 date_joined
-address
+ethereum_address
 }
 }`
 
@@ -527,6 +540,7 @@ export {
     updateBasicInfo,
     updateCoverImageFile,
     updateAudioFile,
+    updateProfileBasicInfo,
     searchHosts,
     fetchProfilePodcasts,
     fetchHostPodcasts,

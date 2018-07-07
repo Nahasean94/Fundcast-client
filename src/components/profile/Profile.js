@@ -1,12 +1,29 @@
 import React, {Component} from 'react'
-import {fetchHostPodcasts, fetchUserProfile} from "../shared/queries"
-import {fundcastFetchOptionsOverride} from ".././shared/fetchOverrideOptions"
+import {fetchHostPodcasts, fetchUserProfile} from "../../shared/queries"
+import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {Consumer, Query} from 'graphql-react'
 import shortid from "shortid"
-import PodcastView from "./podcasts/PodcastView"
+import PodcastView from "../podcasts/PodcastView"
 import * as jwt from "jsonwebtoken"
+import UpdateProfile from "./UpdateProfile"
 
 class HostPage extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            showUpdateProfileModal: false
+        }
+        this.showUpdateProfileModal = this.showUpdateProfileModal.bind(this)
+        this.closeUpdateProfileModal = this.closeUpdateProfileModal.bind(this)
+    }
+
+    showUpdateProfileModal(e) {
+        this.setState({showUpdateProfileModal: true})
+    }
+
+    closeUpdateProfileModal(e) {
+        this.setState({showUpdateProfileModal: false})
+    }
 
     render() {
         const token = jwt.decode(localStorage.getItem("Fundcast"))
@@ -14,6 +31,7 @@ class HostPage extends Component {
         if (token) {
             id = token.id
         }
+        const {showUpdateProfileModal}=this.state
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -27,7 +45,7 @@ class HostPage extends Component {
                         >
                             {({loading, data}) => {
                                 if (data) {
-                                    const {id, username, profile_picture, email, role, date_joined, address} = data.fetchUserProfile
+                                    const {id, username, profile_picture, email, role, date_joined, ethereum_address} = data.fetchUserProfile
                                     return <div>
                                         <ul className="list-unstyled">
                                             <li><img src={`http://localhost:8080/uploads/${profile_picture}`}
@@ -48,10 +66,13 @@ class HostPage extends Component {
                                                 Date joined: {date_joined}
                                             </li>
                                             <li>
-                                                Ethereum address: {address}
+                                                Ethereum address: {ethereum_address}
                                             </li>
 
                                         </ul>
+                                        <hr/>
+                                        <button className="btn btn-sm btn-outline-primary" onClick={this.showUpdateProfileModal}>Update profile</button>
+                                        <Consumer>{graphql=> <UpdateProfile graphql={graphql} show={showUpdateProfileModal} onClose={this.closeUpdateProfileModal} username={username} email={email} role={role} profilePicture={profile_picture}  id={id} ethereum_address={ethereum_address}/>}</Consumer>
                                     </div>
 
                                 } else if (loading) {
@@ -107,10 +128,10 @@ class HostPage extends Component {
                                                         )
                                                     })
                                                 }
-                                                } else {
-                                                    return (
-                                                        <p>No podcasts found found</p>
-                                                    )
+                                            } else {
+                                                return (
+                                                    <p>No podcasts found found</p>
+                                                )
                                             }
                                         } else if (loading) {
                                             return (
@@ -141,6 +162,7 @@ class HostPage extends Component {
 
                     </div>
                 </div>
+
             </div>
         )
     }

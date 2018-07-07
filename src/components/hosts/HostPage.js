@@ -55,6 +55,7 @@ class HostPage extends Component {
                                             </li>
 
                                         </ul>
+
                                     </div>
 
                                 } else if (loading) {
