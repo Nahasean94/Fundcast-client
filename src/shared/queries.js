@@ -85,6 +85,7 @@ path
 payment{
 paid
 }
+publishing
     }
     }
 `

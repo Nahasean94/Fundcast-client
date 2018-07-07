@@ -8,8 +8,10 @@ import shortid from "shortid"
 import Comments from "../comments/Comments"
 import LikingPodcast from "./LikingPodcast"
 import EditPodcastModal from "./modals/EditPodcastModal"
-import UnpublishPodcastModal from "./modals/UnpublishModal"
+import UnpublishPodcastModal from "./modals/UnpublishPodcastModal"
 import DeletePodcastModal from "./modals/ConfirmDeletePodcast"
+import PublishPodcastModal from "./modals/PublishPodcastModal"
+import jwt from "jsonwebtoken"
 
 
 class PodcastPage extends Component {
@@ -22,45 +24,45 @@ class PodcastPage extends Component {
             showDeletePodcastModal: false,
 
         }
-        this.showEditPodcastModal=this.showEditPodcastModal.bind(this)
-        this.closeEditPodcastModal=this.closeEditPodcastModal.bind(this)
-        this.showPublishPodcastModal=this.showPublishPodcastModal.bind(this)
-        this.closePublishPodcastModal=this.closePublishPodcastModal.bind(this)
-        this.showUnpublishPodcastModal=this.showUnpublishPodcastModal.bind(this)
-        this.closeUnpublishPodcastModal=this.closeUnpublishPodcastModal.bind(this)
-        this.showDeletePodcastModal=this.showDeletePodcastModal.bind(this)
-        this.closeDeletePodcastModal=this.closeDeletePodcastModal.bind(this)
+        this.showEditPodcastModal = this.showEditPodcastModal.bind(this)
+        this.closeEditPodcastModal = this.closeEditPodcastModal.bind(this)
+        this.showPublishPodcastModal = this.showPublishPodcastModal.bind(this)
+        this.closePublishPodcastModal = this.closePublishPodcastModal.bind(this)
+        this.showUnpublishPodcastModal = this.showUnpublishPodcastModal.bind(this)
+        this.closeUnpublishPodcastModal = this.closeUnpublishPodcastModal.bind(this)
+        this.showDeletePodcastModal = this.showDeletePodcastModal.bind(this)
+        this.closeDeletePodcastModal = this.closeDeletePodcastModal.bind(this)
     }
 
-    showEditPodcastModal(e) {
+    showEditPodcastModal() {
         this.setState({showEditPodcastModal: true})
     }
 
-    closeEditPodcastModal(e) {
+    closeEditPodcastModal() {
         this.setState({showEditPodcastModal: false})
     }
 
-    showPublishPodcastModal(e) {
+    showPublishPodcastModal() {
         this.setState({showPublishPodcastModal: true})
     }
 
-    closePublishPodcastModal(e) {
+    closePublishPodcastModal() {
         this.setState({showPublishPodcastModal: false})
     }
 
-    showUnpublishPodcastModal(e) {
+    showUnpublishPodcastModal() {
         this.setState({showUnpublishPodcastModal: true})
     }
 
-    closeUnpublishPodcastModal(e) {
+    closeUnpublishPodcastModal() {
         this.setState({showUnpublishPodcastModal: false})
     }
 
-    showDeletePodcastModal(e) {
+    showDeletePodcastModal() {
         this.setState({showDeletePodcastModal: true})
     }
 
-    closeDeletePodcastModal(e) {
+    closeDeletePodcastModal() {
         this.setState({showDeletePodcastModal: false})
     }
 
@@ -76,8 +78,21 @@ class PodcastPage extends Component {
             >
                 {({loading, data}) => {
                     if (data) {
-                        const {id, title, description, tags, listens, hosts, timestamp, payment, coverImage, likes, audioFile} = data.podcast
+                        const {id, title, description, tags, listens, hosts, timestamp, payment, coverImage, likes, audioFile, publishing} = data.podcast
+
                         const {showEditPodcastModal, showDeletePodcastModal, showPublishPodcastModal, showUnpublishPodcastModal} = this.state
+                        let isHost = false
+
+                        let token
+                        if (localStorage.getItem('Fundcast')) {
+                            token = jwt.decode(localStorage.getItem('Fundcast'))
+                        }
+                        if (token) {
+                            hosts.map(host => {
+                                if (host.username === token.username)
+                                    isHost = true
+                            })
+                        }
                         const imageView =
                             <img src={`http://localhost:8080/uploads/${coverImage.path}`} width="350" height="270"
                                  alt={title} className="rounded"/>
@@ -93,12 +108,35 @@ class PodcastPage extends Component {
                                     </li>
                                 })}
                             </ul>
+                        const publishButton = <button className="btn btn-outline-primary btn-sm" type="button"
+                                                      onClick={this.showPublishPodcastModal}>Publish
+                        </button>
+                        const unPublishButton = <button className="btn btn-outline-warning btn-sm" type="button"
+                                                        onClick={this.showUnpublishPodcastModal}>Unpublish
+                        </button>
+                        const hostActions = <div>
+                            <ul className="list-inline list-unstyled">
+                                <li className="list-inline-item">
+                                    {publishing === 'published' ? unPublishButton : publishButton}
+                                </li>
+                                <li className="list-inline-item">
+                                    <button className="btn btn-outline-success btn-sm"
+                                            onClick={this.showEditPodcastModal}>Edit
+                                    </button>
+                                </li>
+                                <li className="list-inline-item">
+                                    <button className="btn btn-outline-danger btn-sm" type="button"
+                                            onClick={this.showDeletePodcastModal}>Delete
+                                    </button>
+                                </li>
+                            </ul>
+                            <hr/>
+                        </div>
                         return <div className="row">
                             <div className="col-sm-3">
                                 {imageView}
-                                <br/>
-                                <br/>
                                 <hr/>
+                                {isHost ? hostActions : ''}
                                 <div className="feed-meta">
                                     <ul className="list-inline list-unstyled">
                                         <li className="list-inline-item pull-left"><Consumer>{graphql => <LikingPodcast
@@ -109,28 +147,7 @@ class PodcastPage extends Component {
                                 </div>
                             </div>
                             <div className="col-sm-5 offset-sm-1">
-                                <ul className="list-inline list-unstyled">
-
-                                    <li className="list-inline-item pull-right">
-                                        <div className="dropdown">
-                                            <button className="btn btn-dark btn-sm dropdown-toggle" type="button"
-                                                    id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">
-                                                Actions
-                                            </button>
-                                            <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                                <button className="dropdown-item btn-sm" type="button" onClick={this.showEditPodcastModal}>Edit</button>
-                                                <button className="dropdown-item btn-sm" type="button" onClick={this.showUnpublishPodcastModal}>Unpublish
-                                                </button>
-                                                <button className="dropdown-item btn-sm" type="button" onClick={this.showDeletePodcastModal}>Delete
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                    </li>
-                                    <li className="list-inline-item pull-left"><h3>{title}</h3></li>
-                                </ul>
-                                <br/>
+                                <h2>{title}</h2>
                                 <br/>
                                 {hostedBy}
                                 <div className="feed-meta">
@@ -170,7 +187,7 @@ class PodcastPage extends Component {
                                     >
                                         {({loading, data}) => {
                                             if (data) {
-                                                if (data.podcasts.length>0) {
+                                                if (data.podcasts.length > 0) {
                                                     return data.podcasts.map(podcast =>
                                                         (
                                                             <div key={shortid.generate()}>
@@ -179,7 +196,7 @@ class PodcastPage extends Component {
                                                             </div>
                                                         )
                                                     )
-                                                }else{
+                                                } else {
                                                     return <p>No related podcasts found</p>
                                                 }
                                             }
@@ -194,9 +211,22 @@ class PodcastPage extends Component {
                                 }
 
                             </div>
-                            <Consumer>{graphql =>  <EditPodcastModal graphql={graphql} show={showEditPodcastModal} onClose={this.closeEditPodcastModal}  coverImage={coverImage} description={description} id={id} hosts={hosts} paid={payment.paid} podcast={podcast} tags={tags} title={title}/>}</Consumer>
-                            <Consumer>{graphql =>   <UnpublishPodcastModal graphql={graphql} id={id} show={showUnpublishPodcastModal} onClose={this.closeUnpublishPodcastModal}/>}</Consumer>
-                            <Consumer>{graphql =>   <DeletePodcastModal graphql={graphql} id={id} show={showDeletePodcastModal} onClose={this.closeDeletePodcastModal}/>}</Consumer>
+                            <Consumer>{graphql => <EditPodcastModal graphql={graphql} show={showEditPodcastModal}
+                                                                    onClose={this.closeEditPodcastModal}
+                                                                    coverImage={coverImage} description={description}
+                                                                    id={id} hosts={hosts} paid={payment.paid}
+                                                                    podcast={podcast} tags={tags}
+                                                                    title={title}/>}</Consumer>
+                            <Consumer>{graphql => <UnpublishPodcastModal graphql={graphql} id={id}
+                                                                         show={showUnpublishPodcastModal}
+                                                                         onClose={this.closeUnpublishPodcastModal}/>}</Consumer>
+                            <Consumer>{graphql => <PublishPodcastModal graphql={graphql} id={id}
+                                                                       show={showPublishPodcastModal}
+                                                                       onClose={this.closePublishPodcastModal}/>}</Consumer>
+
+                            <Consumer>{graphql => <DeletePodcastModal graphql={graphql} id={id}
+                                                                      show={showDeletePodcastModal}
+                                                                      onClose={this.closeDeletePodcastModal}/>}</Consumer>
                         </div>
 
                     } else if (loading) {
