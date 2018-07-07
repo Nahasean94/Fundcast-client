@@ -329,14 +329,14 @@ const deletePodcast = `
   }
 }
 `
-const unPublishPodcast= `
+const unPublishPodcast = `
    mutation($id:ID!) {
   unPublishPodcast(id:$id) {
    id
   }
 }
 `
-const publishPodcast= `
+const publishPodcast = `
    mutation($id:ID!) {
   publishPodcast(id:$id) {
    id
@@ -435,14 +435,62 @@ const createNewPodcast = `
   }
 }
 `
-const tags=`
+const updateBasicInfo = `
+   mutation($id:ID!,$title:String!,$description:String!,$hosts:[String!]!,$paid:Int!,$tags:[String!]!) {
+  updateBasicInfo(id:$id,title:$title,description:$description,hosts:$hosts,paid:$paid,tags:$tags) {
+ title
+ description
+ hosts{
+ id
+ }
+ payment{
+ id
+ }
+ tags
+ timestamp
+  }
+}
+`
+const updateCoverImageFile = `
+   mutation($id:ID!,$coverImage:Upload!) {
+  updateCoverImageFile(id:$id,coverImage:$coverImage) {
+ title
+ description
+ hosts{
+ id
+ }
+ payment{
+ id
+ }
+ tags
+ timestamp
+  }
+}
+`
+const updateAudioFile = `
+   mutation($id:ID!,$podcast:Upload!) {
+  updateAudioFile(id:$id,podcast:$podcast) {
+ title
+ description
+ hosts{
+ id
+ }
+ payment{
+ id
+ }
+ tags
+ timestamp
+  }
+}
+`
+const tags = `
 {
 tags{
 id
 name
 }
 }`
-const hosts=`
+const hosts = `
 {
 hosts{
 id
@@ -450,7 +498,7 @@ username
 profile_picture
 }
 }`
-const searchHosts=`
+const searchHosts = `
 query($username:String!){
 searchHosts(username:$username){
 id
@@ -458,7 +506,7 @@ username
 profile_picture
 }
 }`
-const person=`
+const person = `
 query($id:ID!){
 person(id:$id){
 username
@@ -476,6 +524,9 @@ export {
     podcast,
     hosts,
     tags,
+    updateBasicInfo,
+    updateCoverImageFile,
+    updateAudioFile,
     searchHosts,
     fetchProfilePodcasts,
     fetchHostPodcasts,

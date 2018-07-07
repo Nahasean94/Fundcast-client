@@ -111,7 +111,7 @@ class PodcastPage extends Component {
                         const publishButton = <button className="btn btn-outline-primary btn-sm" type="button"
                                                       onClick={this.showPublishPodcastModal}>Publish
                         </button>
-                        const unPublishButton = <button className="btn btn-outline-warning btn-sm" type="button"
+                        const unPublishButton = <button className="btn btn-outline-dark btn-sm" type="button"
                                                         onClick={this.showUnpublishPodcastModal}>Unpublish
                         </button>
                         const hostActions = <div>
