@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import jwt from "jsonwebtoken"
 import {timeSince} from "../../shared/TimeSince"
 import {Consumer} from 'graphql-react'
 import {Link} from "react-router-dom"
@@ -10,60 +9,27 @@ class PodcastView extends React.Component {
         super(props)
         this.state = {
             ...this.props.podcast,
-
+            showFullDescription: false
         }
+        this.showFullDescription = this.showFullDescription.bind(this)
     }
 
-    onProfileLink(e) {
-
+    showFullDescription(e) {
         e.preventDefault()
-        const {hosts, profile} = this.props.podcast
-// this.props.clearPodcasts()
-        const token = jwt.decode(localStorage.getItem('Fundcast')) ? jwt.decode(localStorage.getItem('Fundcast')) : ''
-        if (token) {
-            if (token.id !== hosts.id && token.id !== profile.id) {
-                this.context.router.history.push(`/fundcast/${ e.target.id}`)
-            }
-            else if (token.id === hosts.id && token.id === profile.id) {
-                if (window.location.pathname !== '/profile') {
-                    this.context.router.history.push('/profile')
-                }
-            }
-            else if (token.id === hosts.id && token.id !== profile.id) {
-                if (window.location.pathname !== '/profile' && token.id === e.target.id) {
-
-                    this.context.router.history.push('/profile')
-                } else {
-                    if (token.id !== e.target.id) {
-                        this.context.router.history.push(`/fundcast/${profile.id}`)
-                    }
-                }
-            }
-            else if (token.id !== hosts.id && token.id === profile.id) {
-                if (window.location.pathname === '/profile' && token.id !== e.target.id) {
-
-                    this.context.router.history.push(`/fundcast/${hosts.id}`)
-                }
-                else if (window.location.pathname !== '/profile' && token.id === e.target.id) {
-
-                    this.context.router.history.push('/profile')
-                }
-            }
-        } else {
-            this.context.router.history.push(`/fundcast/${ e.target.id}`)
-        }
-
+        this.setState({showFullDescription: true})
     }
 
 
     render() {
-        const {id, title, description, tags, listens, hosts, timestamp, payment, coverImage, likes} = this.props.podcast
+        const {id, title, description, tags, listens, hosts, timestamp, payment, coverImage, likes,publishing} = this.props.podcast
+        const {showFullDescription} = this.state
 
         const link = `/podcasts/${id}`
 
         const more = <p>
             {description !== undefined &&
-            description.substr(0, 599)}... <a href="">more</a></p>
+            description.substr(0, 599)}... <a href="" onClick={this.showFullDescription}>more</a></p>
+
 
         const imageView =
             <img src={`http://localhost:8080/uploads/${coverImage.path}`} width="150" height="120"
@@ -98,7 +64,7 @@ class PodcastView extends React.Component {
                 </div>
                 <br/>
                 <div className="view-podcast">
-                    {description !== '' ? description.length > 600 ? more : description : coverImage}
+                    {description !== '' && description.length > 600  && !showFullDescription ? more : description}
                 </div>
                 <br/>
                 <ul className="list-inline">
