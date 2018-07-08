@@ -7,7 +7,7 @@ import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {Query} from "graphql-react"
 import classnames from "classnames"
 import TextFieldGroup from "../../shared/TextFieldsGroup"
-import {updateProfileBasicInfo} from "../../shared/queries"
+import {updateProfileBasicInfo,uploadProfilePicture} from "../../shared/queries"
 
 
 class UpdateProfile extends React.Component {
@@ -19,16 +19,16 @@ class UpdateProfile extends React.Component {
             role: this.props.role,
             password: this.props.password,
             ethereum_address: this.props.ethereum_address,
+            file:'',
             errors: {},
             isLoading: false,
             invalid: false,
         }
-
         this.onChange = this.onChange.bind(this)
         this.onSubmitBasicInfo = this.onSubmitBasicInfo.bind(this)
         this.onSubmitPassword = this.onSubmitPassword.bind(this)
         this.onSubmitProfilePicture = this.onSubmitProfilePicture.bind(this)
-
+        this.handleProfilePicture = this.handleProfilePicture.bind(this)
     }
 
     validateInput(data) {
@@ -115,17 +115,6 @@ class UpdateProfile extends React.Component {
         }
     }
 
-    handlePodcastChange({
-                            target: {
-                                validity,
-                                files: [file]
-                            }
-                        }) {
-        if (validity.valid) {
-            this.setState({podcast: file})
-        }
-    }
-
     handleProfilePicture({
                              target: {
                                  validity,
@@ -133,7 +122,7 @@ class UpdateProfile extends React.Component {
                              }
                          }) {
         if (validity.valid) {
-            this.setState({coverImage: file})
+            this.setState({file})
         }
     }
 
@@ -166,17 +155,16 @@ class UpdateProfile extends React.Component {
 
     onSubmitProfilePicture(e) {
         e.preventDefault()
-        if (this.state.podcast) {
+        if (this.state.file) {
             this.props.graphql
                 .query({
                     fetchOptionsOverride: fundcastFetchOptionsOverride,
                     resetOnLoad: true,
                     operation: {
                         variables: {
-                            id: this.props.id,
-                            podcast: this.state.podcast
+                            file: this.state.file
                         },
-                        query: ''
+                        query: uploadProfilePicture
                     }
                 })
                 .request.then(({data}) => {
@@ -318,15 +306,13 @@ class UpdateProfile extends React.Component {
                             <div className="tab-pane fade" id="nav-podcast" role="tabpanel"
                                  aria-labelledby="nav-podcast-tab">
                                 <br/>
-                                <h5>Choose a new cover audio file</h5>
                                 <br/>
                                 <form onSubmit={this.onSubmitProfilePicture}>
                                     <div className="form-group row">
-                                        <label className="col-sm-2 col-form-label" htmlFor="paid">Podcast audio
-                                            file</label>
+                                        <label className="col-sm-2 col-form-label" htmlFor="customFile">Select picture</label>
                                         <div className="col-sm-10">
                                             <input type="file" className="form-control-sm" id="customFile"
-                                                   name="podcast" accept="audio/*" onChange={this.handlePodcastChange}/>
+                                                   name="file" accept="image/*" onChange={this.handleProfilePicture}/>
 
                                         </div>
                                     </div>
@@ -336,7 +322,7 @@ class UpdateProfile extends React.Component {
                                             <div className="form-group">
                                                 <button disabled={isLoading || invalid}
                                                         className="form-control from-control-sm btn btn-primary btn-sm"
-                                                        type="submit">Save
+                                                        type="submit">Upload
                                                 </button>
                                             </div>
                                         </div>

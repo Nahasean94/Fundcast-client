@@ -215,7 +215,13 @@ const isUserExists = `
 const uploadProfilePicture = `
    mutation($file:Upload!) {
   uploadProfilePicture(file:$file) {
-   uploaded
+   id
+  username
+  email
+  role
+  profile_picture
+  date_joined
+  ethereum_address
   }
 }
 `
