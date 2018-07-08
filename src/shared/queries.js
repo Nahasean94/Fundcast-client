@@ -342,6 +342,20 @@ const unPublishPodcast = `
   }
 }
 `
+const confirmPassword = `
+    query($password:String!){
+  confirmPassword(password:$password) {
+   confirmed
+  }
+}
+`
+const changePassword = `
+    mutation($password:String!){
+  changePassword(password:$password) {
+   confirmed
+  }
+}
+`
 const publishPodcast = `
    mutation($id:ID!) {
   publishPodcast(id:$id) {
@@ -547,6 +561,7 @@ export {
     updateCoverImageFile,
     updateAudioFile,
     updateProfileBasicInfo,
+    confirmPassword,
     searchHosts,
     fetchProfilePodcasts,
     fetchHostPodcasts,
@@ -563,7 +578,7 @@ export {
     addComment,
     updateProfile,
     createNewPodcast,
-    uploadFile,
+    changePassword,
     uploadProfilePicture,
     person,
     unPublishPodcast,

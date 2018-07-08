@@ -7,7 +7,7 @@ import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {Query} from "graphql-react"
 import classnames from "classnames"
 import TextFieldGroup from "../../shared/TextFieldsGroup"
-import {updateProfileBasicInfo,uploadProfilePicture} from "../../shared/queries"
+import {changePassword, confirmPassword, updateProfileBasicInfo, uploadProfilePicture} from "../../shared/queries"
 
 
 class UpdateProfile extends React.Component {
@@ -17,9 +17,11 @@ class UpdateProfile extends React.Component {
             username: this.props.username,
             email: this.props.email,
             role: this.props.role,
-            password: this.props.password,
+            passwordConfirmation: '',
+            password: '',
+            old_password: '',
             ethereum_address: this.props.ethereum_address,
-            file:'',
+            file: '',
             errors: {},
             isLoading: false,
             invalid: false,
@@ -29,6 +31,7 @@ class UpdateProfile extends React.Component {
         this.onSubmitPassword = this.onSubmitPassword.bind(this)
         this.onSubmitProfilePicture = this.onSubmitProfilePicture.bind(this)
         this.handleProfilePicture = this.handleProfilePicture.bind(this)
+        this.confirmOldPassword = this.confirmOldPassword.bind(this)
     }
 
     validateInput(data) {
@@ -55,6 +58,9 @@ class UpdateProfile extends React.Component {
 
     validatePassword(data) {
         let errors = {}
+        if (validator.isEmpty(data.old_password)) {
+            errors.old_password = 'This field is required'
+        }
         if (validator.isEmpty(data.password)) {
             errors.password = 'This field is required'
         }
@@ -68,6 +74,32 @@ class UpdateProfile extends React.Component {
             errors,
             isValid: isEmpty(errors)
         }
+    }
+
+    confirmOldPassword() {
+        this.props.graphql
+            .query({
+                fetchOptionsOverride: fundcastFetchOptionsOverride,
+                resetOnLoad: true,
+                operation: {
+                    variables: {
+                        password: this.state.old_password
+                    },
+                    query: confirmPassword
+                }
+            })
+            .request.then(({data}) => {
+                if (data) {
+                    if (!data.confirmPassword.confirmed) {
+                        let errors = {}
+                        errors.old_password = 'Password does not match existing one'
+                        this.setState({errors})
+                    } else {
+                        this.setState({errors: {}})
+                    }
+                }
+            }
+        )
     }
 
     isValid() {
@@ -128,25 +160,25 @@ class UpdateProfile extends React.Component {
 
     onSubmitPassword(e) {
         e.preventDefault()
-        if (this.state.coverImage) {
+        if (this.isPasswordValid()) {
             this.props.graphql
                 .query({
                     fetchOptionsOverride: fundcastFetchOptionsOverride,
                     resetOnLoad: true,
                     operation: {
                         variables: {
-                            id: this.props.id,
-                            coverImage: this.state.coverImage,
+                            password: this.state.password,
                         },
-                        query: ''
+                        query: changePassword
                     }
                 })
                 .request.then(({data}) => {
                     if (data) {
-                        this.setState({
-                            coverImage: ''
-                        })
-                        this.props.onClose()
+                        if (data.changePassword.confirmed) {
+                            window.location.reload()
+                            localStorage.removeItem('Fundcast')
+                            this.context.router.history.push('/signin')
+                        }
                     }
                 }
             )
@@ -209,7 +241,6 @@ class UpdateProfile extends React.Component {
                             <div className="tab-pane fade show active" id="nav-basic-info" role="tabpanel"
                                  aria-labelledby="nav-basic-info-tab">
                                 <br/>
-                                <br/>
                                 <form onSubmit={this.onSubmitBasicInfo}>
                                     <TextFieldGroup
                                         label="Username"
@@ -265,17 +296,16 @@ class UpdateProfile extends React.Component {
                             <div className="tab-pane fade" id="nav-cover-image" role="tabpanel"
                                  aria-labelledby="nav-cover-image-tab">
                                 <br/>
-                                <h5>Update password</h5>
-                                <br/>
 
-                                <form onSubmit={this.onSubmit}>
+                                <form onSubmit={this.onSubmitPassword}>
                                     <TextFieldGroup
                                         label="Old Password"
                                         type="password"
-                                        name="password"
-                                        value={this.state.password}
+                                        name="old_password"
+                                        value={this.state.old_password}
                                         onChange={this.onChange}
-                                        error={errors.password}
+                                        error={errors.old_password}
+                                        checkUserExists={this.confirmOldPassword}
                                     />
                                     <TextFieldGroup
                                         label="New Password"
@@ -293,23 +323,23 @@ class UpdateProfile extends React.Component {
                                         onChange={this.onChange}
                                         error={errors.passwordConfirmation}
                                     />
-
-
-                                    <div className="form-group">
-                                        <button disabled={this.state.isLoading || this.state.invalid}
-                                                className="btn btn-primary btn-sm"
-                                                type="submit">Update
-                                        </button>
+                                    <div className="form-group row">
+                                        <div className="col-sm-10 offset-sm-2">
+                                            <button disabled={this.state.isLoading || this.state.invalid}
+                                                    className="form-control form-control-sm btn btn-primary btn-sm"
+                                                    type="submit">Update
+                                            </button>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
                             <div className="tab-pane fade" id="nav-podcast" role="tabpanel"
                                  aria-labelledby="nav-podcast-tab">
                                 <br/>
-                                <br/>
                                 <form onSubmit={this.onSubmitProfilePicture}>
                                     <div className="form-group row">
-                                        <label className="col-sm-2 col-form-label" htmlFor="customFile">Select picture</label>
+                                        <label className="col-sm-2 col-form-label" htmlFor="customFile">Select
+                                            picture</label>
                                         <div className="col-sm-10">
                                             <input type="file" className="form-control-sm" id="customFile"
                                                    name="file" accept="image/*" onChange={this.handleProfilePicture}/>
@@ -354,7 +384,9 @@ UpdateProfile.propTypes = {
     ethereum_address: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
 }
-
+UpdateProfile.contextTypes = {
+    router: PropTypes.object.isRequired
+}
 export default UpdateProfile
 
 

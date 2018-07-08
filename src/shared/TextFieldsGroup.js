@@ -5,8 +5,8 @@ import classnames from 'classnames'
 const TextFieldGroup = ({ name,value, label, error, type, onChange,checkUserExists}) => {
     return (
         <div className="form-group row">
-            <label className="col-sm-2 col-form-label" >{label}</label>
-            <div className="col-sm-10">
+            <label className="col-sm-3 col-form-label" >{label}</label>
+            <div className="col-sm-9">
             <input type={type} name={name}
                    className={classnames("form-control form-control-sm", {"is-invalid": error})}
                    value={value}

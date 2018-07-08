@@ -188,24 +188,30 @@ class SignupForm extends React.Component {
                     onChange={this.onChange}
                     error={errors.passwordConfirmation}
                 />
-                <div className="form-group">
-                    <label className="col-form-label" htmlFor="role">Account type</label>
-
-                    <select className={classnames("form-control form-control-sm", {"is-invalid": errors.role})}
-                            name="role"
-                            required="true" onChange={this.onChange}>
-                        <option>Select</option>
-                        <option value="listener">Listener</option>
-                        <option value="host">Host</option>
-
-                    </select>
-                    {errors.role && <div className="invalid-feedback">{errors.role}</div>}
+                <div className="form-group row">
+                    <div className="col-sm-3">
+                        <label className="col-form-label" htmlFor="role">Account type</label>
+                    </div>
+                    <div className="col-sm-9">
+                        <select
+                            className={classnames("form-control form-control-sm", {"is-invalid": errors.role})}
+                            name="role" required="true" onChange={this.onChange}
+                            value={this.state.role}>
+                            <option>Select</option>
+                            <option value="listener">Listener</option>
+                            <option value="host">Host</option>
+                        </select>
+                        {errors.role && <div className="invalid-feedback">{errors.role}</div>}
+                    </div>
                 </div>
 
-                <div className="form-group">
-                    <button disabled={this.state.isLoading || this.state.invalid} className="btn btn-primary btn-sm"
-                            type="submit">Sign up
-                    </button>
+                <div className="form-group row">
+                    <div className="col-sm-9 offset-sm-3">
+                        <button disabled={this.state.isLoading || this.state.invalid}
+                                className="form-control form-control-sm btn btn-primary btn-sm"
+                                type="submit">Signup
+                        </button>
+                    </div>
                 </div>
             </form>
         )
