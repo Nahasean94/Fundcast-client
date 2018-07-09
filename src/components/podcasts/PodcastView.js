@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import {timeSince} from "../../shared/TimeSince"
 import {Consumer} from 'graphql-react'
 import {Link} from "react-router-dom"
+import jwt from "jsonwebtoken"
 
 class PodcastView extends React.Component {
     constructor(props) {
@@ -21,7 +22,7 @@ class PodcastView extends React.Component {
 
 
     render() {
-        const {id, title, description, tags, listens, hosts, timestamp, payment, coverImage, likes,publishing} = this.props.podcast
+        const {id, title, description, tags, listens, hosts, timestamp, payment, coverImage, likes,} = this.props.podcast
         const {showFullDescription} = this.state
 
         const link = `/podcasts/${id}`
@@ -44,47 +45,49 @@ class PodcastView extends React.Component {
                     </li>
                 })}
             </ul>
-        return (
-            <div className="well">
-                <div className="row">
-                    <div className="col-sm-3">
-                        <Link to={link}>{imageView}</Link>
+            return (
+                <div className="well">
+                    <div className="row">
+                        <div className="col-sm-3">
+                            <Link to={link}>{imageView}</Link>
 
-                    </div>
-                    <div className="col-sm-9">
-                        <Link to={link}><h3>{title}</h3></Link>
-                        {hostedBy}
-                        <div className="feed-meta">
-                            <ul className="list-inline list-unstyled">
-                                <li className="list-inline-item">Posted about {timeSince(timestamp)}</li>
+                        </div>
+                        <div className="col-sm-9">
+                            <Link to={link}><h3>{title}</h3></Link>
+                            {hostedBy}
+                            <div className="feed-meta">
+                                <ul className="list-inline list-unstyled">
+                                    <li className="list-inline-item">Posted about {timeSince(timestamp)}</li>
 
-                            </ul>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <br/>
-                <div className="view-podcast">
-                    {description !== '' && description.length > 600  && !showFullDescription ? more : description}
-                </div>
-                <br/>
-                <ul className="list-inline">
-                    &nbsp;<i className="fa fa-tags"></i>
-                    {tags.map((tag, i) => {
-                        return <li key={i} className="list-inline-item"><a href="">&nbsp;{tag}</a></li>
-                    })}
+                    <br/>
+                    <div className="view-podcast">
+                        {description !== '' && description.length > 600 && !showFullDescription ? more : description}
+                    </div>
+                    <br/>
+                    <ul className="list-inline">
+                        &nbsp;<i className="fa fa-tags"></i>
+                        {tags.map((tag, i) => {
+                            return <li key={i} className="list-inline-item"><a href="">&nbsp;{tag}</a></li>
+                        })}
 
-                    <li className="list-inline-item pull-right">
-                        <ul className="list-inline">
-                            <li className="list-inline-item"><strong>{likes.length} likes</strong></li>
-                            <li className="list-inline-item"><strong> {listens} people listened</strong></li>
-                        </ul>
-                    </li>
-                </ul>
-                <hr/>
+                        <li className="list-inline-item pull-right">
+                            <ul className="list-inline">
+                                <li className="list-inline-item"><strong>{likes.length} likes</strong></li>
+                                <li className="list-inline-item"><strong> {listens} people listened</strong></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr/>
 
-            </div>
-        )
+                </div>
+            )
+
     }
+
 
 }
 

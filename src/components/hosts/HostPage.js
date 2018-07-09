@@ -82,12 +82,23 @@ class HostPage extends Component {
                                 if (data) {
                                     if (data.fetchHostPodcasts) {
                                         return data.fetchHostPodcasts.map(podcast => {
-                                            return (
-                                                <div key={shortid.generate()}>
-                                                    <Consumer>{graphql => <PodcastView podcast={podcast}
-                                                                                       graphql={graphql}/>}</Consumer>
-                                                </div>
-                                            )
+                                            let isHost = false
+                                            let token
+                                            if (localStorage.getItem('Fundcast')) {
+                                                token = jwt.decode(localStorage.getItem('Fundcast'))
+                                                podcast.hosts.map(host => {
+                                                    if (host.username === token.username)
+                                                        isHost = true
+                                                })
+                                            }
+                                            if (podcast.publishing === 'published' || isHost) {
+                                                return (
+                                                    <div key={shortid.generate()}>
+                                                        <Consumer>{graphql => <PodcastView podcast={podcast}
+                                                                                           graphql={graphql}/>}</Consumer>
+                                                    </div>
+                                                )
+                                            }
                                         })
                                     } else {
                                         return (

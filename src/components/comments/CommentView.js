@@ -75,6 +75,7 @@ class CommentView extends React.Component {
         const more = <p>
             {body.substr(0, 599)}... <a href="" onClick={this.viewComment}>more</a></p>
         return (
+            <div className="container">
             <div className="row">
                 <div className="col-sm-1">
                     <p><img src={`http://localhost:8080/uploads/${author.profile_picture}`}
@@ -114,6 +115,7 @@ class CommentView extends React.Component {
                 {/*<ProfilePictureModal show={show} onClose={this.onClose} picture={author.profile_picture}*/}
                                      {/*username={author.username}/>*/}
 
+            </div>
             </div>
         )
     }

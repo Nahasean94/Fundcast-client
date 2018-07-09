@@ -379,7 +379,7 @@ UpdateProfile.propTypes = {
     onClose: PropTypes.func.isRequired,
     username: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    role: PropTypes.array.isRequired,
+    role: PropTypes.string.isRequired,
     profilePicture: PropTypes.object.isRequired,
     ethereum_address: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,

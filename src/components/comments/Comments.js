@@ -88,7 +88,7 @@ class Comments extends React.Component {
         const {errors} = this.state
         const commentError = errors.comment
         return (
-            <div>
+            <div className="container">
                 <h3>Comments</h3>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">

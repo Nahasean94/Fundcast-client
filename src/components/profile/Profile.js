@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {fetchHostPodcasts, fetchUserProfile} from "../../shared/queries"
+import {fetchHostPodcasts, fetchUserProfile,fetchLikedPodcasts} from "../../shared/queries"
 import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {Consumer, Query} from 'graphql-react'
 import shortid from "shortid"
@@ -15,6 +15,7 @@ class HostPage extends Component {
         }
         this.showUpdateProfileModal = this.showUpdateProfileModal.bind(this)
         this.closeUpdateProfileModal = this.closeUpdateProfileModal.bind(this)
+
     }
 
     showUpdateProfileModal(e) {
@@ -25,13 +26,16 @@ class HostPage extends Component {
         this.setState({showUpdateProfileModal: false})
     }
 
+
+
     render() {
         const token = jwt.decode(localStorage.getItem("Fundcast"))
         let id
         if (token) {
             id = token.id
         }
-        const {showUpdateProfileModal}=this.state
+        const {showUpdateProfileModal} = this.state
+
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -45,7 +49,7 @@ class HostPage extends Component {
                         >
                             {({loading, data}) => {
                                 if (data) {
-                                    const {id, username, profile_picture, email, role, date_joined, ethereum_address} = data.fetchUserProfile
+                                    const {id, username, profile_picture, email, role, date_joined, ethereum_address,} = data.fetchUserProfile
                                     return <div>
                                         <ul className="list-unstyled">
                                             <li><img src={`http://localhost:8080/uploads/${profile_picture}`}
@@ -71,8 +75,16 @@ class HostPage extends Component {
 
                                         </ul>
                                         <hr/>
-                                        <button className="btn btn-sm btn-outline-primary" onClick={this.showUpdateProfileModal}>Update profile</button>
-                                        <Consumer>{graphql=> <UpdateProfile graphql={graphql} show={showUpdateProfileModal} onClose={this.closeUpdateProfileModal} username={username} email={email} role={role} profilePicture={profile_picture}  id={id} ethereum_address={ethereum_address}/>}</Consumer>
+                                        <button className="btn btn-sm btn-outline-primary"
+                                                onClick={this.showUpdateProfileModal}>Update profile
+                                        </button>
+                                        <Consumer>{graphql => <UpdateProfile graphql={graphql}
+                                                                             show={showUpdateProfileModal}
+                                                                             onClose={this.closeUpdateProfileModal}
+                                                                             username={username} email={email}
+                                                                             role={role}
+                                                                             profilePicture={profile_picture} id={id}
+                                                                             ethereum_address={ethereum_address}/>}</Consumer>
                                     </div>
 
                                 } else if (loading) {
@@ -151,7 +163,44 @@ class HostPage extends Component {
                                 here</h4>
                             </div>
                             <div className="tab-pane fade" id="nav-liked" role="tabpanel"
-                                 aria-labelledby="nav-liked-tab"><h4>List of podcasts you've liked to will go here</h4>
+                                 aria-labelledby="nav-liked-tab">
+                                <Query
+                                    loadOnMount
+                                    loadOnReset
+                                    fetchOptionsOverride={fundcastFetchOptionsOverride}
+                                    variables={{id}}
+                                    query={fetchLikedPodcasts}
+                                >
+                                    {({loading, data}) => {
+                                        if (data) {
+                                            if (data.fetchLikedPodcasts) {
+                                                if (data.fetchLikedPodcasts.length > 0) {
+                                                    return data.fetchLikedPodcasts.map(podcast => {
+                                                        return (
+                                                            <div key={shortid.generate()}>
+                                                                <Consumer>{graphql => <PodcastView podcast={podcast}
+                                                                                                   graphql={graphql}/>}</Consumer>
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+                                            } else {
+                                                return (
+                                                    <p>No podcasts found found</p>
+                                                )
+                                            }
+                                        } else if (loading) {
+                                            return (
+                                                <p>Loading…</p>
+                                            )
+                                        }
+
+                                        return (
+                                            <p>Loading failed.</p>
+                                        )
+                                    }
+                                    }
+                                </Query>
                             </div>
                             <div className="tab-pane fade" id="nav-subscriptions" role="tabpanel"
                                  aria-labelledby="nav-subscriptions-tab"><h4>List of podcasts/hosts you've subscribed to

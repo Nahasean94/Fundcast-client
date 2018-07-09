@@ -27,6 +27,35 @@ paid
     }
     }
 `
+const fetchLikedPodcasts = `
+   query($id:ID!) {
+  fetchLikedPodcasts(id:$id) {
+        id
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
+}
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+payment{
+paid
+}
+    }
+    }
+`
 const fetchPodcastsByTags = `
    query($id:ID!) {
   fetchPodcastsByTags(id:$id) {
@@ -172,7 +201,7 @@ path
 payment{
 paid
 }
-
+publishing
   }
 }
 `
@@ -186,6 +215,28 @@ const fetchUserProfile = `
   profile_picture
   date_joined
   ethereum_address
+  liked_podcasts{
+   id
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
+}
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+  }
   }
 }
 `
@@ -562,6 +613,7 @@ export {
     updateAudioFile,
     updateProfileBasicInfo,
     confirmPassword,
+    fetchLikedPodcasts,
     searchHosts,
     fetchProfilePodcasts,
     fetchHostPodcasts,

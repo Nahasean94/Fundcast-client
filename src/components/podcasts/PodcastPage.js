@@ -79,15 +79,11 @@ class PodcastPage extends Component {
                 {({loading, data}) => {
                     if (data) {
                         const {id, title, description, tags, listens, hosts, timestamp, payment, coverImage, likes, audioFile, publishing} = data.podcast
-
                         const {showEditPodcastModal, showDeletePodcastModal, showPublishPodcastModal, showUnpublishPodcastModal} = this.state
                         let isHost = false
-
                         let token
                         if (localStorage.getItem('Fundcast')) {
                             token = jwt.decode(localStorage.getItem('Fundcast'))
-                        }
-                        if (token) {
                             hosts.map(host => {
                                 if (host.username === token.username)
                                     isHost = true
@@ -132,102 +128,112 @@ class PodcastPage extends Component {
                             </ul>
                             <hr/>
                         </div>
-                        return <div className="row">
-                            <div className="col-sm-3">
-                                {imageView}
-                                <hr/>
-                                {isHost ? hostActions : ''}
-                                <div className="feed-meta">
-                                    <ul className="list-inline list-unstyled">
-                                        <li className="list-inline-item pull-left"><Consumer>{graphql => <LikingPodcast
-                                            graphql={graphql} likes={likes}/>}</Consumer></li>
-                                        <li className="list-inline-item pull-right"><h6> {listens} people listened</h6>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div className="col-sm-5 offset-sm-1">
-                                <h2>{title}</h2>
-                                <br/>
-                                {hostedBy}
-                                <div className="feed-meta">
-                                    <ul className="list-inline list-unstyled">
-                                        <li className="list-inline-item">Posted about {timeSince(timestamp)}</li>
-                                    </ul>
-                                </div>
-                                <br/>
-                                {audioView}
-                                <br/>
-                                <br/>
-                                <div className="view-podcast"> {description}
-                                </div>
-                                <div>
-                                    <br/>
-                                    <br/>
-                                    <ul className="list-inline">
-                                        &nbsp;<i className="fa fa-tags"></i>
-                                        {tags.map((tag, i) => {
-                                            return <li key={i} className="list-inline-item"><a href="">&nbsp;{tag}</a>
+                        if (publishing === 'published' || isHost) {
+                            return <div className="row">
+                                <div className="col-sm-3">
+                                    {imageView}
+                                    <hr/>
+                                    {isHost ? hostActions : ''}
+                                    <div className="feed-meta">
+                                        <ul className="list-inline list-unstyled">
+                                            <li className="list-inline-item pull-left"><Consumer>{graphql =>
+                                                <LikingPodcast
+                                                    graphql={graphql} likes={likes}/>}</Consumer></li>
+                                            <li className="list-inline-item pull-right"><h6> {listens} people
+                                                listened</h6>
                                             </li>
-                                        })}
-                                    </ul>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <hr/>
-                                <Consumer>{graphql => <Comments graphql={graphql}/>}</Consumer>
+                                <div className="col-sm-5 offset-sm-1">
+                                    <h2>{title}</h2>
+                                    <br/>
+                                    {hostedBy}
+                                    <div className="feed-meta">
+                                        <ul className="list-inline list-unstyled">
+                                            <li className="list-inline-item">Posted about {timeSince(timestamp)}</li>
+                                        </ul>
+                                    </div>
+                                    <br/>
+                                    {audioView}
+                                    <br/>
+                                    <br/>
+                                    <div className="view-podcast"> {description}
+                                    </div>
 
-                            </div>
-                            <div className="col-sm-2 offset-sm-1">
-                                <h6>Related podcasts</h6>
-                                {
-                                    <Query
-                                        loadOnMount
-                                        loadOnReset
-                                        fetchOptionsOverride={fundcastFetchOptionsOverride}
-                                        query={podcasts}
-                                    >
-                                        {({loading, data}) => {
-                                            if (data) {
-                                                if (data.podcasts.length > 0) {
-                                                    return data.podcasts.map(podcast =>
-                                                        (
-                                                            <div key={shortid.generate()}>
-                                                                <Consumer>{graphql => <RelatedPodcasts podcast={podcast}
-                                                                                                       graphql={graphql}/>}</Consumer>
-                                                            </div>
+                                        <br/>
+                                        <br/>
+                                        <ul className="list-inline">
+                                            &nbsp;<i className="fa fa-tags"></i>
+                                            {tags.map((tag, i) => {
+                                                return <li key={i} className="list-inline-item"><a
+                                                    href="">&nbsp;{tag}</a>
+                                                </li>
+                                            })}
+                                        </ul>
+                                    <hr/>
+                                    <Consumer>{graphql => <Comments graphql={graphql}/>}</Consumer>
+                                </div>
+                                <div className="col-sm-2 offset-sm-1">
+                                    <h6>Related podcasts</h6>
+                                    {
+                                        <Query
+                                            loadOnMount
+                                            loadOnReset
+                                            fetchOptionsOverride={fundcastFetchOptionsOverride}
+                                            query={podcasts}
+                                        >
+                                            {({loading, data}) => {
+                                                if (data) {
+                                                    if (data.podcasts.length > 0) {
+                                                        return data.podcasts.map(podcast =>
+                                                            (
+                                                                <div key={shortid.generate()}>
+                                                                    <Consumer>{graphql => <RelatedPodcasts
+                                                                        podcast={podcast}
+                                                                        graphql={graphql}/>}</Consumer>
+                                                                </div>
+                                                            )
                                                         )
-                                                    )
-                                                } else {
-                                                    return <p>No related podcasts found</p>
+                                                    } else {
+                                                        return <p>No related podcasts found</p>
+                                                    }
                                                 }
+                                                else if (loading) {
+                                                    return <p>Loading…</p>
+                                                }
+                                                return <p>Loading failed.</p>
                                             }
-                                            else if (loading) {
-                                                return <p>Loading…</p>
+
                                             }
-                                            return <p>Loading failed.</p>
-                                        }
+                                        </Query>
+                                    }
 
-                                        }
-                                    </Query>
-                                }
+                                </div>
+                                <Consumer>{graphql => <EditPodcastModal graphql={graphql} show={showEditPodcastModal}
+                                                                        onClose={this.closeEditPodcastModal}
+                                                                        coverImage={coverImage}
+                                                                        description={description}
+                                                                        id={id} hosts={hosts} paid={payment.paid}
+                                                                        podcast={podcast} tags={tags}
+                                                                        title={title}/>}</Consumer>
+                                <Consumer>{graphql => <UnpublishPodcastModal graphql={graphql} id={id}
+                                                                             show={showUnpublishPodcastModal}
+                                                                             onClose={this.closeUnpublishPodcastModal}/>}</Consumer>
+                                <Consumer>{graphql => <PublishPodcastModal graphql={graphql} id={id}
+                                                                           show={showPublishPodcastModal}
+                                                                           onClose={this.closePublishPodcastModal}/>}</Consumer>
 
+                                <Consumer>{graphql => <DeletePodcastModal graphql={graphql} id={id}
+                                                                          show={showDeletePodcastModal}
+                                                                          onClose={this.closeDeletePodcastModal}/>}</Consumer>
                             </div>
-                            <Consumer>{graphql => <EditPodcastModal graphql={graphql} show={showEditPodcastModal}
-                                                                    onClose={this.closeEditPodcastModal}
-                                                                    coverImage={coverImage} description={description}
-                                                                    id={id} hosts={hosts} paid={payment.paid}
-                                                                    podcast={podcast} tags={tags}
-                                                                    title={title}/>}</Consumer>
-                            <Consumer>{graphql => <UnpublishPodcastModal graphql={graphql} id={id}
-                                                                         show={showUnpublishPodcastModal}
-                                                                         onClose={this.closeUnpublishPodcastModal}/>}</Consumer>
-                            <Consumer>{graphql => <PublishPodcastModal graphql={graphql} id={id}
-                                                                       show={showPublishPodcastModal}
-                                                                       onClose={this.closePublishPodcastModal}/>}</Consumer>
-
-                            <Consumer>{graphql => <DeletePodcastModal graphql={graphql} id={id}
-                                                                      show={showDeletePodcastModal}
-                                                                      onClose={this.closeDeletePodcastModal}/>}</Consumer>
-                        </div>
+                        }
+                        else {
+                            return (
+                                <h1>This podcast has not been published</h1>
+                            )
+                        }
 
                     } else if (loading) {
                         return (
