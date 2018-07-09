@@ -308,6 +308,102 @@ paid
     }
     }
 `
+const addHistory = `
+   mutation($podcast_id:ID!) {
+  addHistory(podcast_id:$podcast_id) {
+     id
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
+}
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+audioFile{
+path
+}
+payment{
+paid
+}
+    }
+    }
+`
+const getHistory = `
+   {
+  getHistory{
+     id
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
+}
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+audioFile{
+path
+}
+payment{
+paid
+}
+    }
+    }
+`
+const addListens= `
+   mutation($podcast_id:ID!){
+  addListens(podcast_id:$podcast_id){
+     id
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
+}
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+audioFile{
+path
+}
+payment{
+paid
+}
+    }
+    }
+`
 const unlikePodcast = `
    mutation($id:ID!) {
   unlikePodcast(id:$id) {
@@ -634,5 +730,8 @@ export {
     uploadProfilePicture,
     person,
     unPublishPodcast,
-    publishPodcast
+    publishPodcast,
+    addHistory,
+    getHistory,
+    addListens
 }

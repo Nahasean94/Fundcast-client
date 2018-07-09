@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {fetchHostPodcasts, fetchUserProfile,fetchLikedPodcasts} from "../../shared/queries"
+import {fetchHostPodcasts, fetchUserProfile, fetchLikedPodcasts, getHistory} from "../../shared/queries"
 import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {Consumer, Query} from 'graphql-react'
 import shortid from "shortid"
@@ -159,8 +159,43 @@ class HostPage extends Component {
                                 </Query>
                             </div>
                             <div className="tab-pane fade" id="nav-history" role="tabpanel"
-                                 aria-labelledby="nav-history-tab"><h4>History of podcasts you've listened to will go
-                                here</h4>
+                                 aria-labelledby="nav-history-tab"><Query
+                                loadOnMount
+                                loadOnReset
+                                fetchOptionsOverride={fundcastFetchOptionsOverride}
+                                variables={{id}}
+                                query={getHistory}
+                            >
+                                {({loading, data}) => {
+                                    if (data) {
+                                        if (data.getHistory) {
+                                            if (data.getHistory.length > 0) {
+                                                return data.getHistory.map(podcast => {
+                                                    return (
+                                                        <div key={shortid.generate()}>
+                                                            <Consumer>{graphql => <PodcastView podcast={podcast}
+                                                                                               graphql={graphql}/>}</Consumer>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        } else {
+                                            return (
+                                                <p>No podcasts found found</p>
+                                            )
+                                        }
+                                    } else if (loading) {
+                                        return (
+                                            <p>Loading…</p>
+                                        )
+                                    }
+
+                                    return (
+                                        <p>Loading failed.</p>
+                                    )
+                                }
+                                }
+                            </Query>
                             </div>
                             <div className="tab-pane fade" id="nav-liked" role="tabpanel"
                                  aria-labelledby="nav-liked-tab">

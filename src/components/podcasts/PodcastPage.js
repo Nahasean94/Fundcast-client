@@ -12,6 +12,7 @@ import UnpublishPodcastModal from "./modals/UnpublishPodcastModal"
 import DeletePodcastModal from "./modals/ConfirmDeletePodcast"
 import PublishPodcastModal from "./modals/PublishPodcastModal"
 import jwt from "jsonwebtoken"
+import ListeningPodcast from "./ListeningPodcast"
 
 
 class PodcastPage extends Component {
@@ -32,6 +33,7 @@ class PodcastPage extends Component {
         this.closeUnpublishPodcastModal = this.closeUnpublishPodcastModal.bind(this)
         this.showDeletePodcastModal = this.showDeletePodcastModal.bind(this)
         this.closeDeletePodcastModal = this.closeDeletePodcastModal.bind(this)
+
     }
 
     showEditPodcastModal() {
@@ -66,6 +68,7 @@ class PodcastPage extends Component {
         this.setState({showDeletePodcastModal: false})
     }
 
+
     render() {
 
         return (
@@ -92,8 +95,7 @@ class PodcastPage extends Component {
                         const imageView =
                             <img src={`http://localhost:8080/uploads/${coverImage.path}`} width="350" height="270"
                                  alt={title} className="rounded"/>
-                        const audioView = <audio src={`http://localhost:8080/uploads/${audioFile.path}`} controls={true}
-                                                 className="rounded" style={{width: '100%'}}/>
+
                         const hostedBy =
                             <ul className="list-inline">
                                 <strong>HOSTED BY: </strong>
@@ -155,7 +157,8 @@ class PodcastPage extends Component {
                                         </ul>
                                     </div>
                                     <br/>
-                                    {audioView}
+                                    <Consumer>{graphql => <ListeningPodcast graphql={graphql} podcast={data.podcast}/>}</Consumer>
+
                                     <br/>
                                     <br/>
                                     <div className="view-podcast"> {description}

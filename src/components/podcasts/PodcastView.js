@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {timeSince} from "../../shared/TimeSince"
 import {Consumer} from 'graphql-react'
 import {Link} from "react-router-dom"
-import jwt from "jsonwebtoken"
+
 
 class PodcastView extends React.Component {
     constructor(props) {
