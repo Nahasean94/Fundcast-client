@@ -122,7 +122,7 @@ class LoginForm extends React.Component {
                     error={errors.password}
                 />
                 <div className="form-group row">
-                    <div className="col-sm-9 offset-sm-3">
+                    <div className="col-sm-10 offset-sm-2">
                         <button disabled={this.state.isLoading || this.state.invalid}
                                 className="form-control form-control-sm btn btn-primary btn-sm"
                                 type="submit">Login

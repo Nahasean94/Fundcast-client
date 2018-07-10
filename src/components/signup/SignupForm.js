@@ -189,10 +189,10 @@ class SignupForm extends React.Component {
                     error={errors.passwordConfirmation}
                 />
                 <div className="form-group row">
-                    <div className="col-sm-3">
+                    <div className="col-sm-2">
                         <label className="col-form-label" htmlFor="role">Account type</label>
                     </div>
-                    <div className="col-sm-9">
+                    <div className="col-sm-10">
                         <select
                             className={classnames("form-control form-control-sm", {"is-invalid": errors.role})}
                             name="role" required="true" onChange={this.onChange}
@@ -206,7 +206,7 @@ class SignupForm extends React.Component {
                 </div>
 
                 <div className="form-group row">
-                    <div className="col-sm-9 offset-sm-3">
+                    <div className="col-sm-10 offset-sm-2">
                         <button disabled={this.state.isLoading || this.state.invalid}
                                 className="form-control form-control-sm btn btn-primary btn-sm"
                                 type="submit">Signup

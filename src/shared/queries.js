@@ -618,6 +618,23 @@ const updateBasicInfo = `
   }
 }
 `
+const addBasicInfo = `
+   mutation($title:String!,$description:String!,$hosts:[String!]!,$paid:Int!,$tags:[String!]!) {
+  addBasicInfo(title:$title,description:$description,hosts:$hosts,paid:$paid,tags:$tags) {
+  id
+ title
+ description
+ hosts{
+ id
+ }
+ payment{
+ id
+ }
+ tags
+ timestamp
+  }
+}
+`
 const updateProfileBasicInfo = `
    mutation($id:ID!,$username:String!,$email:String!,$role:String!,$ethereum_address:String) {
   updateProfileBasicInfo(id:$id,username:$username,email:$email,role:$role,ethereum_address:$ethereum_address) {
@@ -647,7 +664,39 @@ const updateCoverImageFile = `
   }
 }
 `
+const addCoverImageFile = `
+   mutation($id:ID!,$coverImage:Upload!) {
+  updateCoverImageFile(id:$id,coverImage:$coverImage) {
+ title
+ description
+ hosts{
+ id
+ }
+ payment{
+ id
+ }
+ tags
+ timestamp
+  }
+}
+`
 const updateAudioFile = `
+   mutation($id:ID!,$podcast:Upload!) {
+  updateAudioFile(id:$id,podcast:$podcast) {
+ title
+ description
+ hosts{
+ id
+ }
+ payment{
+ id
+ }
+ tags
+ timestamp
+  }
+}
+`
+const addAudioFile = `
    mutation($id:ID!,$podcast:Upload!) {
   updateAudioFile(id:$id,podcast:$podcast) {
  title
@@ -707,6 +756,9 @@ export {
     updateBasicInfo,
     updateCoverImageFile,
     updateAudioFile,
+    addBasicInfo,
+    addCoverImageFile,
+    addAudioFile,
     updateProfileBasicInfo,
     confirmPassword,
     fetchLikedPodcasts,
