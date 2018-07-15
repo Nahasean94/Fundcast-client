@@ -55,7 +55,14 @@ class HostPage extends Component {
                                             </li>
 
                                         </ul>
-
+                                        <hr/>
+                                        <Consumer>{graphql => <UpdateProfile graphql={graphql}
+                                                                             show={showUpdateProfileModal}
+                                                                             onClose={this.closeUpdateProfileModal}
+                                                                             username={username} email={email}
+                                                                             role={role}
+                                                                             profilePicture={profile_picture} id={id}
+                                                                             ethereum_address={ethereum_address}/>}</Consumer>
                                     </div>
 
                                 } else if (loading) {

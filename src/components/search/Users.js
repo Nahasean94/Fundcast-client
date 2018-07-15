@@ -26,7 +26,7 @@ class Hosts extends React.Component {
                             <div className="row">
                                 {data.searchUsers.map(user => {
 
-                                    const userPage = `/hosts/${user.id}`
+                                    const userPage = `/users/${user.id}`
                                     return (
                                         <div key={shortid.generate()}>
                                             <div className="col-sm-2">

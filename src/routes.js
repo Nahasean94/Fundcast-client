@@ -12,6 +12,7 @@ import Tags from "./components/podcasts/tags/Tags"
 import TagPage from "./components/podcasts/tags/TagPage"
 import HostPage from "./components/hosts/HostPage"
 import SearchResults from "./components/search/SearchResults"
+import UserPage from "./users/UserPage"
 
 export default () => {
 
@@ -24,6 +25,7 @@ export default () => {
                         <Route path="/signin" component={SigninPage}/>
                         <Route path="/podcasts/:id" component={PodcastPage}/>
                         <Route path="/hosts/:id" component={HostPage}/>
+                        <Route path="/users/:id" component={UserPage}/>
                         <Route path="/hosts" component={Hosts}/>
                         <Route path="/tags/:id" component={TagPage}/>
                         <Route path="/tags" component={Tags}/>

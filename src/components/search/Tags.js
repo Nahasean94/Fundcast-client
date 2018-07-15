@@ -45,8 +45,7 @@ class Tags extends React.Component {
                 else if (loading) {
                     return <p>Searching…</p>
                 }
-                return
-                <p>Searching failed.</p>
+                return <p>Searching failed.</p>
             }
             }
         </Query>)
