@@ -7,7 +7,6 @@ import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {isUserExists, signup} from "../../shared/queries"
 import classnames from 'classnames'
 
-
 class SignupForm extends React.Component {
     constructor(props) {
         super(props)

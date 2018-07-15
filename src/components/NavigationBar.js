@@ -4,18 +4,54 @@ import PropTypes from 'prop-types'
 import NewPodcastForm from './podcasts/modals/NewPodcastForm'
 import {Consumer} from "graphql-react"
 import jwt from "jsonwebtoken"
-
+import classnames from 'classnames'
+import validator from 'validator'
+import {isEmpty} from 'lodash'
+import SearchTerm from './search/SearchTerm'
 class NavigationBar extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             showNewPodcastModal: false,
+            search:'', errors: {},
         }
 
         this.logout = this.logout.bind(this)
         this.showNewPodcastModal = this.showNewPodcastModal.bind(this)
         this.closeNewPodcastModal = this.closeNewPodcastModal.bind(this)
+        this.onChange = this.onChange.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
+    }
+    onChange(e){
+        this.setState({[e.target.name]:e.target.value})
+    }
+    validateInput(data) {
+        let errors = {}
 
+        if (validator.isEmpty(data.search)) {
+            errors.search = 'Search cannot be empty'
+        }
+
+        return {
+            errors,
+            isValid: isEmpty(errors)
+        }
+    }
+
+    isValid() {
+        const {errors, isValid} = this.validateInput(this.state)
+        if (!isValid) {
+            this.setState({errors})
+        }
+        return isValid
+    }
+
+    onSubmit(e) {
+        e.preventDefault()
+        if (this.isValid()) {
+            this.setState({errors: {}})
+SearchTerm.setSearchTerm(this.state.search)
+        }
     }
 
     showNewPodcastModal(e) {
@@ -35,7 +71,8 @@ class NavigationBar extends React.Component {
     }
 
     render() {
-        const {showNewPodcastModal}=this.state
+        const {showNewPodcastModal,errors,search}=this.state
+        const searchError=errors.search
         let isAuthenticated = false
         let token
         if (localStorage.getItem('Fundcast')) {
@@ -86,20 +123,20 @@ class NavigationBar extends React.Component {
                     <div className="navbar-search">
                         <div className="search-block-form">
                             <div className="input-group-btn">
-                                <form id="search-block-form" acceptCharset="UTF-8"
-                                      className="input-group">
-                                    <input title="Enter the terms you wish to search for."
-                                           data-drupal-selector="edit-keys" type="search" id="edit-keys" name="keys"
-                                           value="" size="70" maxLength="128"
-                                           className="form-search form-control input-group" placeholder="Search"/>
-
-
-                                    <div data-drupal-selector="edit-actions"
-                                         className="form-actions js-form-wrapper form-wrapper" id="edit-actions">
-                                        <input data-drupal-selector="edit-submit" type="submit" id="edit-submit"
-                                               value="Search"
-                                               className="button js-form-submit form-submit btn btn-default form-control-sm"/>
+                                <form acceptCharset="UTF-8"
+                                      onSubmit={this.onSubmit} className="form-inline">
+                                    <div className="form-group">
+                                    <input title="Search"
+                                           type="search"  name="search" onChange={this.onChange}
+                                           value={search} size="70" maxLength="128"
+                                           className={classnames("form-control form-control-sm", {"form-control is-invalid": searchError})}  placeholder="Search"/>
+                                    {searchError && <div className="invalid-feedback" >{searchError}</div>}
                                     </div>
+
+                                    {/*<div className="form-group">*/}
+                                        {/*<input type="submit" value="Search"*/}
+                                               {/*className="btn btn-default form-control-sm"/>*/}
+                                    {/*</div>*/}
 
                                 </form>
                             </div>

@@ -11,6 +11,7 @@ import Hosts from "./components/hosts/Hosts"
 import Tags from "./components/podcasts/tags/Tags"
 import TagPage from "./components/podcasts/tags/TagPage"
 import HostPage from "./components/hosts/HostPage"
+import SearchResults from "./components/search/SearchResults"
 
 export default () => {
 
@@ -27,6 +28,8 @@ export default () => {
                         <Route path="/tags/:id" component={TagPage}/>
                         <Route path="/tags" component={Tags}/>
                         <Route path="/test" component={TestPage}/>
+                        <Route path="/test" component={TestPage}/>
+                        <Route path="/search" component={SearchResults}/>
                     </Switch>
                 </App>
 

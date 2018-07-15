@@ -6,6 +6,7 @@ import {Link} from "react-router-dom"
 
 
 class PodcastView extends React.Component {
+
     constructor(props) {
         super(props)
         this.state = {
@@ -30,7 +31,6 @@ class PodcastView extends React.Component {
         const more = <p>
             {description !== undefined &&
             description.substr(0, 599)}... <a href="" onClick={this.showFullDescription}>more</a></p>
-
 
         const imageView =
             <img src={`http://localhost:8080/uploads/${coverImage.path}`} width="150" height="120"
@@ -85,7 +85,6 @@ class PodcastView extends React.Component {
 
                 </div>
             )
-
     }
 
 
