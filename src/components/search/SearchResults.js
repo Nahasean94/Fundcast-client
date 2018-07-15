@@ -17,8 +17,8 @@ class SearchResults extends React.Component {
                                role="tab" aria-controls="pills-podcasts" aria-selected="true">Podcasts</a>
                     </li>
                         <li className="nav-item">
-                            <a className="nav-link" id="pills-hosts-tab" data-toggle="pill" href="#pills-hosts"
-                               role="tab" aria-controls="pills-hosts" aria-selected="true">Tags</a>
+                            <a className="nav-link" id="pills-tags-tab" data-toggle="pill" href="#pills-tags"
+                               role="tab" aria-controls="pills-tags" aria-selected="true">Tags</a>
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" id="pills-hosts-tab" data-toggle="pill" href="#pills-hosts"
@@ -37,11 +37,6 @@ class SearchResults extends React.Component {
                         <div className="tab-pane fade" id="pills-tags" role="tabpanel"
                              aria-labelledby="pills-tags-tab">
                             <Consumer>{graphql=><Tags graphql={graphql}/>}</Consumer>
-                        </div>
-                        <div className="tab-pane fade" id="pills-hosts" role="tabpanel"
-                             aria-labelledby="pills-hosts-tab">
-                            <Consumer>{graphql=><Podcasts graphql={graphql}/>}</Consumer>
-
                         </div>
                         <div className="tab-pane fade" id="pills-hosts" role="tabpanel"
                              aria-labelledby="pills-hosts-tab">

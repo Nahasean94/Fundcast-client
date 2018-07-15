@@ -8,23 +8,25 @@ import classnames from 'classnames'
 import validator from 'validator'
 import {isEmpty} from 'lodash'
 import SearchTerm from './search/SearchTerm'
+
 class NavigationBar extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             showNewPodcastModal: false,
-            search:'', errors: {},
+            search: '', errors: {},
         }
-
         this.logout = this.logout.bind(this)
         this.showNewPodcastModal = this.showNewPodcastModal.bind(this)
         this.closeNewPodcastModal = this.closeNewPodcastModal.bind(this)
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
     }
-    onChange(e){
-        this.setState({[e.target.name]:e.target.value})
+
+    onChange(e) {
+        this.setState({[e.target.name]: e.target.value})
     }
+
     validateInput(data) {
         let errors = {}
 
@@ -50,7 +52,8 @@ class NavigationBar extends React.Component {
         e.preventDefault()
         if (this.isValid()) {
             this.setState({errors: {}})
-SearchTerm.setSearchTerm(this.state.search)
+            SearchTerm.setSearchTerm(this.state.search)
+            this.context.router.history.push('/search')
         }
     }
 
@@ -71,8 +74,8 @@ SearchTerm.setSearchTerm(this.state.search)
     }
 
     render() {
-        const {showNewPodcastModal,errors,search}=this.state
-        const searchError=errors.search
+        const {showNewPodcastModal, errors, search} = this.state
+        const searchError = errors.search
         let isAuthenticated = false
         let token
         if (localStorage.getItem('Fundcast')) {
@@ -126,16 +129,17 @@ SearchTerm.setSearchTerm(this.state.search)
                                 <form acceptCharset="UTF-8"
                                       onSubmit={this.onSubmit} className="form-inline">
                                     <div className="form-group">
-                                    <input title="Search"
-                                           type="search"  name="search" onChange={this.onChange}
-                                           value={search} size="70" maxLength="128"
-                                           className={classnames("form-control form-control-sm", {"form-control is-invalid": searchError})}  placeholder="Search"/>
-                                    {searchError && <div className="invalid-feedback" >{searchError}</div>}
+                                        <input title="Search"
+                                               type="search" name="search" onChange={this.onChange}
+                                               value={search} size="70" maxLength="128"
+                                               className={classnames("form-control form-control-sm", {"form-control is-invalid": searchError})}
+                                               placeholder="Search"/>
+                                        {searchError && <div className="invalid-feedback">{searchError}</div>}
                                     </div>
 
                                     {/*<div className="form-group">*/}
-                                        {/*<input type="submit" value="Search"*/}
-                                               {/*className="btn btn-default form-control-sm"/>*/}
+                                    {/*<input type="submit" value="Search"*/}
+                                    {/*className="btn btn-default form-control-sm"/>*/}
                                     {/*</div>*/}
 
                                 </form>
@@ -146,7 +150,8 @@ SearchTerm.setSearchTerm(this.state.search)
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                     {isAuthenticated ? userLinks : guestLinks}
                 </div>
-                <Consumer >{graphql =>   <NewPodcastForm  graphql={graphql} show={showNewPodcastModal} onClose={this.closeNewPodcastModal}/>}</Consumer>
+                <Consumer>{graphql => <NewPodcastForm graphql={graphql} show={showNewPodcastModal}
+                                                      onClose={this.closeNewPodcastModal}/>}</Consumer>
             </nav>
 
 

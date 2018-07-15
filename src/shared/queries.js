@@ -27,6 +27,35 @@ paid
     }
     }
 `
+const searchPodcasts = `
+   query($search:String!) {
+  searchPodcasts(search:$search) {
+        id
+title
+description
+tags
+listens
+hosts{
+id
+username
+profile_picture
+}
+likes{
+id
+person{
+id
+}
+}
+timestamp
+coverImage{
+path
+}
+payment{
+paid
+}
+    }
+    }
+`
 const fetchLikedPodcasts = `
    query($id:ID!) {
   fetchLikedPodcasts(id:$id) {
@@ -728,11 +757,29 @@ profile_picture
 }
 }`
 const searchHosts = `
-query($username:String!){
-searchHosts(username:$username){
+query($search:String!){
+searchHosts(search:$search){
 id
 username
 profile_picture
+}
+}`
+const searchUsers = `
+query($search:String!){
+searchUsers(search:$search){
+id
+username
+profile_picture
+}
+}`
+const searchTags = `
+query($search:String!){
+searchTags(search:$search){
+id
+podcasts{
+id
+}
+name
 }
 }`
 const person = `
@@ -762,7 +809,7 @@ export {
     updateProfileBasicInfo,
     confirmPassword,
     fetchLikedPodcasts,
-    searchHosts,
+    searchPodcasts,
     fetchProfilePodcasts,
     fetchHostPodcasts,
     fetchUserProfile,
@@ -785,5 +832,8 @@ export {
     publishPodcast,
     addHistory,
     getHistory,
-    addListens
+    addListens,
+    searchHosts,
+    searchTags,
+    searchUsers,
 }

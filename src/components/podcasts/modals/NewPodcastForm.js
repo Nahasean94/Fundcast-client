@@ -437,14 +437,14 @@ class NewPodcastForm extends React.Component {
 NewPodcastForm.propTypes = {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    hosts: PropTypes.array.isRequired,
-    paid: PropTypes.bool.isRequired,
-    tags: PropTypes.array.isRequired,
-    coverImage: PropTypes.object.isRequired,
-    podcast: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
+    // title: PropTypes.string.isRequired,
+    // description: PropTypes.string.isRequired,
+    // hosts: PropTypes.array.isRequired,
+    // paid: PropTypes.bool.isRequired,
+    // tags: PropTypes.array.isRequired,
+    // coverImage: PropTypes.object.isRequired,
+    // podcast: PropTypes.string.isRequired,
+    // id: PropTypes.string.isRequired,
 }
 NewPodcastForm.contextTypes = {
     router: PropTypes.object.isRequired

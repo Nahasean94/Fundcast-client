@@ -16,7 +16,6 @@ class PodcastsColumn extends React.Component {
 
     render() {
         if (window.location.pathname === '/') {
-
             return (<Query
                 loadOnMount
                 loadOnReset
