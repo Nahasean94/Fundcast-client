@@ -404,7 +404,7 @@ paid
     }
     }
 `
-const addListens= `
+const addListens = `
    mutation($podcast_id:ID!){
   addListens(podcast_id:$podcast_id){
      id
@@ -432,6 +432,24 @@ path
 }
 payment{
 paid
+}
+    }
+    }
+`
+const getNotifications = `
+   {
+  getNotifications{
+timestamp
+id
+podcast{
+title
+id
+coverImage{
+path
+}
+hosts{
+username
+}
 }
     }
     }
@@ -813,7 +831,7 @@ id
 }
 }
 }`
-const unSubscribeFromHost= `
+const unSubscribeFromHost = `
 mutation($host:ID!){
 unSubscribeFromHost(host:$host){
 subscribers{
@@ -821,7 +839,7 @@ id
 }
 }
 }`
-const unSubscribeFromTag= `
+const unSubscribeFromTag = `
 mutation($tag:ID!){
 unSubscribeFromTag(tag:$tag){
 subscribers{
@@ -829,7 +847,7 @@ id
 }
 }
 }`
-const getTagSubscribers=`
+const getTagSubscribers = `
 query($tag:ID!){
 getTagSubscribers(tag:$tag){
 id
@@ -885,5 +903,6 @@ export {
     unSubscribeFromHost,
     subscribeToTag,
     unSubscribeFromTag,
-    getTagSubscribers
+    getTagSubscribers,
+    getNotifications
 }

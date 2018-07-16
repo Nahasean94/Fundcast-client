@@ -2,12 +2,15 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import NewPodcastForm from './podcasts/modals/NewPodcastForm'
-import {Consumer} from "graphql-react"
+import {Consumer, Query} from "graphql-react"
 import jwt from "jsonwebtoken"
 import classnames from 'classnames'
 import validator from 'validator'
 import {isEmpty} from 'lodash'
 import SearchTerm from './search/SearchTerm'
+import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
+import {getNotifications} from "../shared/queries"
+import {timeSince} from "../shared/TimeSince"
 
 class NavigationBar extends React.Component {
     constructor(props) {
@@ -66,6 +69,13 @@ class NavigationBar extends React.Component {
         this.setState({showNewPodcastModal: false})
     }
 
+    componentDidMount() {
+        const token = jwt.decode(localStorage.getItem("Fundcast"))
+        if (token) {
+
+        }
+    }
+
     logout(e) {
         e.preventDefault()
         window.location.reload()
@@ -86,7 +96,73 @@ class NavigationBar extends React.Component {
             <div className="navbar-nav flex-row ml-md-auto">
                 <button className="btn btn-sm btn-default" onClick={this.showNewPodcastModal}>Add podcast</button>
             </div>)
+        const fetchNotifications = <Query
+            loadOnMount
+            loadOnReset
+            fetchOptionsOverride={fundcastFetchOptionsOverride}
+            query={getNotifications}
+        >
+            {({loading, data}) => {
+                if (data) {
+                    if (data.getNotifications.length > 0) {
+                        return data.getNotifications.map(notification => {
+                            const link = `/podcasts/${notification.podcast.id}`
+                            const imageView =
+                                <img src={`http://localhost:8080/uploads/${notification.podcast.coverImage.path}`} width="60"
+                                     height="60"
+                                     alt={notification.podcast.title} className="rounded"/>
+
+                            const hostedBy =
+                                <ul className="list-inline">
+                                    <strong>HOSTED BY: </strong>
+                                    {notification.podcast.hosts.map(host => {
+                                        const hostsLink = `/hosts/${host.id}`
+                                        return <li className="list-inline-item"><a href={hostsLink}
+                                                                                   id={host.id}>{host.username}</a>{host === notification.podcast.hosts[notification.podcast.hosts.length - 1] ? '' : ','}
+                                        </li>
+                                    })}
+                                </ul>
+                            return <div className="well notification">
+                                <div className="row">
+                                    <div className="col-sm-3">
+                                        <Link to={link}>{imageView}</Link>
+
+                                    </div>
+                                    <div className="col-sm-9">
+                                        <Link to={link}><h6>{notification.podcast.title}</h6></Link>
+                                        {hostedBy}
+                                        <div className="feed-meta">
+                                            <ul className="list-inline list-unstyled">
+                                                <li className="list-inline-item">Posted
+                                                    about {timeSince(notification.timestamp)}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/*<hr/>*/}
+                            </div>
+                        })
+                    } else {
+                        return <p>You have no unread notifications</p>
+                    }
+                }
+                else if (loading) {
+                    return <p>Loading…</p>
+                }
+                return <p>Loading failed.</p>
+            }
+            }
+        </Query>
+        const notifcationIcon = <div className="dropdown">
+            <button className="btn btn-secondary btn-sm dropdown-toggle"  type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="false">
+                <span><i className="fa fa-bell"></i></span>
+            </button>
+            <div className="dropdown-menu feed-meta dropdown-menu-right" aria-labelledby="dropdownMenu2">
+                {fetchNotifications}
+            </div>
+        </div>
         const userLinks = (<div className="navbar-nav flex-row ml-md-auto">
+            {notifcationIcon} &nbsp;
             {token && token.role === 'host' && uploadButton}
             <a href="/logout" className="nav-item nav-link" onClick={this.logout}>Logout </a>
             {token && <Link to="/profile" className="nav-item nav-link">{token.username}</Link>}
