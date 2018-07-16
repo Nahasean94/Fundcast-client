@@ -266,6 +266,9 @@ coverImage{
 path
 }
   }
+  subscribers{
+  id
+  }
   }
 }
 `
@@ -794,6 +797,46 @@ ethereum_address
 }
 }`
 
+const subscribeToHost = `
+mutation($host:ID!){
+subscribeToHost,(host:$host){
+subscribers{
+id
+}
+}
+}`
+const subscribeToTag = `
+mutation($tag:ID!){
+subscribeToTag,(tag:$tag){
+subscribers{
+id
+}
+}
+}`
+const unSubscribeFromHost= `
+mutation($host:ID!){
+unSubscribeFromHost(host:$host){
+subscribers{
+id
+}
+}
+}`
+const unSubscribeFromTag= `
+mutation($tag:ID!){
+unSubscribeFromHost(tag:$tag){
+subscribers{
+id
+}
+}
+}`
+const getSubscribers=`
+{
+getSubscribers{
+subscribers{
+id
+}
+}
+}`
 export {
     podcasts,
     fetchPodcastsByTags,
@@ -836,4 +879,8 @@ export {
     searchHosts,
     searchTags,
     searchUsers,
+    subscribeToHost,
+    unSubscribeFromHost,
+    subscribeToTag,
+    unSubscribeFromTag
 }

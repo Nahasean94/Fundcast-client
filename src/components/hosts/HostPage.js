@@ -6,8 +6,8 @@ import shortid from "shortid"
 import PodcastView from "../podcasts/PodcastView"
 import * as jwt from "jsonwebtoken"
 import PropTypes from 'prop-types'
+import HostsSubscriptions from "../subscriptions/HostsSubscriptions"
 class HostPage extends Component {
-
 
     render() {
         const token = jwt.decode(localStorage.getItem("Fundcast"))
@@ -30,7 +30,7 @@ class HostPage extends Component {
                         >
                             {({loading, data}) => {
                                 if (data) {
-                                    const {id, username, profile_picture, email, role, date_joined, address} = data.fetchUserProfile
+                                    const {id, username, profile_picture, email, role, date_joined, address,subscribers} = data.fetchUserProfile
                                     return <div>
                                         <ul className="list-unstyled">
                                             <li><img src={`http://localhost:8080/uploads/${profile_picture}`}
@@ -56,13 +56,7 @@ class HostPage extends Component {
 
                                         </ul>
                                         <hr/>
-                                        <Consumer>{graphql => <UpdateProfile graphql={graphql}
-                                                                             show={showUpdateProfileModal}
-                                                                             onClose={this.closeUpdateProfileModal}
-                                                                             username={username} email={email}
-                                                                             role={role}
-                                                                             profilePicture={profile_picture} id={id}
-                                                                             ethereum_address={ethereum_address}/>}</Consumer>
+                                        <Consumer>{graphql => <HostsSubscriptions graphql={graphql} subscribers={subscribers}/>}</Consumer>
                                     </div>
 
                                 } else if (loading) {
