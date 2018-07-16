@@ -823,15 +823,17 @@ id
 }`
 const unSubscribeFromTag= `
 mutation($tag:ID!){
-unSubscribeFromHost(tag:$tag){
+unSubscribeFromTag(tag:$tag){
 subscribers{
 id
 }
 }
 }`
-const getSubscribers=`
-{
-getSubscribers{
+const getTagSubscribers=`
+query($tag:ID!){
+getTagSubscribers(tag:$tag){
+id
+name
 subscribers{
 id
 }
@@ -882,5 +884,6 @@ export {
     subscribeToHost,
     unSubscribeFromHost,
     subscribeToTag,
-    unSubscribeFromTag
+    unSubscribeFromTag,
+    getTagSubscribers
 }

@@ -71,7 +71,8 @@ class PodcastView extends React.Component {
                     <ul className="list-inline">
                         &nbsp;<i className="fa fa-tags"></i>
                         {tags.map((tag, i) => {
-                            return <li key={i} className="list-inline-item"><a href="">&nbsp;{tag}</a></li>
+
+                            return <li key={i} className="list-inline-item">&nbsp;{tag}</li>
                         })}
 
                         <li className="list-inline-item pull-right">

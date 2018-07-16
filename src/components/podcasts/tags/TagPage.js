@@ -5,6 +5,7 @@ import {fetchPodcastsByTags, tags as queryTags} from "../../../shared/queries"
 import {fundcastFetchOptionsOverride} from '../../../shared/fetchOverrideOptions'
 import {Consumer, Query} from 'graphql-react'
 import Link from "react-router-dom/es/Link"
+import TagsSubscriptions from "../../subscriptions/TagsSubscriptions"
 
 
 let tags = []
@@ -64,6 +65,7 @@ class TagPage extends React.Component {
                         </Query>
                     </div>
                     <div className="col-10 col-md-10 col-xl-10 bd-content">
+                        <Consumer>{graphql => <TagsSubscriptions graphql={graphql}/>}</Consumer>
                         <Query
                             loadOnMount
                             loadOnReset
