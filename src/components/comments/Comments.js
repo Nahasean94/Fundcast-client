@@ -3,7 +3,7 @@ import CommentView from './CommentView'
 import {addComment, findPodcastComments} from "../../shared/queries"
 import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {Query} from 'graphql-react'
-import validator from '../../../node_modules/validator/index.js'
+import validator from 'validator'
 import {isEmpty} from 'lodash'
 import classnames from "classnames"
 

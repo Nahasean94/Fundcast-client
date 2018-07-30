@@ -14,7 +14,9 @@ class HostsSubscriptions extends React.Component {
         if (token) {
             this.state.token = token
             this.props.subscribers.map(subscriber => {
-                if (subscriber === token.id) {
+
+                if (subscriber.id === token.id) {
+                    console.log(true)
                     this.state.isSubscribed = true
                 }
             })

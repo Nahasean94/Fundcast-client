@@ -31,6 +31,7 @@ class HostPage extends Component {
                             {({loading, data}) => {
                                 if (data) {
                                     const {id, username, profile_picture, email, role, date_joined, address,subscribers} = data.fetchUserProfile
+
                                     return <div>
                                         <ul className="list-unstyled">
                                             <li><img src={`http://localhost:8080/uploads/${profile_picture}`}

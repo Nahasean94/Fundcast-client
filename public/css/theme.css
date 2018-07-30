@@ -9,6 +9,7 @@
 }
 .notification{
     width:300px;
+    overflow-x: auto;
   }
 .notification-dropdown{
     max-height: 200px !important;
