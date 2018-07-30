@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import validator from 'validator'
 import {isEmpty} from 'lodash'
 import TextFieldGroup from '../../../shared/TextFieldsGroup'
@@ -13,7 +12,8 @@ import {
     tags as queryTags,
 } from "../../../shared/queries"
 import Select from 'react-select'
-import {Query} from "graphql-react"
+import {Query} from 'graphql-react'
+import PropTypes from 'prop-types'
 
 let hostOptions, tagOptions
 
@@ -26,8 +26,9 @@ class NewPodcastForm extends React.Component {
             description: '',
             podcast: '',
             coverImage: '',
-            paid: false,
-            amount:'',
+            paid: 0,
+            isPayable: false,
+            amount: 0,
             message: '',
             errors: {},
             isLoading: false,
@@ -56,7 +57,14 @@ class NewPodcastForm extends React.Component {
         this.setState({hosts})
     }
     handlePaymentChange = (paid) => {
-        this.setState({paid})
+
+        if (paid.target.value == 0) {
+            this.setState({paid: paid.target.value, isPayable: false, amount: 0})
+
+        } else {
+            this.setState({paid: paid.target.value, isPayable: true})
+
+        }
     }
 
     validateInput(data) {
@@ -102,7 +110,7 @@ class NewPodcastForm extends React.Component {
             return tag.value
         })
         if (this.isValid()) {
-
+            console.log(this.state)
             this.setState({errors: {}, isLoading: false})
             this.props.graphql
                 .query({
@@ -114,6 +122,7 @@ class NewPodcastForm extends React.Component {
                             description: this.state.description,
                             hosts: hosts,
                             paid: this.state.paid,
+                            amount: this.state.amount,
                             tags: tags,
                         },
                         query: addBasicInfo
@@ -214,7 +223,7 @@ class NewPodcastForm extends React.Component {
     render() {
         const {show, onClose} = this.props
 
-        const {errors, isLoading, invalid, description, title, paid, tags, message} = this.state
+        const {errors, isLoading, invalid, description, title, paid, tags, message, isPayable, amount} = this.state
         let {hosts} = this.state
 
         if (show) {
@@ -275,14 +284,25 @@ class NewPodcastForm extends React.Component {
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input form-check-inline" type="radio"
                                                            value={1} name="paid"
-                                                           onChange={this.onChange}
+                                                           onChange={this.handlePaymentChange}
                                                            id="paid"/>
                                                     <label className="form-check-label" htmlFor="paid">Paid</label>
                                                 </div>
+
                                             </fieldset>
                                         </div>
 
                                     </div>
+                                    {isPayable &&
+                                    <TextFieldGroup
+                                        label="Amount ($)"
+                                        type="number"
+                                        name="amount"
+                                        value={amount}
+                                        onChange={this.onChange}
+                                        error={errors.amount}
+
+                                    />}
                                     <div className="form-group row">
                                         <label className="col-sm-2 col-form-label" htmlFor="hosts">Tags</label>
                                         <div className="col-sm-10">
@@ -334,7 +354,8 @@ class NewPodcastForm extends React.Component {
                                                                 label: <div><img
                                                                     src={`http://localhost:8080/uploads/${host.profile_picture}`}
                                                                     width="30" height="20"
-                                                                    className="rounded-circle"/>{host.username}</div>,
+                                                                    className="rounded-circle"/>{host.username}
+                                                                </div>,
                                                                 value: host.id
                                                             }
                                                         })

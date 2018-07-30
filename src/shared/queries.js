@@ -670,8 +670,8 @@ const updateBasicInfo = `
 }
 `
 const addBasicInfo = `
-   mutation($title:String!,$description:String!,$hosts:[String!]!,$paid:Int!,$tags:[String!]!) {
-  addBasicInfo(title:$title,description:$description,hosts:$hosts,paid:$paid,tags:$tags) {
+   mutation($title:String!,$description:String!,$hosts:[String!]!,$paid:Int!,$tags:[String!]!,$amount:Int) {
+  addBasicInfo(title:$title,description:$description,hosts:$hosts,paid:$paid,tags:$tags,amount:$amount) {
   id
  title
  description
