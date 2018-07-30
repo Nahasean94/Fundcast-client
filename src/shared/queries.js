@@ -23,6 +23,7 @@ path
 }
 payment{
 paid
+amount
 }
     }
     }
@@ -52,6 +53,7 @@ path
 }
 payment{
 paid
+amount
 }
     }
     }
@@ -81,6 +83,7 @@ path
 }
 payment{
 paid
+amount
 }
     }
     }
@@ -110,6 +113,7 @@ path
 }
 payment{
 paid
+amount
 }
     }
     }
@@ -142,6 +146,7 @@ path
 }
 payment{
 paid
+amount
 }
 publishing
     }
@@ -229,6 +234,7 @@ path
 }
 payment{
 paid
+amount
 }
 publishing
   }
@@ -336,6 +342,7 @@ path
 }
 payment{
 paid
+amount
 }
     }
     }
@@ -368,6 +375,7 @@ path
 }
 payment{
 paid
+amount
 }
     }
     }
@@ -400,6 +408,7 @@ path
 }
 payment{
 paid
+amount
 }
     }
     }
@@ -432,6 +441,7 @@ path
 }
 payment{
 paid
+amount
 }
     }
     }
@@ -483,6 +493,7 @@ path
 }
 payment{
 paid
+amount
 }
     }
     }

@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {timeSince} from "../../shared/TimeSince"
-import {Link} from "react-router-dom"
-
+import jwt from 'jsonwebtoken'
+import UnlockModal from "../../modals/UnlockModal"
 
 class PodcastView extends React.Component {
 
@@ -10,9 +10,42 @@ class PodcastView extends React.Component {
         super(props)
         this.state = {
             ...this.props.podcast,
-            showFullDescription: false
+            showFullDescription: false,
+            hasPaid: false,
+            showUnlockModal: false,
         }
         this.showFullDescription = this.showFullDescription.bind(this)
+        this.showUnlockModal = this.showUnlockModal.bind(this)
+        this.closeUnlockModal = this.closeUnlockModal.bind(this)
+        this.viewPodcast = this.viewPodcast.bind(this)
+        if (localStorage.getItem("Fundast")) {
+            const token = jwt.decode(localStorage.getItem("Fundcast"))
+            this.props.podcast.payment.buyers.map(buyer => {
+                if (token.id === buyer) {
+                    this.state.hasPaid = true
+                }
+            })
+        }
+    }
+
+    showUnlockModal() {
+        this.setState({showUnlockModal: true})
+    }
+
+    closeUnlockModal() {
+        this.setState({showUnlockModal: false})
+    }
+
+    viewPodcast(e, link) {
+        e.preventDefault()
+        if (this.props.podcast.payment.paid == 0) {
+            this.context.router.history.push(link)
+        }
+        else if (this.state.hasPaid) {
+            this.context.router.history.push(link)
+        } else {
+            this.setState({showUnlockModal: true})
+        }
     }
 
     showFullDescription(e) {
@@ -22,8 +55,8 @@ class PodcastView extends React.Component {
 
 
     render() {
-        const {id, title, description, tags, listens, hosts, timestamp, payment, coverImage, likes,} = this.props.podcast
-        const {showFullDescription} = this.state
+        const {id, title, description, tags, listens, hosts, timestamp, payment, coverImage, likes} = this.props.podcast
+        const {showFullDescription, hasPaid} = this.state
 
         const link = `/podcasts/${id}`
 
@@ -48,11 +81,15 @@ class PodcastView extends React.Component {
             <div className="well">
                 <div className="row">
                     <div className="col-sm-3">
-                        <Link to={link}>{imageView}</Link>
+                        <a href="" onClick={(e) => {
+                            this.viewPodcast(e, link)
+                        }}>{imageView}</a>
 
                     </div>
                     <div className="col-sm-9">
-                        <Link to={link}><h3>{title}</h3></Link>
+                        <a href="" onClick={(e) => {
+                            this.viewPodcast(e, link)
+                        }}><h3>{title}</h3></a>
                         {hostedBy}
                         <div className="feed-meta">
                             <ul className="list-inline list-unstyled">
@@ -73,7 +110,10 @@ class PodcastView extends React.Component {
 
                         return <li key={i} className="list-inline-item">&nbsp;{tag}</li>
                     })}
-
+                    {payment.paid == 1 && !hasPaid && < li className="list-inline-item">
+                        <button className="btn btn-sm btn-primary" onClick={this.showUnlockModal}>Unlock
+                            ${payment.amount}</button>
+                    </li>}
                     <li className="list-inline-item pull-right">
                         <ul className="list-inline">
                             <li className="list-inline-item"><strong>{likes.length} likes</strong></li>
@@ -82,7 +122,8 @@ class PodcastView extends React.Component {
                     </li>
                 </ul>
                 <hr/>
-
+                <UnlockModal show={this.state.showUnlockModal} onClose={this.closeUnlockModal}
+                             podcast={this.props.podcast}/>
             </div>
         )
     }

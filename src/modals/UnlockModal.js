@@ -2,18 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 
-class PodcastModal extends React.Component {
+class UnlockModal extends React.Component {
     render() {
-        const {show, onClose, post, username, uploads} = this.props
-        const upload = uploads.length > 0 ?
-            <img src={`http://localhost:8080/uploads/${uploads[0].path}`} width="400" height="350" alt="Uploads"/> : ''
+        const {show, onClose} = this.props
+
         if (show) {
             return (
                 <Modal isOpen={show} toggle={onClose} size="lg">
-                    <ModalHeader toggle={onClose}>{username}</ModalHeader>
+                    <ModalHeader toggle={onClose}>Unlock podcast to listen</ModalHeader>
                     <ModalBody>
                         <div className="modal-body">
-                            <p>{post ? post : upload}</p>
+                            <p>We are about to finish this system</p>
                         </div>
                     </ModalBody>
                     <ModalFooter>
@@ -27,10 +26,9 @@ class PodcastModal extends React.Component {
     }
 }
 
-PodcastModal.propTypes = {
+UnlockModal.propTypes = {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    post: PropTypes.string,
-    uploads: PropTypes.array
+    podcast: PropTypes.object.isRequired,
 }
-export default PodcastModal
+export default UnlockModal
