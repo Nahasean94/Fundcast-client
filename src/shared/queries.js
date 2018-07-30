@@ -789,6 +789,21 @@ username
 profile_picture
 }
 }`
+const getHostsSubscriptions = `
+query($id:ID!){
+getHostsSubscriptions(id:$id){
+id
+username
+profile_picture
+}
+}`
+const getTagsSubscriptions = `
+query($id:ID!){
+getTagsSubscriptions(id:$id){
+id
+name
+}
+}`
 const searchHosts = `
 query($search:String!){
 searchHosts(search:$search){
@@ -885,10 +900,10 @@ export {
     confirmPassword,
     fetchLikedPodcasts,
     searchPodcasts,
-    fetchProfilePodcasts,
     fetchHostPodcasts,
     fetchUserProfile,
-    getProfileInfo,
+    getHostsSubscriptions,
+    getTagsSubscriptions,
     signup,
     isUserExists,
     login,
@@ -899,7 +914,6 @@ export {
     deletePodcast,
     addComment,
     updateProfile,
-    createNewPodcast,
     changePassword,
     uploadProfilePicture,
     person,

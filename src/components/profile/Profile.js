@@ -1,11 +1,19 @@
 import React, {Component} from 'react'
-import {fetchHostPodcasts, fetchLikedPodcasts, fetchUserProfile, getHistory} from "../../shared/queries"
+import {
+    fetchHostPodcasts,
+    fetchLikedPodcasts,
+    fetchUserProfile,
+    getHistory,
+    getHostsSubscriptions,
+    getTagsSubscriptions
+} from "../../shared/queries"
 import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {Consumer, Query} from 'graphql-react'
 import shortid from "shortid"
 import PodcastView from "../podcasts/PodcastView"
 import * as jwt from "jsonwebtoken"
 import UpdateProfile from "./UpdateProfile"
+import {Link} from "react-router-dom"
 
 class HostPage extends Component {
     constructor(props) {
@@ -237,8 +245,112 @@ class HostPage extends Component {
                                 </Query>
                             </div>
                             <div className="tab-pane fade" id="nav-subscriptions" role="tabpanel"
-                                 aria-labelledby="nav-subscriptions-tab"><h4>List of podcasts/hosts you've subscribed to
-                                will go here</h4>
+                                 aria-labelledby="nav-subscriptions-tab">
+                                <br/>
+                                <div className="row">
+                                    <div className="col-2">
+                                        <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                             aria-orientation="vertical">
+                                            <a className="nav-link active" id="v-pills-home-tab" data-toggle="pill"
+                                               href="#v-pills-home" role="tab" aria-controls="v-pills-home"
+                                               aria-selected="true">Hosts</a>
+                                            <a className="nav-link" id="v-pills-profile-tab" data-toggle="pill"
+                                               href="#v-pills-profile" role="tab" aria-controls="v-pills-profile"
+                                               aria-selected="false">Tags</a>
+
+                                        </div>
+                                    </div>
+
+                                    <div className="col-10">
+
+                                        <div className="tab-content" id="v-pills-tabContent">
+                                            <div className="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                                                 aria-labelledby="v-pills-home-tab">
+                                                <Query
+                                                    loadOnMount
+                                                    loadOnReset
+                                                    fetchOptionsOverride={fundcastFetchOptionsOverride}
+                                                    variables={{id: jwt.decode(localStorage.getItem("Fundcast")).id}}
+                                                    query={getHostsSubscriptions}
+                                                >
+                                                    {({loading, data}) => {
+                                                        if (data) {
+                                                            if (data.getHostsSubscriptions) {
+                                                                return <div className="container">
+                                                                    <div className="row">
+                                                                        {data.getHostsSubscriptions.map(host => {
+                                                                            const hostPage = `/hosts/${host.id}`
+                                                                            return (
+                                                                                <div key={shortid.generate()}>
+                                                                                    <div className="col-sm-2">
+                                                                                        <div className="">
+                                                                                            <a href={hostPage}> <img
+                                                                                                src={`http://localhost:8080/uploads/${host.profile_picture}`}
+                                                                                                width="150" height="100"
+                                                                                                alt={host.username}
+                                                                                                className="rounded"/></a>
+                                                                                            <a href={hostPage}>
+                                                                                                <h6>{host.username}</h6>
+                                                                                            </a>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+                                                                            )
+                                                                        })
+                                                                        } </div>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        else if (loading) {
+                                                            return <p>Loading…</p>
+                                                        }
+                                                        return <p>Loading failed.</p>
+                                                    }
+
+                                                    }
+                                                </Query>
+                                            </div>
+                                            <div className="tab-pane fade" id="v-pills-profile" role="tabpanel"
+                                                 aria-labelledby="v-pills-profile-tab">
+                                                <Query
+                                                    loadOnMount
+                                                    loadOnReset
+                                                    fetchOptionsOverride={fundcastFetchOptionsOverride}
+                                                    variables={{id: jwt.decode(localStorage.getItem("Fundcast")).id}}
+                                                    query={getTagsSubscriptions}
+                                                >
+                                                    {({loading, data}) => {
+                                                        if (data) {
+                                                            if (data.getTagsSubscriptions) {
+                                                                return <div className="container">
+                                                                    <div className="row">
+                                                                        <ol>
+                                                                            {data.getTagsSubscriptions.map(tag => {
+                                                                                const tagsPage = `/tags/${tag.id}`
+                                                                                return (
+                                                                                    <li key={shortid.generate()}>
+                                                                                        <Link to={tagsPage}>{tag.name}</Link>
+                                                                                    </li>
+                                                                                )
+                                                                            })}
+                                                                        </ol>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        }
+                                                        else if (loading) {
+                                                            return <p>Loading…</p>
+                                                        }
+                                                        return <p>Loading failed.</p>
+                                                    }
+
+                                                    }
+                                                </Query>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                             </div>
                         </div>
