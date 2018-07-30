@@ -13,7 +13,7 @@ class Comments extends React.Component {
         this.state = {
             comment: '',
             errors: {},
-            liked:false,
+            liked: false,
             isLoading: false,
             invalid: false
         }
@@ -94,7 +94,8 @@ class Comments extends React.Component {
                     <div className="form-group">
                         <textarea name="comment" onChange={this.onChange}
                                   className={classnames("form-control form-control-sm", {"is-invalid": commentError})}
-                                  rows="3" placeholder="Add comment" onClick={this.onChange} value={this.state.comment}/>
+                                  rows="3" placeholder="Add comment" onClick={this.onChange}
+                                  value={this.state.comment}/>
                         {commentError && <div className="invalid-feedback">{commentError}</div>}
                     </div>
                     <div className="row">
@@ -113,33 +114,33 @@ class Comments extends React.Component {
                         podcast_id: window.location.pathname.split('/')[2],
 
                     }}
-                query= {findPodcastComments}
-            >
-                {({loading, data}) => {
-                    if (data) {
-                        if (data.findPodcastComments.length>0) {
+                    query={findPodcastComments}
+                >
+                    {({loading, data}) => {
+                        if (data) {
+                            if (data.findPodcastComments.length > 0) {
 
-                            return <ul className="list-unstyled">
-                                {data.findPodcastComments.map(comment => {
-                                    return (
-                                        <li key={comment.id}><CommentView comment={comment}/></li>)
-                                })
-                                }
+                                return <ul className="list-unstyled">
+                                    {data.findPodcastComments.map(comment => {
+                                        return (
+                                            <li key={comment.id}><CommentView comment={comment}/></li>)
+                                    })
+                                    }
 
-                            </ul>
+                                </ul>
+                            }
                         }
+                        else if (loading) {
+                            return <p>Loading…</p>
+                        }
+                        return <p>No comments found</p>
                     }
-                    else if (loading) {
-                        return <p>Loading…</p>
+
                     }
-                    return <p>No comments found</p>
-                }
+                </Query>
+            </div>
 
-                }
-            </Query>
-    </div>
-
-    )
+        )
     }
 }
 

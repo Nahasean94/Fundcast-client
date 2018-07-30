@@ -1,17 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import validator from 'validator'
-import {isDate, isEmpty} from 'lodash'
+import {isEmpty} from 'lodash'
 import TextFieldGroup from '../../../shared/TextFieldsGroup'
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import {fundcastFetchOptionsOverride} from "../../../shared/fetchOverrideOptions"
-import {
-    hosts as queryHosts,
-    tags as queryTags,
-    updateAudioFile,
-    updateBasicInfo,
-    updateCoverImageFile
-} from "../../../shared/queries"
+import {hosts as queryHosts, tags as queryTags} from "../../../shared/queries"
 import Select from 'react-select'
 import {Query} from "graphql-react"
 
@@ -123,6 +117,7 @@ class NewPodcastForm extends React.Component {
             )
         }
     }
+
     handlePodcastChange({
                             target: {
                                 validity,
@@ -144,6 +139,7 @@ class NewPodcastForm extends React.Component {
             this.setState({coverImage: file})
         }
     }
+
     onSubmitCoverImage(e) {
         e.preventDefault()
         if (this.state.coverImage) {

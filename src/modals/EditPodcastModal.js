@@ -1,9 +1,9 @@
 import React from 'react'
-import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import { updatePodcast as showUpdatedPodcast} from "../actions/podcastsActions"
-import { updatePodcast} from '../shared/queries'
+import {updatePodcast as showUpdatedPodcast} from "../actions/podcastsActions"
+import {updatePodcast} from '../shared/queries'
 import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
 
 class EditPodcastModal extends React.Component {
@@ -17,14 +17,14 @@ class EditPodcastModal extends React.Component {
     }
 
     onSave() {
-        const { editedPodcast} = this.state
+        const {editedPodcast} = this.state
         if (editedPodcast !== '') {
             this.props.graphql
                 .query({
                     fetchOptionsOverride: fundcastFetchOptionsOverride,
                     resetOnLoad: true,
                     operation: {
-                        variables: {id: this.props.postId,body:editedPodcast},
+                        variables: {id: this.props.postId, body: editedPodcast},
                         query: updatePodcast
                     }
                 })
@@ -45,7 +45,7 @@ class EditPodcastModal extends React.Component {
 
     render() {
         const {show, onClose} = this.props
-        let content=this.props.post
+        let content = this.props.post
         if (show) {
             return (
                 <Modal isOpen={show} toggle={onClose} size="lg">
@@ -53,7 +53,7 @@ class EditPodcastModal extends React.Component {
                     <ModalBody>
                         <div className="form-group">
                 <textarea name="updatePodcast" onChange={this.onChange} className="form-control" rows="10" cols="20"
-                         defaultValue={content}/>
+                          defaultValue={content}/>
                         </div>
                     </ModalBody>
                     <ModalFooter>
@@ -72,8 +72,8 @@ EditPodcastModal.propTypes = {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     post: PropTypes.string.isRequired,
-    showUpdatedPodcast:PropTypes.func.isRequired,
-    postId:PropTypes.string.isRequired
+    showUpdatedPodcast: PropTypes.func.isRequired,
+    postId: PropTypes.string.isRequired
 }
 
-export default connect(null,{showUpdatedPodcast})(EditPodcastModal)
+export default connect(null, {showUpdatedPodcast})(EditPodcastModal)

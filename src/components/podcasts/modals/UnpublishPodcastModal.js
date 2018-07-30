@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import {unPublishPodcast} from "../../../shared/queries"
 import {fundcastFetchOptionsOverride} from "../../../shared/fetchOverrideOptions"
 
@@ -18,7 +18,7 @@ class UnpublishPodcastModal extends React.Component {
                 resetOnLoad: true,
                 operation: {
                     variables: {
-                       id:this.props.id
+                        id: this.props.id
                     },
                     query: unPublishPodcast
                 }

@@ -7,10 +7,10 @@ class LoginPage extends React.Component {
     render() {
         return (
 
-                <div >
+            <div>
 
-                    <Consumer >{graphql =>   <LoginForm  graphql={graphql}/>}</Consumer>
-                </div>
+                <Consumer>{graphql => <LoginForm graphql={graphql}/>}</Consumer>
+            </div>
 
         )
     }

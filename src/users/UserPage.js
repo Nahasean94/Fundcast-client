@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import {fetchUserProfile} from "../shared/queries"
 import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
-import {Consumer, Query} from 'graphql-react'
+import {Query} from 'graphql-react'
 import * as jwt from "jsonwebtoken"
 import PropTypes from 'prop-types'
+
 class UserPage extends Component {
 
 

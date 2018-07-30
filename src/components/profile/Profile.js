@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {fetchHostPodcasts, fetchUserProfile, fetchLikedPodcasts, getHistory} from "../../shared/queries"
+import {fetchHostPodcasts, fetchLikedPodcasts, fetchUserProfile, getHistory} from "../../shared/queries"
 import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {Consumer, Query} from 'graphql-react'
 import shortid from "shortid"
@@ -25,7 +25,6 @@ class HostPage extends Component {
     closeUpdateProfileModal(e) {
         this.setState({showUpdateProfileModal: false})
     }
-
 
 
     render() {

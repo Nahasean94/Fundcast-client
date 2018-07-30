@@ -1,2 +1,1 @@
-# Fundcast-client
-A react client app for <a href="https://github.com/Nahasean94/Fundcast">Fundcast</a> back end code
+This application built for the Ethereum blockchain. It will enable the country store public records of its citizens, including academic records, driving licenses, log books, title deeds etc. The aim is to help curb forgery of the these records, and drive towards a paperless society.

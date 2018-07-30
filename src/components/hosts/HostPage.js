@@ -7,6 +7,7 @@ import PodcastView from "../podcasts/PodcastView"
 import * as jwt from "jsonwebtoken"
 import PropTypes from 'prop-types'
 import HostsSubscriptions from "../subscriptions/HostsSubscriptions"
+
 class HostPage extends Component {
 
     render() {
@@ -30,7 +31,7 @@ class HostPage extends Component {
                         >
                             {({loading, data}) => {
                                 if (data) {
-                                    const {id, username, profile_picture, email, role, date_joined, address,subscribers} = data.fetchUserProfile
+                                    const {id, username, profile_picture, email, role, date_joined, address, subscribers} = data.fetchUserProfile
 
                                     return <div>
                                         <ul className="list-unstyled">
@@ -57,7 +58,8 @@ class HostPage extends Component {
 
                                         </ul>
                                         <hr/>
-                                        <Consumer>{graphql => <HostsSubscriptions graphql={graphql} subscribers={subscribers}/>}</Consumer>
+                                        <Consumer>{graphql => <HostsSubscriptions graphql={graphql}
+                                                                                  subscribers={subscribers}/>}</Consumer>
                                     </div>
 
                                 } else if (loading) {

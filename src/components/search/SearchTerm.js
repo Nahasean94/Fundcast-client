@@ -1,10 +1,10 @@
 class SearchTerm {
-    state= {
-        search:''
+    state = {
+        search: ''
     }
 
     setSearchTerm(term) {
-        this.state.search=term
+        this.state.search = term
     }
 
     getSearchTerm() {

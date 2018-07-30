@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import jwt from "jsonwebtoken"
 import {timeSince} from "../../shared/TimeSince"
-import {Consumer} from 'graphql-react'
 import {Link} from "react-router-dom"
 
 class RelatedPodcasts extends React.Component {
@@ -12,7 +11,7 @@ class RelatedPodcasts extends React.Component {
             ...this.props.podcast,
 
         }
-        this.onProfileLink=this.onProfileLink.bind(this)
+        this.onProfileLink = this.onProfileLink.bind(this)
     }
 
 

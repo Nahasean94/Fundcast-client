@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 
 class PodcastModal extends React.Component {
     render() {
         const {show, onClose, post, username, uploads} = this.props
-        const upload = uploads.length>0 ? <img src={`http://localhost:8080/uploads/${uploads[0].path}`} width="400" height="350" alt="Uploads"/> : ''
+        const upload = uploads.length > 0 ?
+            <img src={`http://localhost:8080/uploads/${uploads[0].path}`} width="400" height="350" alt="Uploads"/> : ''
         if (show) {
             return (
                 <Modal isOpen={show} toggle={onClose} size="lg">

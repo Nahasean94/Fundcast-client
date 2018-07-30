@@ -6,6 +6,7 @@ import {hosts} from "../shared/queries"
 import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
 
 let options
+
 class TestPage extends React.Component {
     constructor(props) {
         super(props)
@@ -44,20 +45,22 @@ class TestPage extends React.Component {
                 >
                     {({loading, data}) => {
                         if (data) {
-                             options = data.hosts.map(host => {
+                            options = data.hosts.map(host => {
                                 return {
-                                    label: <div><img src={`http://localhost:8080/uploads/${host.profile_picture}`} width="30" height="20" className="rounded-circle"/>{host.username}</div>,
+                                    label: <div><img src={`http://localhost:8080/uploads/${host.profile_picture}`}
+                                                     width="30" height="20" className="rounded-circle"/>{host.username}
+                                    </div>,
                                     value: host.username
                                 }
                             })
                             return <Select.Creatable
                                 closeOnSelect={true}
-                                                        multi={true}
-                                                        onChange={this.onChange}
-                                                        options={options}
-                                                        placeholder="Select your favourite(s)"
-                                                        removeSelected={true}
-                                                        />
+                                multi={true}
+                                onChange={this.onChange}
+                                options={options}
+                                placeholder="Select your favourite(s)"
+                                removeSelected={true}
+                            />
                         }
                         else if (loading) {
                             return <p>Loading…</p>

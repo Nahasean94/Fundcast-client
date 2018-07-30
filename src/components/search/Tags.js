@@ -2,7 +2,7 @@ import React from 'react'
 import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {searchTags} from "../../shared/queries"
 import shortid from "shortid"
-import {Consumer, Query} from "graphql-react"
+import {Query} from "graphql-react"
 import SearchTerm from './SearchTerm'
 import {Link} from "react-router-dom"
 
@@ -30,7 +30,8 @@ class Tags extends React.Component {
 
                                         const tagsPage = `/tags/${tag.id}`
                                         return (
-                                            <li key={shortid.generate()}><Link to={tagsPage}><h4>{tag.name}</h4></Link></li>
+                                            <li key={shortid.generate()}><Link to={tagsPage}><h4>{tag.name}</h4></Link>
+                                            </li>
                                         )
                                     })
                                     }

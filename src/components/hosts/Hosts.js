@@ -1,5 +1,5 @@
 import React from 'react'
-import {Consumer, Query} from 'graphql-react'
+import {Query} from 'graphql-react'
 import shortid from "shortid"
 import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {hosts} from "../../shared/queries"

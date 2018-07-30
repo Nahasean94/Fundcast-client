@@ -157,23 +157,24 @@ class PodcastPage extends Component {
                                         </ul>
                                     </div>
                                     <br/>
-                                    <Consumer>{graphql => <ListeningPodcast graphql={graphql} podcast={data.podcast}/>}</Consumer>
+                                    <Consumer>{graphql => <ListeningPodcast graphql={graphql}
+                                                                            podcast={data.podcast}/>}</Consumer>
 
                                     <br/>
                                     <br/>
                                     <div className="view-podcast"> {description}
                                     </div>
 
-                                        <br/>
-                                        <br/>
-                                        <ul className="list-inline">
-                                            &nbsp;<i className="fa fa-tags"></i>
-                                            {tags.map((tag, i) => {
-                                                return <li key={i} className="list-inline-item"><a
-                                                    href="">&nbsp;{tag}</a>
-                                                </li>
-                                            })}
-                                        </ul>
+                                    <br/>
+                                    <br/>
+                                    <ul className="list-inline">
+                                        &nbsp;<i className="fa fa-tags"></i>
+                                        {tags.map((tag, i) => {
+                                            return <li key={i} className="list-inline-item"><a
+                                                href="">&nbsp;{tag}</a>
+                                            </li>
+                                        })}
+                                    </ul>
                                     <hr/>
                                     <Consumer>{graphql => <Comments graphql={graphql}/>}</Consumer>
                                 </div>

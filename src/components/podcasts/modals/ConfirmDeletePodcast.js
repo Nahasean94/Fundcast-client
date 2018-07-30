@@ -24,11 +24,11 @@ class ConfirmDeletePodcast extends React.Component {
                 }
             })
             .request.then(({data}) => {
-            if(data) {
-                this.context.router.history.push('/profile')
+                if (data) {
+                    this.context.router.history.push('/profile')
+                }
             }
-        }
-    )
+        )
 
     }
 

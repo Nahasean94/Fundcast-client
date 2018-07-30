@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import validator from '../../../node_modules/validator/index.js'
 import {isEmpty} from 'lodash'
 import TextFieldGroup from './../../shared/TextFieldsGroup'
-import  {setLoginToken} from "../../actions/loginActions"
+import {setLoginToken} from "../../actions/loginActions"
 import {connect} from 'react-redux'
 import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
 import {login} from '../../shared/queries'

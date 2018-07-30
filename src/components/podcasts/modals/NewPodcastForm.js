@@ -1,16 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import validator from 'validator'
-import {isDate, isEmpty} from 'lodash'
+import {isEmpty} from 'lodash'
 import TextFieldGroup from '../../../shared/TextFieldsGroup'
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import {fundcastFetchOptionsOverride} from "../../../shared/fetchOverrideOptions"
 import {
-    addAudioFile, addBasicInfo,
+    addAudioFile,
+    addBasicInfo,
     addCoverImageFile,
     hosts as queryHosts,
     tags as queryTags,
-
 } from "../../../shared/queries"
 import Select from 'react-select'
 import {Query} from "graphql-react"
@@ -21,13 +21,14 @@ class NewPodcastForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            id:'',
+            id: '',
             title: '',
             description: '',
             podcast: '',
             coverImage: '',
             paid: false,
-            message:'',
+            amount:'',
+            message: '',
             errors: {},
             isLoading: false,
             invalid: false,
@@ -44,6 +45,7 @@ class NewPodcastForm extends React.Component {
         this.handleCoverImageChange = this.handleCoverImageChange.bind(this)
         this.handleTagsChange = this.handleTagsChange.bind(this)
         this.handleHostsChange = this.handleHostsChange.bind(this)
+        this.handlePaymentChange = this.handlePaymentChange.bind(this)
 
     }
 
@@ -52,6 +54,9 @@ class NewPodcastForm extends React.Component {
     }
     handleHostsChange = (hosts) => {
         this.setState({hosts})
+    }
+    handlePaymentChange = (paid) => {
+        this.setState({paid})
     }
 
     validateInput(data) {
@@ -117,14 +122,15 @@ class NewPodcastForm extends React.Component {
                 .request.then(({data}) => {
                     if (data) {
                         console.log(data)
-                        if(data.addBasicInfo)
-                        this.setState({id:data.addBasicInfo.id,message:'Successfully added basic info.'})
+                        if (data.addBasicInfo)
+                            this.setState({id: data.addBasicInfo.id, message: 'Successfully added basic info.'})
 
                     }
                 }
             )
         }
     }
+
     handlePodcastChange({
                             target: {
                                 validity,
@@ -146,6 +152,7 @@ class NewPodcastForm extends React.Component {
             this.setState({coverImage: file})
         }
     }
+
     onSubmitCoverImage(e) {
         e.preventDefault()
         if (this.state.coverImage) {
@@ -164,7 +171,7 @@ class NewPodcastForm extends React.Component {
                 .request.then(({data}) => {
                     if (data) {
                         this.setState({
-                            coverImage: '',message:'Successfully added cover image.'
+                            coverImage: '', message: 'Successfully added cover image.'
                         })
                     }
                 }
@@ -190,7 +197,7 @@ class NewPodcastForm extends React.Component {
                 .request.then(({data}) => {
                     if (data) {
                         this.setState({
-                            coverImage: '',message:'Successfully added audio file.'
+                            coverImage: '', message: 'Successfully added audio file.'
                         })
                         this.props.onClose()
                     }
@@ -207,7 +214,7 @@ class NewPodcastForm extends React.Component {
     render() {
         const {show, onClose} = this.props
 
-        const {errors, isLoading, invalid, description, title, paid, tags,message} = this.state
+        const {errors, isLoading, invalid, description, title, paid, tags, message} = this.state
         let {hosts} = this.state
 
         if (show) {
@@ -261,7 +268,7 @@ class NewPodcastForm extends React.Component {
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input form-check-inline" type="radio"
                                                            value={0} name="paid"
-                                                           onChange={this.onChange}
+                                                           onChange={this.handlePaymentChange}
                                                            id="free"/>
                                                     <label className="form-check-label" htmlFor="free">Free</label>
                                                 </div>

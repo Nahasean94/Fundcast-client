@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {timeSince} from "../../shared/TimeSince"
-import {Consumer} from 'graphql-react'
 import {Link} from "react-router-dom"
 
 
@@ -45,47 +44,47 @@ class PodcastView extends React.Component {
                     </li>
                 })}
             </ul>
-            return (
-                <div className="well">
-                    <div className="row">
-                        <div className="col-sm-3">
-                            <Link to={link}>{imageView}</Link>
+        return (
+            <div className="well">
+                <div className="row">
+                    <div className="col-sm-3">
+                        <Link to={link}>{imageView}</Link>
 
-                        </div>
-                        <div className="col-sm-9">
-                            <Link to={link}><h3>{title}</h3></Link>
-                            {hostedBy}
-                            <div className="feed-meta">
-                                <ul className="list-inline list-unstyled">
-                                    <li className="list-inline-item">Posted about {timeSince(timestamp)}</li>
-
-                                </ul>
-                            </div>
-                        </div>
                     </div>
-                    <br/>
-                    <div className="view-podcast">
-                        {description !== '' && description.length > 600 && !showFullDescription ? more : description}
-                    </div>
-                    <br/>
-                    <ul className="list-inline">
-                        &nbsp;<i className="fa fa-tags"></i>
-                        {tags.map((tag, i) => {
+                    <div className="col-sm-9">
+                        <Link to={link}><h3>{title}</h3></Link>
+                        {hostedBy}
+                        <div className="feed-meta">
+                            <ul className="list-inline list-unstyled">
+                                <li className="list-inline-item">Posted about {timeSince(timestamp)}</li>
 
-                            return <li key={i} className="list-inline-item">&nbsp;{tag}</li>
-                        })}
-
-                        <li className="list-inline-item pull-right">
-                            <ul className="list-inline">
-                                <li className="list-inline-item"><strong>{likes.length} likes</strong></li>
-                                <li className="list-inline-item"><strong> {listens} people listened</strong></li>
                             </ul>
-                        </li>
-                    </ul>
-                    <hr/>
-
+                        </div>
+                    </div>
                 </div>
-            )
+                <br/>
+                <div className="view-podcast">
+                    {description !== '' && description.length > 600 && !showFullDescription ? more : description}
+                </div>
+                <br/>
+                <ul className="list-inline">
+                    &nbsp;<i className="fa fa-tags"></i>
+                    {tags.map((tag, i) => {
+
+                        return <li key={i} className="list-inline-item">&nbsp;{tag}</li>
+                    })}
+
+                    <li className="list-inline-item pull-right">
+                        <ul className="list-inline">
+                            <li className="list-inline-item"><strong>{likes.length} likes</strong></li>
+                            <li className="list-inline-item"><strong> {listens} people listened</strong></li>
+                        </ul>
+                    </li>
+                </ul>
+                <hr/>
+
+            </div>
+        )
     }
 
 

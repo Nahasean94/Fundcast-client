@@ -108,7 +108,8 @@ class NavigationBar extends React.Component {
                         return data.getNotifications.map(notification => {
                             const link = `/podcasts/${notification.podcast.id}`
                             const imageView =
-                                <img src={`http://localhost:8080/uploads/${notification.podcast.coverImage.path}`} width="60"
+                                <img src={`http://localhost:8080/uploads/${notification.podcast.coverImage.path}`}
+                                     width="60"
                                      height="60"
                                      alt={notification.podcast.title} className="rounded"/>
 
@@ -154,7 +155,8 @@ class NavigationBar extends React.Component {
             }
         </Query>
         const notifcationIcon = <div className="dropdown">
-            <button className="btn btn-secondary btn-sm dropdown-toggle"  type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="false">
+            <button className="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenu2"
+                    data-toggle="dropdown" aria-expanded="false">
                 <span><i className="fa fa-bell"></i></span>
             </button>
             <div className="dropdown-menu feed-meta dropdown-menu-right" aria-labelledby="dropdownMenu2">

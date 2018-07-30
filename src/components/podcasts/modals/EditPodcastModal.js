@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import validator from 'validator'
-import {isDate, isEmpty} from 'lodash'
+import {isEmpty} from 'lodash'
 import TextFieldGroup from '../../../shared/TextFieldsGroup'
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import {fundcastFetchOptionsOverride} from "../../../shared/fetchOverrideOptions"
@@ -133,6 +133,7 @@ class EditPodcastModal extends React.Component {
             )
         }
     }
+
     handlePodcastChange({
                             target: {
                                 validity,
@@ -154,6 +155,7 @@ class EditPodcastModal extends React.Component {
             this.setState({coverImage: file})
         }
     }
+
     onSubmitCoverImage(e) {
         e.preventDefault()
         if (this.state.coverImage) {

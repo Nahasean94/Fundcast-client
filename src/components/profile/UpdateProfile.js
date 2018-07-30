@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import validator from 'validator'
-import {isDate, isEmpty} from 'lodash'
+import {isEmpty} from 'lodash'
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import {fundcastFetchOptionsOverride} from "../../shared/fetchOverrideOptions"
-import {Query} from "graphql-react"
 import classnames from "classnames"
 import TextFieldGroup from "../../shared/TextFieldsGroup"
 import {changePassword, confirmPassword, updateProfileBasicInfo, uploadProfilePicture} from "../../shared/queries"

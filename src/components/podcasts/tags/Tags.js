@@ -7,7 +7,6 @@ import {Consumer, Query} from 'graphql-react'
 import Link from "react-router-dom/es/Link"
 
 
-
 class Tags extends React.Component {
     constructor(props) {
         super(props)
@@ -17,52 +16,8 @@ class Tags extends React.Component {
             message: '',
             error: ''
         }
-        // this.onChange = this.onChange.bind(this)
-        // this.getTags()
     }
 
-    // getTags() {
-    //     return <Query
-    //         loadOnMount
-    //         loadOnReset
-    //         fetchOptionsOverride={fundcastFetchOptionsOverride}
-    //         query={queryTags}
-    //     >
-    //         {({loading, data}) => {
-    //             if (data) {
-    //                 if (data.tags.length > 0) {
-    //                     this.setState({tags: data.tags})
-    //                 }
-    //                 else {
-    //                     this.setState({message: "No tags found"})
-    //                 }
-    //             }
-    //             else if (loading) {
-    //                 this.setState({message: "Loading"})
-    //
-    //             }
-    //             else this.setState({message: "Loading failed"})
-    //         }
-    //         }
-    //     </Query>
-    // }
-
-    // onChange(e) {
-    //     // let arr_results = []
-    //     // this.props.clearTeachers()
-    //     searchResults.length = 0
-    //     this.render()
-    //     for (let i = 0; i < tags.length; i++) {
-    //         let exp = new RegExp(e.target.value, 'i')
-    //         if (String(tags[i].name).match(exp)) {
-    //             searchResults.push(tags[i])
-    //             this.render()
-    //             // arr_results.push(teachers[i])
-    //             // this.props.addTeacher(teachers[i])
-    //         }
-    //
-    //     }
-    // }
 
     render() {
         // const {loading, message, tags} = this.state
@@ -71,31 +26,6 @@ class Tags extends React.Component {
                 <div className="row flex-xl-nowrap">
                     <div className="col-2 col-md-2 bd-sidebar">
                         <h3>Tags</h3>
-
-                        {/*<form>*/}
-                        {/*<div className="input-group">*/}
-                        {/*<input type="text"*/}
-                        {/*className="form-control form-control-sm"*/}
-                        {/*placeholder="Search "*/}
-                        {/*aria-label="Search " aria-describedby="basic-addon1"*/}
-                        {/*onChange={this.onChange} name="tsc"/>*/}
-                        {/*</div>*/}
-                        {/*</form>*/}
-                        {/*<hr/>*/}
-
-                        {/*{loading ?*/}
-                        {/*<p>Loading…</p>*/}
-                        {/*: message ? <p>{message}</p> :*/}
-                        {/*<ul className="list-unstyled">*/}
-                        {/*<li><strong><Link to="/tags">All</Link></strong></li>*/}
-                        {/*{tags.map(tag => {*/}
-                        {/*const tagLink = `/tags/${tag.id}`*/}
-                        {/*return (<li><strong><Link to={tagLink}>{tag.name}</Link></strong></li>)*/}
-                        {/*})}*/}
-                        {/*</ul>*/}
-                        {/*}*/}
-
-
                         <Query
                             loadOnMount
                             loadOnReset

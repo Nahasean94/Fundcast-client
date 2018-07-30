@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import TextFieldGroup from "../shared/TextFieldsGroup"
 import validator from "validator"
 import {isEmpty} from "lodash"
-import { updateProfile} from "../shared/queries"
+import {updateProfile} from "../shared/queries"
 
 import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
 

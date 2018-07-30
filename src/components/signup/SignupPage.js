@@ -9,9 +9,9 @@ class SignupPage extends React.Component {
 
         return (
 
-                <div>
-                    <Consumer >{graphql =>   <SignupForm   graphql={graphql}/>}</Consumer>
-                </div>
+            <div>
+                <Consumer>{graphql => <SignupForm graphql={graphql}/>}</Consumer>
+            </div>
 
         )
     }
