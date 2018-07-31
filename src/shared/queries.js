@@ -10,6 +10,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -24,6 +25,15 @@ path
 payment{
 paid
 amount
+ethereum_address
+buyers{
+id
+amount
+buyer{
+id
+}
+}
+
 }
     }
     }
@@ -40,6 +50,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -54,6 +65,14 @@ path
 payment{
 paid
 amount
+ethereum_address
+buyers{
+id
+amount
+buyer{
+id
+}
+}
 }
     }
     }
@@ -70,6 +89,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -84,6 +104,14 @@ path
 payment{
 paid
 amount
+ethereum_address
+buyers{
+id
+amount
+buyer{
+id
+}
+}
 }
     }
     }
@@ -100,6 +128,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -114,6 +143,14 @@ path
 payment{
 paid
 amount
+ethereum_address
+buyers{
+id
+amount
+buyer{
+id
+}
+}
 }
     }
     }
@@ -130,6 +167,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -147,6 +185,14 @@ path
 payment{
 paid
 amount
+ethereum_address
+buyers{
+id
+amount
+buyer{
+id
+}
+}
 }
 publishing
     }
@@ -221,6 +267,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -235,6 +282,14 @@ path
 payment{
 paid
 amount
+ethereum_address
+buyers{
+id
+amount
+buyer{
+id
+}
+}
 }
 publishing
   }
@@ -260,6 +315,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -326,6 +382,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -343,6 +400,14 @@ path
 payment{
 paid
 amount
+ethereum_address
+buyers{
+id
+amount
+buyer{
+id
+}
+}
 }
     }
     }
@@ -359,6 +424,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -376,6 +442,14 @@ path
 payment{
 paid
 amount
+ethereum_address
+buyers{
+id
+amount
+buyer{
+id
+}
+}
 }
     }
     }
@@ -392,6 +466,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -409,6 +484,14 @@ path
 payment{
 paid
 amount
+ethereum_address
+buyers{
+id
+amount
+buyer{
+id
+}
+}
 }
     }
     }
@@ -425,6 +508,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -442,6 +526,14 @@ path
 payment{
 paid
 amount
+ethereum_address
+buyers{
+id
+amount
+buyer{
+id
+}
+}
 }
     }
     }
@@ -477,6 +569,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 likes{
 id
@@ -494,7 +587,22 @@ path
 payment{
 paid
 amount
+ethereum_address
+buyers{
+id
+amount
+buyer{
+id
 }
+}
+}
+    }
+    }
+`
+const unlockPodcast = `
+   mutation($podcast:ID!,$buyer:ID!,$amount:Int!) {
+  unlockPodcast(podcast:$podcast,buyer:$buyer,amount:$amount) {
+   id
     }
     }
 `
@@ -665,8 +773,8 @@ const createNewPodcast = `
 }
 `
 const updateBasicInfo = `
-   mutation($id:ID!,$title:String!,$description:String!,$hosts:[String!]!,$paid:Int!,$tags:[String!]!) {
-  updateBasicInfo(id:$id,title:$title,description:$description,hosts:$hosts,paid:$paid,tags:$tags) {
+   mutation($id:ID!,$title:String!,$description:String!,$hosts:[String!]!,$paid:Int!,$tags:[String!]!$amount:Int,$ethereum_address:String) {
+  updateBasicInfo(id:$id,title:$title,description:$description,hosts:$hosts,paid:$paid,tags:$tags,amount:$amount,ethereum_address:$ethereum_address) {
  title
  description
  hosts{
@@ -681,8 +789,8 @@ const updateBasicInfo = `
 }
 `
 const addBasicInfo = `
-   mutation($title:String!,$description:String!,$hosts:[String!]!,$paid:Int!,$tags:[String!]!,$amount:Int) {
-  addBasicInfo(title:$title,description:$description,hosts:$hosts,paid:$paid,tags:$tags,amount:$amount) {
+   mutation($title:String!,$description:String!,$hosts:[String!]!,$paid:Int!,$tags:[String!]!,$amount:Int,$ethereum_address:String) {
+  addBasicInfo(title:$title,description:$description,hosts:$hosts,paid:$paid,tags:$tags,amount:$amount,ethereum_address:$ethereum_address) {
   id
  title
  description
@@ -787,6 +895,7 @@ hosts{
 id
 username
 profile_picture
+ethereum_address
 }
 }`
 const getHostsSubscriptions = `
@@ -930,5 +1039,7 @@ export {
     subscribeToTag,
     unSubscribeFromTag,
     getTagSubscribers,
-    getNotifications
+    getNotifications,
+    unlockPodcast
+
 }

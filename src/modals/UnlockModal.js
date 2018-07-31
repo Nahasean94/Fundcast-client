@@ -3,36 +3,69 @@ import PropTypes from 'prop-types'
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import Fundcast from '../blockchain/build/contracts/Fundcast.json'
 import getWeb3 from '../utils/getWeb3'
+import {fundcastFetchOptionsOverride} from "../shared/fetchOverrideOptions"
+import {unlockPodcast} from "../shared/queries"
+import jwt from 'jsonwebtoken'
 
 const contract = require('truffle-contract')
+
 class UnlockModal extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.unlockPodcast=this.unlockPodcast.bind(this)
+        this.unlockPodcast = this.unlockPodcast.bind(this)
     }
 
-    unlockPodcast(){
-        const cost=(this.props.podcast.payment.amount/459.94)*1000000000000000000
+
+    unlockPodcast() {
+        const cost = (this.props.podcast.payment.amount / 459.94) * 1000000000000000000
+        const hosts = this.props.podcast.hosts
         const fundcast = contract(Fundcast)
         fundcast.setProvider(this.state.web3.currentProvider)
-
+        console.log(this.props.podcast.payment.ethereum_address)
         // Declaring this for later so we can chain functions on SimpleStorage.
         let fundcastInstance
 
         // Get accounts.
         this.state.web3.eth.getCoinbase((error, coinbase) => {
 
-            fundcast.deployed().then((instance) => {
+            fundcast.deployed().then(async (instance) => {
                 fundcastInstance = instance
-                return fundcastInstance.unlockPodcast("0x86497dac3bba3061f4cc673d0ea0a6efefec5ec4", {from: coinbase,value:cost})
-            }).then((result) => {
-                this.state.web3.eth.getBalance('0x86497dac3bba3061f4cc673d0ea0a6efefec5ec4').then(balance=>{
-                    console.log(balance/1000000000000000000)
+                return await fundcastInstance.unlockPodcast(this.props.podcast.payment.ethereum_address, {
+                    from: coinbase,
+                    value: cost
                 })
-                // console.log(result)
+            }).then(unlocked => {
+                return this.state.web3.eth.getBalance(this.props.podcast.payment.ethereum_address).then(balance => {
+                    console.log(balance / 1000000000000000000)
+                    if (localStorage.getItem("Fundcast")) {
+                        const token = jwt.decode(localStorage.getItem("Fundcast"))
+                        this.props.graphql
+                            .query({
+                                fetchOptionsOverride: fundcastFetchOptionsOverride,
+                                resetOnLoad: true,
+                                operation: {
+                                    variables: {
+                                        podcast: this.props.podcast.id,
+                                        buyer: token.id,
+                                        amount: this.props.podcast.payment.amount,
+                                    },
+                                    query: unlockPodcast
+                                }
+                            })
+                            .request.then(({data}) => {
+                                if (data) {
+                                    const link = `/podcasts/${data.unlockPodcast.id}`
+                                    this.context.router.history.push(link)
+                                }
+                            }
+                        )
+                    }
+                })
+
             })
         })
     }
+
     componentWillMount() {
         // Get network provider and web3 instance.
         getWeb3
@@ -45,6 +78,7 @@ class UnlockModal extends React.Component {
                 console.log('Error finding web3.')
             })
     }
+
     render() {
         const {show, onClose} = this.props
 
@@ -54,7 +88,8 @@ class UnlockModal extends React.Component {
                     <ModalHeader toggle={onClose}>Unlock podcast to listen</ModalHeader>
                     <ModalBody>
                         <div className="modal-body">
-                            <p>Unlock the podcast by sending {this.props.podcast.payment.amount/459.94} ethers or USD{this.props.podcast.payment.amount} to host</p>
+                            <p>Unlock the podcast by sending {this.props.podcast.payment.amount / 459.94} ethers or
+                                {this.props.podcast.payment.amount} USD to hosts</p>
                             <button className="btn btn-primary" onClick={this.unlockPodcast}>Unlock</button>
                         </div>
                     </ModalBody>
@@ -73,5 +108,8 @@ UnlockModal.propTypes = {
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     podcast: PropTypes.object.isRequired,
+}
+UnlockModal.contextTypes = {
+    router: PropTypes.object.isRequired
 }
 export default UnlockModal

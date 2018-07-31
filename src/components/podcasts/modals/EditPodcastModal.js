@@ -21,20 +21,23 @@ class EditPodcastModal extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            title: this.props.title,
-            description: this.props.description,
-            paid: this.props.paid,
+            title: this.props.podcast.title,
+            description: this.props.podcast.description,
+            paid: this.props.podcast.payment.paid,
             coverImage: '',
             podcast: '',
+            isPayable: this.props.podcast.payment.paid == 1 ? true : false,
+            ethereum_address: this.props.podcast.payment.ethereum_address,
+            amount: this.props.podcast.payment.amount,
             errors: {},
             isLoading: false,
             invalid: false,
-            tags: this.props.tags.map(tag => {
+            tags: this.props.podcast.tags.map(tag => {
                 return {
                     label: tag, value: tag
                 }
             }),
-            hosts: this.props.hosts.map(host => {
+            hosts: this.props.podcast.hosts.map(host => {
                 return {
                     label: <div><img
                         src={`http://localhost:8080/uploads/${host.profile_picture}`}
@@ -53,6 +56,7 @@ class EditPodcastModal extends React.Component {
         this.handleCoverImageChange = this.handleCoverImageChange.bind(this)
         this.handleTagsChange = this.handleTagsChange.bind(this)
         this.handleHostsChange = this.handleHostsChange.bind(this)
+        this.handlePaymentChange = this.handlePaymentChange.bind(this)
 
     }
 
@@ -61,6 +65,16 @@ class EditPodcastModal extends React.Component {
     }
     handleHostsChange = (hosts) => {
         this.setState({hosts})
+    }
+    handlePaymentChange = (paid) => {
+
+        if (paid.target.value == 0) {
+            this.setState({paid: paid.target.value, isPayable: false, amount: 0})
+
+        } else {
+            this.setState({paid: paid.target.value, isPayable: true})
+
+        }
     }
 
     validateInput(data) {
@@ -115,12 +129,14 @@ class EditPodcastModal extends React.Component {
                     resetOnLoad: true,
                     operation: {
                         variables: {
-                            id: this.props.id,
+                            id: this.props.podcast.id,
                             title: this.state.title,
                             description: this.state.description,
                             hosts: hosts,
                             paid: this.state.paid,
                             tags: tags,
+                            amount: this.state.amount,
+                            ethereum_address: this.state.ethereum_address,
                         },
                         query: updateBasicInfo
                     }
@@ -218,7 +234,7 @@ class EditPodcastModal extends React.Component {
     render() {
         const {show, onClose} = this.props
 
-        const {errors, isLoading, invalid, description, title, paid, tags,} = this.state
+        const {errors, isLoading, invalid, description, title, paid, amount, ethereum_address, tags, isPayable} = this.state
         let {hosts} = this.state
 
         if (show) {
@@ -272,22 +288,41 @@ class EditPodcastModal extends React.Component {
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input form-check-inline" type="radio"
                                                            value={0} name="paid"
-                                                           onChange={this.onChange}
-                                                           id="free"/>
+                                                           onChange={this.handlePaymentChange}
+                                                           id="free" checked={!isPayable}/>
                                                     <label className="form-check-label" htmlFor="free">Free</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input form-check-inline" type="radio"
                                                            value={1} name="paid"
-                                                           onChange={this.onChange}
-                                                           id="paid"/>
+                                                           onChange={this.handlePaymentChange}
+                                                           id="paid" checked={isPayable}/>
                                                     <label className="form-check-label" htmlFor="paid">Paid</label>
-                                                    <strong>&nbsp; Currently {paid ? 'Paid' : 'Free'}</strong>
                                                 </div>
+
                                             </fieldset>
                                         </div>
 
                                     </div>
+                                    {isPayable && <div>
+                                        <TextFieldGroup
+                                            label="Amount ($)"
+                                            type="number"
+                                            name="amount"
+                                            value={amount}
+                                            onChange={this.onChange}
+                                            error={errors.amount}
+
+                                        />
+                                        <TextFieldGroup
+                                            label="Ethereum Address"
+                                            type="string"
+                                            name="ethereum_address"
+                                            value={ethereum_address}
+                                            onChange={this.onChange}
+                                            error={errors.ethereum_address}
+
+                                        /></div>}
                                     <div className="form-group row">
                                         <label className="col-sm-2 col-form-label" htmlFor="hosts">Tags</label>
                                         <div className="col-sm-10">
@@ -447,18 +482,18 @@ class EditPodcastModal extends React.Component {
 }
 
 
-EditPodcastModal.propTypes = {
-    show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    hosts: PropTypes.array.isRequired,
-    paid: PropTypes.bool.isRequired,
-    tags: PropTypes.array.isRequired,
-    coverImage: PropTypes.object.isRequired,
-    podcast: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-}
+// EditPodcastModal.propTypes = {
+//     show: PropTypes.bool.isRequired,
+//     onClose: PropTypes.func.isRequired,
+//     title: PropTypes.string.isRequired,
+//     description: PropTypes.string.isRequired,
+//     hosts: PropTypes.array.isRequired,
+//     paid: PropTypes.bool.isRequired,
+//     tags: PropTypes.array.isRequired,
+//     coverImage: PropTypes.object.isRequired,
+//     podcast: PropTypes.string.isRequired,
+//     id: PropTypes.string.isRequired,
+// }
 EditPodcastModal.contextTypes = {
     router: PropTypes.object.isRequired
 }

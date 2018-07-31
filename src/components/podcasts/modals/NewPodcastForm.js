@@ -33,6 +33,7 @@ class NewPodcastForm extends React.Component {
             errors: {},
             isLoading: false,
             invalid: false,
+            ethereum_address:'',
             tags: [],
             hosts: [],
 
@@ -123,6 +124,7 @@ class NewPodcastForm extends React.Component {
                             hosts: hosts,
                             paid: this.state.paid,
                             amount: this.state.amount,
+                            ethereum_address: this.state.ethereum_address,
                             tags: tags,
                         },
                         query: addBasicInfo
@@ -223,7 +225,7 @@ class NewPodcastForm extends React.Component {
     render() {
         const {show, onClose} = this.props
 
-        const {errors, isLoading, invalid, description, title, paid, tags, message, isPayable, amount} = this.state
+        const {errors, isLoading, invalid, description, title, paid, tags, message, isPayable, amount,ethereum_address} = this.state
         let {hosts} = this.state
 
         if (show) {
@@ -293,7 +295,7 @@ class NewPodcastForm extends React.Component {
                                         </div>
 
                                     </div>
-                                    {isPayable &&
+                                    {isPayable && <div>
                                     <TextFieldGroup
                                         label="Amount ($)"
                                         type="number"
@@ -302,7 +304,16 @@ class NewPodcastForm extends React.Component {
                                         onChange={this.onChange}
                                         error={errors.amount}
 
-                                    />}
+                                    />
+                                    <TextFieldGroup
+                                        label="Ethereum Address"
+                                        type="string"
+                                        name="ethereum_address"
+                                        value={ethereum_address}
+                                        onChange={this.onChange}
+                                        error={errors.ethereum_address}
+
+                                    /></div>}
                                     <div className="form-group row">
                                         <label className="col-sm-2 col-form-label" htmlFor="hosts">Tags</label>
                                         <div className="col-sm-10">

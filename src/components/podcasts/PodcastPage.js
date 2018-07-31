@@ -216,11 +216,8 @@ class PodcastPage extends Component {
                                 </div>
                                 <Consumer>{graphql => <EditPodcastModal graphql={graphql} show={showEditPodcastModal}
                                                                         onClose={this.closeEditPodcastModal}
-                                                                        coverImage={coverImage}
-                                                                        description={description}
-                                                                        id={id} hosts={hosts} paid={payment.paid}
-                                                                        podcast={podcast} tags={tags}
-                                                                        title={title}/>}</Consumer>
+                                                                        podcast={data.podcast}
+                                                                        />}</Consumer>
                                 <Consumer>{graphql => <UnpublishPodcastModal graphql={graphql} id={id}
                                                                              show={showUnpublishPodcastModal}
                                                                              onClose={this.closeUnpublishPodcastModal}/>}</Consumer>

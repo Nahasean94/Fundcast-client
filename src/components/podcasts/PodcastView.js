@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import {timeSince} from "../../shared/TimeSince"
 import jwt from 'jsonwebtoken'
 import UnlockModal from "../../modals/UnlockModal"
+import {Consumer} from 'graphql-react'
 
 class PodcastView extends React.Component {
 
@@ -18,13 +19,24 @@ class PodcastView extends React.Component {
         this.showUnlockModal = this.showUnlockModal.bind(this)
         this.closeUnlockModal = this.closeUnlockModal.bind(this)
         this.viewPodcast = this.viewPodcast.bind(this)
-        if (localStorage.getItem("Fundast")) {
+        if (localStorage.getItem("Fundcast")) {
             const token = jwt.decode(localStorage.getItem("Fundcast"))
-            this.props.podcast.payment.buyers.map(buyer => {
-                if (token.id === buyer) {
-                    this.state.hasPaid = true
+            if (this.props.podcast) {
+                if (this.props.podcast.payment.buyers) {
+                    console.log(this.props.podcast.payment.buyers,"buyers")
+                    this.props.podcast.payment.buyers.map(buyer => {
+                console.log(buyer,token.id)
+                        if (token.id === buyer.buyer.id) {
+                            this.state.hasPaid = true
+                        }
+                    })
                 }
-            })
+                this.props.podcast.hosts.map(host => {
+                    if (token.id === host.id) {
+                        this.state.hasPaid = true
+                    }
+                })
+            }
         }
     }
 
@@ -122,8 +134,8 @@ class PodcastView extends React.Component {
                     </li>
                 </ul>
                 <hr/>
-                <UnlockModal show={this.state.showUnlockModal} onClose={this.closeUnlockModal}
-                             podcast={this.props.podcast}/>
+                <Consumer>{graphql=><UnlockModal graphql={graphql} show={this.state.showUnlockModal} onClose={this.closeUnlockModal}
+                             podcast={this.props.podcast}/>}</Consumer>
             </div>
         )
     }

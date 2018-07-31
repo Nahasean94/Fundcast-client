@@ -152,7 +152,7 @@ class SignupForm extends React.Component {
         }
         return (
             <form onSubmit={this.onSubmit}>
-                <h3>Create a free account</h3>
+                <h3>Create account</h3>
 
                 <TextFieldGroup
                     label="Username"
