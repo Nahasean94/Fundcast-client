@@ -23,9 +23,9 @@ class PodcastView extends React.Component {
             const token = jwt.decode(localStorage.getItem("Fundcast"))
             if (this.props.podcast) {
                 if (this.props.podcast.payment.buyers) {
-                    console.log(this.props.podcast.payment.buyers,"buyers")
+                    console.log(this.props.podcast.payment.buyers, "buyers")
                     this.props.podcast.payment.buyers.map(buyer => {
-                console.log(buyer,token.id)
+                        console.log(buyer, token.id)
                         if (token.id === buyer.buyer.id) {
                             this.state.hasPaid = true
                         }
@@ -109,33 +109,34 @@ class PodcastView extends React.Component {
 
                             </ul>
                         </div>
+                        <div className="view-podcast">
+                            {description !== '' && description.length > 600 && !showFullDescription ? more : description}
+                        </div>
+
+                        <br/>
+                        <ul className="list-inline">
+                            &nbsp;<i className="fa fa-tags"></i>
+                            {tags.map((tag, i) => {
+
+                                return <li key={i} className="list-inline-item">&nbsp;{tag}</li>
+                            })}
+                            {payment.paid == 1 && !hasPaid && < li className="list-inline-item">
+                                <button className="btn btn-sm btn-primary" onClick={this.showUnlockModal}>Unlock
+                                    ${payment.amount}</button>
+                            </li>}
+                            <li className="list-inline-item pull-right">
+                                <ul className="list-inline">
+                                    <li className="list-inline-item"><strong>{likes.length} likes</strong></li>
+                                    <li className="list-inline-item"><strong> {listens} people listened</strong></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        {/*<hr/>*/}
                     </div>
                 </div>
-                <br/>
-                <div className="view-podcast">
-                    {description !== '' && description.length > 600 && !showFullDescription ? more : description}
-                </div>
-                <br/>
-                <ul className="list-inline">
-                    &nbsp;<i className="fa fa-tags"></i>
-                    {tags.map((tag, i) => {
-
-                        return <li key={i} className="list-inline-item">&nbsp;{tag}</li>
-                    })}
-                    {payment.paid == 1 && !hasPaid && < li className="list-inline-item">
-                        <button className="btn btn-sm btn-primary" onClick={this.showUnlockModal}>Unlock
-                            ${payment.amount}</button>
-                    </li>}
-                    <li className="list-inline-item pull-right">
-                        <ul className="list-inline">
-                            <li className="list-inline-item"><strong>{likes.length} likes</strong></li>
-                            <li className="list-inline-item"><strong> {listens} people listened</strong></li>
-                        </ul>
-                    </li>
-                </ul>
-                <hr/>
-                <Consumer>{graphql=><UnlockModal graphql={graphql} show={this.state.showUnlockModal} onClose={this.closeUnlockModal}
-                             podcast={this.props.podcast}/>}</Consumer>
+                <Consumer>{graphql => <UnlockModal graphql={graphql} show={this.state.showUnlockModal}
+                                                   onClose={this.closeUnlockModal}
+                                                   podcast={this.props.podcast}/>}</Consumer>
             </div>
         )
     }

@@ -65,20 +65,25 @@ class HostPage extends Component {
                                                      height="200"/>
                                             </li>
                                             <li>
-                                                Username: {username}
+                                                <strong>Username: </strong> {username}
                                             </li>
                                             <li>
-                                                Email: {email}
+                                                <strong>Email: </strong> {email}
                                             </li>
                                             <li>
-                                                Account: {role}
+                                                <strong>Account: </strong> {role}
                                             </li>
                                             <li>
-                                                Date joined: {date_joined}
+                                                <strong>Date
+                                                    joined: </strong> {new Date(date_joined).toLocaleDateString()}
                                             </li>
                                             <li>
-                                                Ethereum address: {ethereum_address}
+                                                <strong>Ethereum address: </strong> {ethereum_address}
                                             </li>
+
+                                            {ethereum_address && <li>
+                                                <strong>Balance: </strong>
+                                            </li>}
 
                                         </ul>
                                         <hr/>
@@ -185,6 +190,10 @@ class HostPage extends Component {
                                                         </div>
                                                     )
                                                 })
+                                            } else {
+                                                return (
+                                                    <p>No podcasts found found</p>
+                                                )
                                             }
                                         } else {
                                             return (
@@ -330,7 +339,8 @@ class HostPage extends Component {
                                                                                 const tagsPage = `/tags/${tag.id}`
                                                                                 return (
                                                                                     <li key={shortid.generate()}>
-                                                                                        <Link to={tagsPage}>{tag.name}</Link>
+                                                                                        <Link
+                                                                                            to={tagsPage}>{tag.name}</Link>
                                                                                     </li>
                                                                                 )
                                                                             })}

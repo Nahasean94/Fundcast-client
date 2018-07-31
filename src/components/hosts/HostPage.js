@@ -31,7 +31,7 @@ class HostPage extends Component {
                         >
                             {({loading, data}) => {
                                 if (data) {
-                                    const {id, username, profile_picture, email, role, date_joined, address, subscribers} = data.fetchUserProfile
+                                    const {id, username, profile_picture, email, role, date_joined, ethereum_address, subscribers} = data.fetchUserProfile
 
                                     return <div>
                                         <ul className="list-unstyled">
@@ -41,20 +41,24 @@ class HostPage extends Component {
                                                      height="200"/>
                                             </li>
                                             <li>
-                                                Username: {username}
+                                               <strong>Username: </strong>  {username}
                                             </li>
                                             <li>
-                                                Email: {email}
+                                               <strong>Email: </strong>  {email}
                                             </li>
                                             <li>
-                                                Account: {role}
+                                               <strong>Account: </strong>  {role}
                                             </li>
                                             <li>
-                                                Date joined: {date_joined}
+                                               <strong>Date joined: </strong>  {new Date(date_joined).toLocaleDateString()}
                                             </li>
                                             <li>
-                                                Ethereum address: {address}
+                                                <strong>Ethereum address: </strong> {ethereum_address}
                                             </li>
+
+                                            {ethereum_address&&<li>
+                                               <button className="btn btn-sm btn-primary">Donate</button>
+                                            </li>}
 
                                         </ul>
                                         <hr/>
