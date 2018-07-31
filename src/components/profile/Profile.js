@@ -14,12 +14,17 @@ import PodcastView from "../podcasts/PodcastView"
 import * as jwt from "jsonwebtoken"
 import UpdateProfile from "./UpdateProfile"
 import {Link} from "react-router-dom"
+import Fundcast from "../../blockchain/build/contracts/Fundcast"
+import getWeb3 from "../../utils/getWeb3"
+
+const contract = require('truffle-contract')
 
 class HostPage extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            showUpdateProfileModal: false
+            showUpdateProfileModal: false,
+            balance: ''
         }
         this.showUpdateProfileModal = this.showUpdateProfileModal.bind(this)
         this.closeUpdateProfileModal = this.closeUpdateProfileModal.bind(this)
@@ -34,6 +39,40 @@ class HostPage extends Component {
         this.setState({showUpdateProfileModal: false})
     }
 
+
+    componentWillMount() {
+        const token = jwt.decode(localStorage.getItem("Fundcast"))
+        if (token.ethereum_address) {
+
+            // Get network provider and web3 instance.
+            getWeb3
+                .then(results => {
+                    this.setState({
+                        web3: results.web3
+                    })
+                }).then(() => {
+                const fundcast = contract(Fundcast)
+                fundcast.setProvider(this.state.web3.currentProvider)
+                // Declaring this for later so we can chain functions on SimpleStorage.
+                let fundcastInstance
+
+                // Get accounts.
+                this.state.web3.eth.getCoinbase((error, coinbase) => {
+
+                    fundcast.deployed().then(async (instance) => {
+                        fundcastInstance = instance
+                        return this.state.web3.eth.getBalance(token.ethereum_address).then(balance => {
+                            this.setState({balance: (balance / 1000000000000000000) * 459.94})
+                        })
+
+                    })
+                        .catch(() => {
+                            console.log('Error finding web3.')
+                        })
+                })
+            })
+        }
+    }
 
     render() {
         const token = jwt.decode(localStorage.getItem("Fundcast"))
@@ -82,7 +121,7 @@ class HostPage extends Component {
                                             </li>
 
                                             {ethereum_address && <li>
-                                                <strong>Balance: </strong>
+                                                <strong>Balance: </strong> {this.state.balance} USD
                                             </li>}
 
                                         </ul>
@@ -95,7 +134,8 @@ class HostPage extends Component {
                                                                              onClose={this.closeUpdateProfileModal}
                                                                              username={username} email={email}
                                                                              role={role}
-                                                                             profilePicture={profile_picture} id={id}
+                                                                             profilePicture={profile_picture}
+                                                                             id={id}
                                                                              ethereum_address={ethereum_address}/>}</Consumer>
                                     </div>
 
@@ -146,8 +186,9 @@ class HostPage extends Component {
                                                     return data.fetchHostPodcasts.map(podcast => {
                                                         return (
                                                             <div key={shortid.generate()}>
-                                                                <Consumer>{graphql => <PodcastView podcast={podcast}
-                                                                                                   graphql={graphql}/>}</Consumer>
+                                                                <Consumer>{graphql => <PodcastView
+                                                                    podcast={podcast}
+                                                                    graphql={graphql}/>}</Consumer>
                                                             </div>
                                                         )
                                                     })
@@ -229,8 +270,9 @@ class HostPage extends Component {
                                                     return data.fetchLikedPodcasts.map(podcast => {
                                                         return (
                                                             <div key={shortid.generate()}>
-                                                                <Consumer>{graphql => <PodcastView podcast={podcast}
-                                                                                                   graphql={graphql}/>}</Consumer>
+                                                                <Consumer>{graphql => <PodcastView
+                                                                    podcast={podcast}
+                                                                    graphql={graphql}/>}</Consumer>
                                                             </div>
                                                         )
                                                     })
@@ -258,13 +300,16 @@ class HostPage extends Component {
                                 <br/>
                                 <div className="row">
                                     <div className="col-2">
-                                        <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                        <div className="nav flex-column nav-pills" id="v-pills-tab"
+                                             role="tablist"
                                              aria-orientation="vertical">
-                                            <a className="nav-link active" id="v-pills-home-tab" data-toggle="pill"
+                                            <a className="nav-link active" id="v-pills-home-tab"
+                                               data-toggle="pill"
                                                href="#v-pills-home" role="tab" aria-controls="v-pills-home"
                                                aria-selected="true">Hosts</a>
                                             <a className="nav-link" id="v-pills-profile-tab" data-toggle="pill"
-                                               href="#v-pills-profile" role="tab" aria-controls="v-pills-profile"
+                                               href="#v-pills-profile" role="tab"
+                                               aria-controls="v-pills-profile"
                                                aria-selected="false">Tags</a>
 
                                         </div>
@@ -273,7 +318,8 @@ class HostPage extends Component {
                                     <div className="col-10">
 
                                         <div className="tab-content" id="v-pills-tabContent">
-                                            <div className="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                                            <div className="tab-pane fade show active" id="v-pills-home"
+                                                 role="tabpanel"
                                                  aria-labelledby="v-pills-home-tab">
                                                 <Query
                                                     loadOnMount
@@ -293,11 +339,13 @@ class HostPage extends Component {
                                                                                 <div key={shortid.generate()}>
                                                                                     <div className="col-sm-2">
                                                                                         <div className="">
-                                                                                            <a href={hostPage}> <img
-                                                                                                src={`http://localhost:8080/uploads/${host.profile_picture}`}
-                                                                                                width="150" height="100"
-                                                                                                alt={host.username}
-                                                                                                className="rounded"/></a>
+                                                                                            <a href={hostPage}>
+                                                                                                <img
+                                                                                                    src={`http://localhost:8080/uploads/${host.profile_picture}`}
+                                                                                                    width="150"
+                                                                                                    height="100"
+                                                                                                    alt={host.username}
+                                                                                                    className="rounded"/></a>
                                                                                             <a href={hostPage}>
                                                                                                 <h6>{host.username}</h6>
                                                                                             </a>
