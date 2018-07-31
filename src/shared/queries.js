@@ -189,8 +189,10 @@ ethereum_address
 buyers{
 id
 amount
+timestamp
 buyer{
 id
+username
 }
 }
 }

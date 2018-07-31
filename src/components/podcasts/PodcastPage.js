@@ -13,6 +13,7 @@ import DeletePodcastModal from "./modals/ConfirmDeletePodcast"
 import PublishPodcastModal from "./modals/PublishPodcastModal"
 import jwt from "jsonwebtoken"
 import ListeningPodcast from "./ListeningPodcast"
+import Buyers from "./modals/buyers/Buyers"
 
 
 class PodcastPage extends Component {
@@ -23,6 +24,7 @@ class PodcastPage extends Component {
             showPublishPodcastModal: false,
             showUnpublishPodcastModal: false,
             showDeletePodcastModal: false,
+            showBuyersModal:false
 
         }
         this.showEditPodcastModal = this.showEditPodcastModal.bind(this)
@@ -33,6 +35,8 @@ class PodcastPage extends Component {
         this.closeUnpublishPodcastModal = this.closeUnpublishPodcastModal.bind(this)
         this.showDeletePodcastModal = this.showDeletePodcastModal.bind(this)
         this.closeDeletePodcastModal = this.closeDeletePodcastModal.bind(this)
+        this.showBuyersModal = this.showBuyersModal.bind(this)
+        this.closeBuyersModal = this.closeBuyersModal.bind(this)
 
     }
 
@@ -67,6 +71,13 @@ class PodcastPage extends Component {
     closeDeletePodcastModal() {
         this.setState({showDeletePodcastModal: false})
     }
+    showBuyersModal() {
+        this.setState({showBuyersModal: true})
+    }
+
+    closeBuyersModal() {
+        this.setState({showBuyersModal: false})
+    }
 
 
     render() {
@@ -82,6 +93,7 @@ class PodcastPage extends Component {
                 {({loading, data}) => {
                     if (data) {
                         const {id, title, description, tags, listens, hosts, timestamp, payment, coverImage, likes, audioFile, publishing} = data.podcast
+                        console.log(payment)
                         const {showEditPodcastModal, showDeletePodcastModal, showPublishPodcastModal, showUnpublishPodcastModal} = this.state
                         let isHost = false
                         let token
@@ -128,7 +140,12 @@ class PodcastPage extends Component {
                                     </button>
                                 </li>
                             </ul>
+                            <br/>
+                            {payment.paid && <button className="btn btn-primary btn-sm" type="button"
+                                    onClick={this.showBuyersModal}>View buyers {payment.buyers.length}
+                            </button>}
                             <hr/>
+                            <Buyers buyers={payment.buyers} show={this.state.showBuyersModal} onClose={this.closeBuyersModal}/>
                         </div>
                         if (publishing === 'published' || isHost) {
                             return <div className="row">

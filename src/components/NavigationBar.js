@@ -104,7 +104,7 @@ class NavigationBar extends React.Component {
         >
             {({loading, data}) => {
                 if (data) {
-                    if (data.getNotifications.length > 0) {
+                    if (data.getNotifications) {
                         return data.getNotifications.map(notification => {
                             const link = `/podcasts/${notification.podcast.id}`
                             const imageView =

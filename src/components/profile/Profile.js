@@ -42,6 +42,7 @@ class HostPage extends Component {
 
     componentWillMount() {
         const token = jwt.decode(localStorage.getItem("Fundcast"))
+
         if (token.ethereum_address) {
 
             // Get network provider and web3 instance.
@@ -62,6 +63,7 @@ class HostPage extends Component {
                     fundcast.deployed().then(async (instance) => {
                         fundcastInstance = instance
                         return this.state.web3.eth.getBalance(token.ethereum_address).then(balance => {
+
                             this.setState({balance: (balance / 1000000000000000000) * 459.94})
                         })
 
@@ -120,7 +122,7 @@ class HostPage extends Component {
                                                 <strong>Ethereum address: </strong> {ethereum_address}
                                             </li>
 
-                                            {ethereum_address && <li>
+                                            {ethereum_address && token.ethereum_address && <li>
                                                 <strong>Balance: </strong> {this.state.balance} USD
                                             </li>}
 
