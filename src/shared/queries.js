@@ -868,7 +868,7 @@ const updateAudioFile = `
 `
 const addAudioFile = `
    mutation($id:ID!,$podcast:Upload!) {
-  updateAudioFile(id:$id,podcast:$podcast) {
+  addAudioFile(id:$id,podcast:$podcast) {
  title
  description
  hosts{
