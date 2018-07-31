@@ -7,9 +7,23 @@ import PodcastView from "../podcasts/PodcastView"
 import * as jwt from "jsonwebtoken"
 import PropTypes from 'prop-types'
 import HostsSubscriptions from "../subscriptions/HostsSubscriptions"
+import Donate from "./Donate"
 
 class HostPage extends Component {
-
+    constructor(props){
+        super(props)
+        this.state={
+            showDonateModal:false
+        }
+        this.showDonateModal=this.showDonateModal.bind(this)
+        this.closeDonateModal=this.closeDonateModal.bind(this)
+    }
+    showDonateModal(){
+        this.setState({showDonateModal:true})
+    }
+    closeDonateModal(){
+        this.setState({showDonateModal:false})
+    }
     render() {
         const token = jwt.decode(localStorage.getItem("Fundcast"))
         if (token) {
@@ -57,8 +71,9 @@ class HostPage extends Component {
                                             </li>
 
                                             {ethereum_address&&<li>
-                                               <button className="btn btn-sm btn-primary">Donate</button>
+                                               <button className="btn btn-sm btn-primary" onClick={this.showDonateModal}>Donate</button>
                                             </li>}
+                                            <Donate show={this.state.showDonateModal} onClose={this.closeDonateModal} ethereum_address={ethereum_address}/>
 
                                         </ul>
                                         <hr/>
@@ -124,6 +139,7 @@ class HostPage extends Component {
                             }
                             }
                         </Query>
+
                     </div>
                 </div>
             </div>
