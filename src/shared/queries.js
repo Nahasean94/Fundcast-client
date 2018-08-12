@@ -995,6 +995,27 @@ id
 }
 }
 }`
+const adminExists = `
+   {
+  adminExists{
+   exists
+  }
+}`
+const registerAdmin = `
+mutation($username:String!,$password:String!){
+registerAdmin(username:$username,password:$password){
+id
+}
+}`
+const adminLogin = `
+   mutation($username:String!,$password:String!) {
+  adminLogin(username:$username,password:$password) {
+    token
+    ok
+    error
+  }
+}
+`
 export {
     podcasts,
     fetchPodcastsByTags,
@@ -1042,6 +1063,9 @@ export {
     unSubscribeFromTag,
     getTagSubscribers,
     getNotifications,
-    unlockPodcast
+    unlockPodcast,
+    adminExists,
+    registerAdmin,
+    adminLogin,
 
 }

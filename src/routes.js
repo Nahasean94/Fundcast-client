@@ -13,6 +13,9 @@ import TagPage from "./components/podcasts/tags/TagPage"
 import HostPage from "./components/hosts/HostPage"
 import SearchResults from "./components/search/SearchResults"
 import UserPage from "./users/UserPage"
+import AdminDashboard from "./components/admin/AdminDashboard"
+import AdminSignInPage from "./components/admin/signin/AdminSignInPage"
+import requireAdminAuth from "./utils/requireAdminAuth"
 
 export default () => {
 
@@ -32,6 +35,8 @@ export default () => {
                         <Route path="/test" component={TestPage}/>
                         <Route path="/test" component={TestPage}/>
                         <Route path="/search" component={SearchResults}/>
+                        <Route path="/admin/signin" component={AdminSignInPage}/>
+                        <Route path="/admin" component={requireAdminAuth(AdminDashboard)}/>
                     </Switch>
                 </App>
 
