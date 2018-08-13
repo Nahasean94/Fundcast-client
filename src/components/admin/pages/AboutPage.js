@@ -5,6 +5,8 @@ import EditAbout from "./modals/EditAbout"
 import {Consumer, Query} from "graphql-react"
 import {fundcastFetchOptionsOverride} from "../../../shared/fetchOverrideOptions"
 import {fetchUserProfile, getAbout} from "../../../shared/queries"
+import jwt from "jsonwebtoken"
+import classnames from "classnames"
 
 class AboutPage extends React.Component {
     constructor(props) {
@@ -55,13 +57,20 @@ class AboutPage extends React.Component {
 
     render() {
         const { about} = this.state
-        return (<div className="container-fluid">
+        let isAdmin
+        if (localStorage.getItem("Fundcast")) {
+            let token = jwt.decode(localStorage.getItem("Fundcast"))
+            if (token.role === 'admin') {
+                isAdmin = true
+            }
+        }
+        return (<div className={classnames("container",{isAdmin:"container-fluid"})}>
             <div className="row">
-                <div className="col-sm- col-md-2 bd-sidebar">
+                {isAdmin && <div className="col-sm- col-md-2 bd-sidebar">
                     <Menu router={this.context.router} active="dashboard"/>
-                </div>
+                </div>}
                 <div className="col-sm-10 col-md-10 col-xl-10 bd-content">
-                    <button className="btn btn-primary btn-sm" onClick={this.showUpdateAboutModal}>Update about</button>
+                    {isAdmin && <button className="btn btn-primary btn-sm" onClick={this.showUpdateAboutModal}>Update about</button>}
                     <hr/>
                     <Query
                         loadOnMount
@@ -77,8 +86,8 @@ class AboutPage extends React.Component {
                                         <h3>About fundcast</h3>
                                         <br/>
                                         <p>{about}</p>
-                                        <Consumer>{graphql => <EditAbout about={about} graphql={graphql} show={this.state.showUpdateAboutModal}
-                                                                         onClose={this.closeUpdateAboutModal}/>}</Consumer>
+                                            {isAdmin && <Consumer>{graphql => <EditAbout about={about} graphql={graphql} show={this.state.showUpdateAboutModal}
+                                                                         onClose={this.closeUpdateAboutModal}/>}</Consumer>}
                                     </div>
                                 } else {
                                     <p>Add information about Fundcast</p>
@@ -90,9 +99,9 @@ class AboutPage extends React.Component {
                                 )
                             }
                             return (
-                                <p>Add information about Fundcast
-                                    <Consumer>{graphql => <EditAbout about={about} graphql={graphql} show={this.state.showUpdateAboutModal}
-                                                                     onClose={this.closeUpdateAboutModal}/>}</Consumer></p>
+                                <p>Information about Fundcast
+                                    {isAdmin &&  <Consumer>{graphql => <EditAbout about={about} graphql={graphql} show={this.state.showUpdateAboutModal}
+                                                                     onClose={this.closeUpdateAboutModal}/>}</Consumer>}</p>
                             )
                         }
                         }

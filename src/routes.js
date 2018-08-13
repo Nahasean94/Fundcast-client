@@ -35,7 +35,9 @@ export default () => {
                         <Route path="/hosts" component={Hosts}/>
                         <Route path="/tags/:id" component={TagPage}/>
                         <Route path="/tags" component={Tags}/>
-                        <Route path="/test" component={TestPage}/>
+                        <Route path="/about" component={AboutPage}/>
+                        <Route path="/faqs" component={FaqsPage}/>
+                        {/*<Route path="/test" component={TestPage}/>*/}
                         <Route path="/test" component={TestPage}/>
                         <Route path="/search" component={SearchResults}/>
                         <Route path="/admin/signin" component={AdminSignInPage}/>

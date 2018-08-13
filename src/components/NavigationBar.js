@@ -197,6 +197,12 @@ class NavigationBar extends React.Component {
                         <li className="nav-item">
                             <a className="nav-link" href="/tags">Tags</a>
                         </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/about">About</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/faqs">Faqs</a>
+                        </li>
                     </ul>
                     <div className="navbar-search">
                         <div className="search-block-form">

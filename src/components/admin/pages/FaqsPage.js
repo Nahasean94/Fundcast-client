@@ -5,6 +5,8 @@ import {Consumer, Query} from "graphql-react"
 import {fundcastFetchOptionsOverride} from "../../../shared/fetchOverrideOptions"
 import {getFaqs} from "../../../shared/queries"
 import NewFaq from "./modals/NewFaq"
+import jwt from 'jsonwebtoken'
+import classnames from 'classnames'
 
 class FaqsPage extends React.Component {
     constructor(props) {
@@ -27,41 +29,23 @@ class FaqsPage extends React.Component {
         this.setState({showUpdateFaqsModal: false})
     }
 
-    // componentDidMount() {
-    //     this.props.graphql
-    //         .query({
-    //             fetchOptionsOverride: fundcastFetchOptionsOverride,
-    //             resetOnLoad: true,
-    //             operation: {
-    //                 query: getFaqs
-    //             }
-    //         })
-    //         .request.then(({data, loading, error}) => {
-    //
-    //             if (data && data.getFaqs) {
-    //                 console.log(data.getFaqs.about)
-    //                 this.setState({about: data.getFaqs.about})
-    //             }
-    //             else if (loading) {
-    //                 this.setState({loading: true})
-    //             }
-    //             else if (error) {
-    //                 this.setState({error: true})
-    //             }
-    //
-    //         }
-    //     )
-    // }
 
     render() {
         const {about} = this.state
-        return (<div className="container-fluid">
+        let isAdmin = false
+        if (localStorage.getItem("Fundcast")) {
+            let token = jwt.decode(localStorage.getItem("Fundcast"))
+            if (token.role === 'admin') {
+                isAdmin = true
+            }
+        }
+        return (<div className={classnames("container",{isAdmin:"container-fluid"})}>
             <div className="row">
-                <div className="col-sm- col-md-2 bd-sidebar">
+                {isAdmin &&  <div className="col-sm- col-md-2 bd-sidebar">
                     <Menu router={this.context.router} active="dashboard"/>
-                </div>
+                </div>}
                 <div className="col-sm-10 col-md-10 col-xl-10 bd-content">
-                    <button className="btn btn-primary btn-sm" onClick={this.showUpdateFaqsModal}>Add FAQ</button>
+                    {isAdmin && <button className="btn btn-primary btn-sm" onClick={this.showUpdateFaqsModal}>Add FAQ</button>}
                     <hr/>
                     <Query
                         loadOnMount
@@ -95,8 +79,8 @@ class FaqsPage extends React.Component {
                         }}
                     </Query>
                 </div>
-                <Consumer>{graphql => <NewFaq graphql={graphql} show={this.state.showUpdateFaqsModal}
-                                              onClose={this.closeUpdateFaqsModal}/>}</Consumer>
+                {isAdmin && <Consumer>{graphql => <NewFaq graphql={graphql} show={this.state.showUpdateFaqsModal}
+                                                          onClose={this.closeUpdateFaqsModal}/>}</Consumer>}
 
             </div>
 
