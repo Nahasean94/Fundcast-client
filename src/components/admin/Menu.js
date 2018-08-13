@@ -18,9 +18,9 @@ export default ({router, active}) => {
     }
 
     return <Nav pills vertical className="bd-links" id="bd-docs-nav">
-        <NavItem>
-            <NavLink href="" onClick={onUsersLink} active={active === 'users'}>Users</NavLink>
-        </NavItem>
+        {/*<NavItem>*/}
+            {/*<NavLink href="" onClick={onUsersLink} active={active === 'users'}>Users</NavLink>*/}
+        {/*</NavItem>*/}
         <NavItem>
             <NavLink href="" onClick={onFaqsLink} active={active === 'faqs'}>FAQs</NavLink>
         </NavItem>

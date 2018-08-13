@@ -1023,6 +1023,15 @@ const updateAbout = `
   }
 }
 `
+const newFaq = `
+   mutation($question:String!,$answer:String!,){
+  newFaq(question:$question,answer:$answer) {
+   question
+   id
+   answer
+  }
+}
+`
 const getAbout = `
    {
   getAbout{
@@ -1030,10 +1039,21 @@ const getAbout = `
   }
 }
 `
+const getFaqs = `
+   {
+  getFaqs{
+      question
+   id
+   answer
+  }
+}
+`
 export {
     podcasts,
     updateAbout,
     getAbout,
+    getFaqs,
+    newFaq,
     fetchPodcastsByTags,
     podcast,
     hosts,
