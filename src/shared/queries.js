@@ -1016,8 +1016,24 @@ const adminLogin = `
   }
 }
 `
+const updateAbout = `
+   mutation($about:String!){
+  updateAbout(about:$about) {
+   about
+  }
+}
+`
+const getAbout = `
+   {
+  getAbout{
+    about
+  }
+}
+`
 export {
     podcasts,
+    updateAbout,
+    getAbout,
     fetchPodcastsByTags,
     podcast,
     hosts,

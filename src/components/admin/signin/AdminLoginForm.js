@@ -20,7 +20,6 @@ class AdminLoginForm extends React.Component {
             invalid: false,
             loading: false,
             message: ''
-
         }
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)

@@ -16,6 +16,9 @@ import UserPage from "./users/UserPage"
 import AdminDashboard from "./components/admin/AdminDashboard"
 import AdminSignInPage from "./components/admin/signin/AdminSignInPage"
 import requireAdminAuth from "./utils/requireAdminAuth"
+import AboutPage from "./components/admin/pages/AboutPage"
+import ListenersPage from "./components/admin/pages/ListenersPage"
+import FaqsPage from "./components/admin/pages/FaqsPage"
 
 export default () => {
 
@@ -36,6 +39,9 @@ export default () => {
                         <Route path="/test" component={TestPage}/>
                         <Route path="/search" component={SearchResults}/>
                         <Route path="/admin/signin" component={AdminSignInPage}/>
+                        <Route path="/admin/about" component={requireAdminAuth(AboutPage)}/>
+                        <Route path="/admin/listeners" component={requireAdminAuth(ListenersPage)}/>
+                        <Route path="/admin/faqs" component={requireAdminAuth(FaqsPage)}/>
                         <Route path="/admin" component={requireAdminAuth(AdminDashboard)}/>
                     </Switch>
                 </App>

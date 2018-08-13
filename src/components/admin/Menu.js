@@ -3,38 +3,30 @@ import {Nav, NavItem, NavLink} from "reactstrap"
 
 
 export default ({router, active}) => {
-    const onCaseFormsLink = (e) => {
+    const onUsersLink = (e) => {
         e.preventDefault()
-        router.history.push("/admin/dashboard/listeners")
-}
-    const onCaseCategoriesLink = (e) => {
-        e.preventDefault()
-        router.history.push("/admin/dashboard/hosts")
-    }
-    const onCaseTypeLink= (e) => {
-        e.preventDefault()
-        router.history.push("/admin/dashboard/faqs")
-
-    }
-    const onCourtStationsLink = (e) => {
-        e.preventDefault()
-        router.history.push("/admin/dashboard/about")
+        router.history.push("/admin/listeners")
     }
 
-    return <Nav pills vertical  className="bd-links" id="bd-docs-nav">
-        <NavItem>
-            <NavLink href="" onClick={onCourtStationsLink} active={active === 'court-station'}>Court Stations</NavLink>
-        </NavItem>
-        <NavItem>
-            <NavLink href="" onClick={onCaseFormsLink} active={active === 'case-forms'}>Case Forms</NavLink>
-        </NavItem>
-        <NavItem>
-            <NavLink href="" onClick={onCaseCategoriesLink} active={active === 'case-categories'}>Case categories</NavLink>
-        </NavItem>
-        <NavItem>
-            <NavLink href="" onClick={onCaseTypeLink} active={active === 'case-types'}>Case types</NavLink>
-        </NavItem>
+    const onFaqsLink = (e) => {
+        e.preventDefault()
+        router.history.push("/admin/faqs")
+    }
+    const onAboutLink = (e) => {
+        e.preventDefault()
+        router.history.push("/admin/about")
+    }
 
+    return <Nav pills vertical className="bd-links" id="bd-docs-nav">
+        <NavItem>
+            <NavLink href="" onClick={onUsersLink} active={active === 'users'}>Users</NavLink>
+        </NavItem>
+        <NavItem>
+            <NavLink href="" onClick={onFaqsLink} active={active === 'faqs'}>FAQs</NavLink>
+        </NavItem>
+        <NavItem>
+            <NavLink href="" onClick={onAboutLink} active={active === 'about'}>About</NavLink>
+        </NavItem>
 
     </Nav>
 
