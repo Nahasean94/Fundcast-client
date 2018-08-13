@@ -83,6 +83,11 @@ class NewPodcastForm extends React.Component {
         if (data.tags.length < 1) {
             errors.tags = 'This field is required'
         }
+        if(data.ethereum_address){
+            if(data.ethereum_address.length<42||data.ethereum_address.length>42){
+                errors.ethereum_address='Ethereum address must be 42 characters'
+            }
+        }
         if (data.hosts.length < 1) {
             errors.hosts = 'This field is required'
         }

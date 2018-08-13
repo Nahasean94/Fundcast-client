@@ -197,7 +197,7 @@ class HostPage extends Component {
                                                 }
                                             } else {
                                                 return (
-                                                    <p>No podcasts found found</p>
+                                                    <p>No podcasts found</p>
                                                 )
                                             }
                                         } else if (loading) {
@@ -235,12 +235,12 @@ class HostPage extends Component {
                                                 })
                                             } else {
                                                 return (
-                                                    <p>No podcasts found found</p>
+                                                    <p>No podcasts found</p>
                                                 )
                                             }
                                         } else {
                                             return (
-                                                <p>No podcasts found found</p>
+                                                <p>No podcasts found</p>
                                             )
                                         }
                                     } else if (loading) {
@@ -281,7 +281,7 @@ class HostPage extends Component {
                                                 }
                                             } else {
                                                 return (
-                                                    <p>No podcasts found found</p>
+                                                    <p>No podcasts found</p>
                                                 )
                                             }
                                         } else if (loading) {
